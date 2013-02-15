@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{115CA4B0-1A6B-42A8-910C-0A81BDA1B779}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>skkyWeb</RootNamespace>
+    <AssemblyName>skkyWeb</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DataVisualization" />
+    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Charts\AxisSettings.cs" />
+    <Compile Include="Charts\ChartManager.cs" />
+    <Compile Include="Charts\ChartSettings.cs" />
+    <Compile Include="Charts\ChartToHtml.cs" />
+    <Compile Include="Charts\SeriesDataReflection.cs" />
+    <Compile Include="Charts\SeriesDataRowManager.cs" />
+    <Compile Include="Charts\StripLineSettings.cs" />
+    <Compile Include="Charts\DataPointSettings.cs" />
+    <Compile Include="Charts\DataPointSettingsWithObjects.cs" />
+    <Compile Include="Charts\skkyChartBase.cs" />
+    <Compile Include="Charts\SeriesData.cs" />
+    <Compile Include="Charts\SeriesSettings.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Security\AuthenticationController.cs" />
+    <Compile Include="Security\PortalUser.cs" />
+    <Compile Include="Security\UserController.cs" />
+    <Compile Include="Security\UserPageSettings.cs" />
+    <Compile Include="Security\UserWebSettings.cs" />
+    <Compile Include="util\ExcelFileResult.cs" />
+    <Compile Include="util\Html.cs" />
+    <Compile Include="util\Http.cs" />
+    <Compile Include="util\HttpAuthenticationOptions.cs" />
+    <Compile Include="util\HttpRequestor.cs" />
+    <Compile Include="util\JsonpHttpModule.cs" />
+    <Compile Include="util\JsonpResponseFilter.cs" />
+    <Compile Include="util\LiteralControlJavascript.cs" />
+    <Compile Include="util\MasterPage.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="util\Page.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="util\UnitedStates.cs" />
+    <Compile Include="util\WebError.cs" />
+    <Compile Include="util\WebEvent.cs" />
+    <Compile Include="Yahoo\HotelGeoFix.cs" />
+    <Compile Include="Yahoo\PlaceFinder.cs" />
+    <Compile Include="Yahoo\ResultSet.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\skky4\skky4.csproj">
+      <Project>{62E28009-A515-4B4F-B4DC-27FC747ACF80}</Project>
+      <Name>skky4</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

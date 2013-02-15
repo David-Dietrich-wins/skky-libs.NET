@@ -1,0 +1,285 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{62E28009-A515-4B4F-B4DC-27FC747ACF80}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>skky</RootNamespace>
+    <AssemblyName>skky</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="app.cs" />
+    <Compile Include="Conversions\CelsiusToFahrenheit.cs" />
+    <Compile Include="Conversions\ConversionBase.cs" />
+    <Compile Include="Conversions\CubicKilometersToCubicMiles.cs" />
+    <Compile Include="Conversions\CubicMetersPerSecondToGallonsPerMinute.cs" />
+    <Compile Include="Conversions\CubicMetersToAcreFeet.cs" />
+    <Compile Include="Conversions\CubicMetersToCubicFeet.cs" />
+    <Compile Include="Conversions\CubicMetersToGallons.cs" />
+    <Compile Include="Conversions\GramsToPounds.cs" />
+    <Compile Include="Conversions\IConversion.cs" />
+    <Compile Include="Conversions\KilogramsPerKilometerToPoundsPerMile.cs" />
+    <Compile Include="Conversions\KilogramsPerLitreToPoundsPerUKGallon.cs" />
+    <Compile Include="Conversions\KilogramsPerLitreToPoundsPerUSGallon.cs" />
+    <Compile Include="Conversions\KilogramsPerM3ToPoundsPerImperialGallon.cs" />
+    <Compile Include="Conversions\KilogramsPerM3ToPoundsPerUSGallon.cs" />
+    <Compile Include="Conversions\KilogramsToPounds.cs" />
+    <Compile Include="Conversions\KilogramsToTons.cs" />
+    <Compile Include="Conversions\KilometersPerLitreToMilesPerGallon.cs" />
+    <Compile Include="Conversions\KilometersToMiles.cs" />
+    <Compile Include="Conversions\LitersToGallons.cs" />
+    <Compile Include="Conversions\MeasureObject.cs" />
+    <Compile Include="Conversions\OneHundredKilometersPerLitreToMilesPerGallon.cs" />
+    <Compile Include="Conversions\SquareKilometersToSquareMiles.cs" />
+    <Compile Include="Conversions\SquareMetersToSquareFeet.cs" />
+    <Compile Include="db\Account.cs" />
+    <Compile Include="db\AirlineEmission.cs" />
+    <Compile Include="db\ASPNetDb1.designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ASPNetDb.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="db\aspnet_User.cs" />
+    <Compile Include="db\aspnet_WebEvent_Event.cs" />
+    <Compile Include="db\City.cs" />
+    <Compile Include="db\ClientDataContext.cs" />
+    <Compile Include="db\Conversion.cs" />
+    <Compile Include="db\Department.cs" />
+    <Compile Include="db\DirectAccess.cs" />
+    <Compile Include="db\EcCar.cs" />
+    <Compile Include="db\EcGeneral.cs" />
+    <Compile Include="db\EcHome.cs" />
+    <Compile Include="db\Equipment.cs" />
+    <Compile Include="db\EquipmentType.cs" />
+    <Compile Include="db\FbInvite.cs" />
+    <Compile Include="db\FbUser.cs" />
+    <Compile Include="db\FbUserSetting.cs" />
+    <Compile Include="db\FltSegment.cs" />
+    <Compile Include="db\HotelEmission.cs" />
+    <Compile Include="db\HotelGeo.cs" />
+    <Compile Include="db\HtlSegment.cs" />
+    <Compile Include="db\Item.cs" />
+    <Compile Include="db\ItemMeasureInfo.cs" />
+    <Compile Include="db\ItemType.cs" />
+    <Compile Include="db\MeasureInfo.cs" />
+    <Compile Include="db\MeasureInfoConversion.cs" />
+    <Compile Include="db\MeasureItemEntity.cs" />
+    <Compile Include="db\MeasureObject.cs" />
+    <Compile Include="db\MeasureTimeEntity.cs" />
+    <Compile Include="db\NameValue.cs" />
+    <Compile Include="db\Objects.cs">
+      <DependentUpon>Objects.dbml</DependentUpon>
+    </Compile>
+    <Compile Include="db\Objects.designer.cs">
+      <DependentUpon>Objects.dbml</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="db\ObjectsDataContext.cs" />
+    <Compile Include="db\Pnr.cs" />
+    <Compile Include="db\Segment.cs" />
+    <Compile Include="db\SegmentEmission.cs" />
+    <Compile Include="db\TotalFlightEmission.cs" />
+    <Compile Include="db\TotalHotelEmission.cs" />
+    <Compile Include="db\TotalTravelEmission.cs" />
+    <Compile Include="db\UserRoute.cs" />
+    <Compile Include="EmissionsCalc\Car.cs" />
+    <Compile Include="EmissionsCalc\Consumption.cs" />
+    <Compile Include="EmissionsCalc\Meat.cs" />
+    <Compile Include="EmissionsCalc\shipping.cs" />
+    <Compile Include="EmissionsCalc\Trip.cs" />
+    <Compile Include="jqGrid\ActionParams.cs" />
+    <Compile Include="jqGrid\colModel.cs" />
+    <Compile Include="jqGrid\gridInitModelObjectArray.cs" />
+    <Compile Include="jqGrid\gridInitModel.cs" />
+    <Compile Include="jqGrid\gridModel.cs" />
+    <Compile Include="jqGrid\gridModelObjectArray.cs" />
+    <Compile Include="jqGrid\GridModelRequest.cs" />
+    <Compile Include="jqGrid\GridModelResponse.cs" />
+    <Compile Include="LinqKit\ExpandableQuery.cs" />
+    <Compile Include="LinqKit\ExpressionExpander.cs" />
+    <Compile Include="LinqKit\ExpressionVisitor.cs" />
+    <Compile Include="LinqKit\Extensions.cs" />
+    <Compile Include="LinqKit\Linq.cs" />
+    <Compile Include="LinqKit\ParameterRebinder.cs" />
+    <Compile Include="LinqKit\PredicateBuilder.cs" />
+    <Compile Include="LinqKit\Utility.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="Sicurity\PasswordGenerator.cs" />
+    <Compile Include="Types\CallParams.cs" />
+    <Compile Include="Types\StringIntGuid.cs" />
+    <Compile Include="Types\StringObject.cs" />
+    <Compile Include="Types\StringObjArray.cs" />
+    <Compile Include="Types\PropertyManagerSorter.cs" />
+    <Compile Include="Types\ReturnStatusException.cs" />
+    <Compile Include="Types\idName.cs" />
+    <Compile Include="Types\ReturnStatus.cs" />
+    <Compile Include="Types\StringIntInt.cs" />
+    <Compile Include="Types\IntIntDoubleDateTime.cs" />
+    <Compile Include="Types\DataRowManager.cs" />
+    <Compile Include="Types\DataTypeDescription.cs" />
+    <Compile Include="Types\DateSettings.cs" />
+    <Compile Include="Types\DoubleDouble.cs" />
+    <Compile Include="Types\EmissionMarker.cs" />
+    <Compile Include="Types\EmissionsHelper.cs" />
+    <Compile Include="Types\EmissionsPoint.cs" />
+    <Compile Include="Types\SkkyCallParams.cs" />
+    <Compile Include="Types\GuidString.cs" />
+    <Compile Include="Types\GuidStringDouble.cs" />
+    <Compile Include="Types\GuidStringInt.cs" />
+    <Compile Include="Types\GuidStringIntDouble.cs" />
+    <Compile Include="Types\ILatitudeLongitude.cs" />
+    <Compile Include="Types\Key.cs" />
+    <Compile Include="Types\KeyValue.cs" />
+    <Compile Include="Types\LatitudeLongitude.cs" />
+    <Compile Include="Types\Namer.cs" />
+    <Compile Include="Types\Property.cs" />
+    <Compile Include="Types\PropertyDateTime.cs" />
+    <Compile Include="Types\PropertyDouble.cs" />
+    <Compile Include="Types\PropertyGuid.cs" />
+    <Compile Include="Types\PropertyInt.cs" />
+    <Compile Include="Types\PropertyLong.cs" />
+    <Compile Include="Types\PropertyManager.cs" />
+    <Compile Include="Types\PropertyString.cs" />
+    <Compile Include="Types\PropertyT.cs" />
+    <Compile Include="Types\SerializableKeyValuePair.cs" />
+    <Compile Include="Types\SkkyAirFlifo.cs" />
+    <Compile Include="Types\SkkyEmmissionPnr.cs" />
+    <Compile Include="Types\SkkyObject.cs" />
+    <Compile Include="Types\SkkySegment.cs" />
+    <Compile Include="Types\StringDouble.cs" />
+    <Compile Include="Types\StringGuid.cs" />
+    <Compile Include="Types\StringInt.cs" />
+    <Compile Include="Types\StringIntDouble.cs" />
+    <Compile Include="Types\StringIntDoubleDateTime.cs" />
+    <Compile Include="Types\StringString.cs" />
+    <Compile Include="Types\StringStringInt.cs" />
+    <Compile Include="Types\WhereOperation.cs" />
+    <Compile Include="util\Converters.cs" />
+    <Compile Include="util\ExcelColumn.cs" />
+    <Compile Include="util\ExcelSpreadsheet.cs" />
+    <Compile Include="util\DcsWrapper.cs" />
+    <Compile Include="util\EnvironmentHelper.cs" />
+    <Compile Include="util\Eval.cs" />
+    <Compile Include="util\ExcelWorkbook.cs" />
+    <Compile Include="util\ExcelWriter.cs" />
+    <Compile Include="util\Extensions.cs" />
+    <Compile Include="util\FileHelper.cs" />
+    <Compile Include="util\FileNameRotator.cs" />
+    <Compile Include="util\ITrace.cs" />
+    <Compile Include="util\LinqExtensions.cs" />
+    <Compile Include="util\Mail.cs" />
+    <Compile Include="util\NumberDisplay.cs" />
+    <Compile Include="util\Parser.cs" />
+    <Compile Include="util\PhoneNumber.cs" />
+    <Compile Include="util\Security.cs" />
+    <Compile Include="util\StreamHelper.cs" />
+    <Compile Include="util\StringEnum.cs" />
+    <Compile Include="util\Trace.cs" />
+    <Compile Include="util\TraceBase.cs" />
+    <Compile Include="util\TraceListenerRollingFile.cs" />
+    <Compile Include="web\config.cs" />
+    <Compile Include="web\HttpRequestOptions.cs" />
+    <Compile Include="web\json.cs" />
+    <Compile Include="web\OAuthAppSettings.cs" />
+    <Compile Include="web\PopupMenu.cs" />
+    <Compile Include="web\skkyjson.cs" />
+    <Compile Include="util\XMLHelper.cs" />
+    <Compile Include="Westwind\wwAppConfiguration.cs" />
+    <Compile Include="Westwind\wwEncrypt.cs" />
+    <Compile Include="Westwind\wwUtils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="db\ASPNetDb.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>ASPNetDb1.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="db\Objects.dbml">
+      <Generator>MSLinqToSQLGenerator</Generator>
+      <LastGenOutput>Objects.designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="db\ASPNetDb.dbml.layout">
+      <DependentUpon>ASPNetDb.dbml</DependentUpon>
+    </None>
+    <None Include="db\Objects.dbml.layout">
+      <DependentUpon>Objects.dbml</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ThirdParty\Amadeus\APIv2_COM.dll" />
+    <Content Include="ThirdParty\Amadeus\Interop.k1aHostConstantsLib.dll" />
+    <Content Include="ThirdParty\Amadeus\Interop.k1aHostInterface.dll" />
+    <Content Include="ThirdParty\Amadeus\Interop.k1aHostToolKit.dll" />
+    <Content Include="ThirdParty\Amadeus\MSXML.DLL" />
+    <Content Include="ThirdParty\Dundas\DundasWebChart.dll" />
+    <Content Include="ThirdParty\Dundas\DundasWebChart.xml" />
+    <Content Include="ThirdParty\NPOI.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Hotels\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
