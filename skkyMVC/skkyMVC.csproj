@@ -46,7 +46,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\skky-libraries.NET\skky4\skky4.csproj">
+    <ProjectReference Include="..\skky4\skky4.csproj">
       <Project>{62E28009-A515-4B4F-B4DC-27FC747ACF80}</Project>
       <Name>skky4</Name>
     </ProjectReference>

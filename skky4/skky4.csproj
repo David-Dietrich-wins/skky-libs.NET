@@ -147,7 +147,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Settings.cs" />
-    <Compile Include="Sicurity\PasswordGenerator.cs" />
+    <Compile Include="Security\PasswordGenerator.cs" />
     <Compile Include="Types\CallParams.cs" />
     <Compile Include="Types\StringIntGuid.cs" />
     <Compile Include="Types\StringObject.cs" />
