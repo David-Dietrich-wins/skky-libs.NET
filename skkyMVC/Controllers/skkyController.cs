@@ -210,6 +210,15 @@ namespace skkyMVC.Controllers
 			string dirToSaveIn = System.IO.Path.Combine(Server.MapPath("~/App_Data"), savePath);
 			return dirToSaveIn;
 		}
+﻿
+		public string ReverseMapPath(string path)
+		{
+			string appPath = HttpContext.Server.MapPath("~");
+			//string res = string.Format("/{0}", path.Replace(appPath, "").Replace("\\", "/"));
+			string res = string.Format("/{0}", path.Replace(appPath, "").Replace("\\", "/"));
+			return res;
+		}
+		
 		public static string TimeDifferenceMessage(DateTime dtStart, DateTime dtEnd)
 		{
 			string msg = string.Empty;
