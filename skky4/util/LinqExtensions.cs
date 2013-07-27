@@ -459,8 +459,20 @@ namespace skky.util
 			{
 				if (string.IsNullOrEmpty(sordDefault))
 					sordDefault = "asc";
-				return query.OrderBy<T>(sidxDefault, sordDefault);
+				var orderbyquery = query.OrderBy<T>(sidxDefault, sordDefault);
+				query = orderbyquery;
 			}
+
+			//if (ap.rows > 1 && ap.page > 1)
+			//{
+			//	var skipquery = query.Skip(ap.rows * (ap.page - 1));
+			//	query = skipquery;
+			//}
+			//if (ap.rows > 1)
+			//{
+			//	var takequery = query.Take(ap.rows);
+			//	query = takequery;
+			//}
 
 			return query;
 		}

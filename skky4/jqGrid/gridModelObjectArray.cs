@@ -17,10 +17,15 @@ namespace skky.jqGrid
 			[DataMember]
 			public object[] cell;
 
-			public Row(int numCells)
+			public Row(object oid, int numCells)
 			{
+				id = oid;
 				cell = new object[numCells];
 			}
+
+			public Row(int numCells)
+				: this(null, numCells)
+			{ }
 		}
 
 		public gridModelObjectArray()
