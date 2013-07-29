@@ -59,7 +59,7 @@ namespace skky.util
 					else
 						str += "\n";
 
-					str += ex.InnerException.Message;
+					str += GetExceptionMessageString(ex.InnerException);
 				}
 			}
 

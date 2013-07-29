@@ -91,6 +91,11 @@ namespace skky.Types
 			return rs;
 		}
 
+		public ReturnStatus AddExceptionErrorMessage(Exception ex)
+		{
+			return ReturnStatus.AddExceptionErrorMessage(this, ex);
+		}
+
 		public void AddError(string errorString)
 		{
 			ErrorMessage.Add(errorString);
