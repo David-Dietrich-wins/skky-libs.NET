@@ -149,6 +149,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Security\PasswordGenerator.cs" />
     <Compile Include="Types\CallParams.cs" />
+    <Compile Include="Types\StringLong.cs" />
     <Compile Include="Types\StringIntGuid.cs" />
     <Compile Include="Types\StringObject.cs" />
     <Compile Include="Types\StringObjArray.cs" />
