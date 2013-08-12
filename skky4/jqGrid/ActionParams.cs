@@ -10,6 +10,10 @@ namespace skky.jqGrid
 	[DataContract]
 	public class ActionParams
 	{
+		public const string CONST_ActionAdd = "add";
+		public const string CONST_ActionDelete = "del";
+		public const string CONST_ActionEdit = "edit";
+
 		[DataContract]
 		public class Rule
 		{

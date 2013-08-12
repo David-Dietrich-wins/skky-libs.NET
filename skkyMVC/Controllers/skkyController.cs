@@ -8,6 +8,7 @@ using skky.util;
 using System.Net;
 using System.Configuration;
 using System.Reflection;
+using skky.jqGrid;
 
 namespace skkyMVC.Controllers
 {
@@ -41,6 +42,34 @@ namespace skkyMVC.Controllers
 			string className = this.GetType().Name;
 
 			return skky.util.Trace.MethodException(className, methodName, ex, msg);
+		}
+
+		public static ReturnStatus GridExceptionReturnStatus(string action, Exception ex, string actionType = "")
+		{
+			ReturnStatus rs = new ReturnStatus();
+			string str = "Exception while ";
+			switch (action)
+			{
+				case ActionParams.CONST_ActionAdd:
+					str += "adding";
+					break;
+				case ActionParams.CONST_ActionDelete:
+					str += "deleting";
+					break;
+				default:
+				//case ActionParams.CONST_ActionEdit:
+					str += "editing";
+					break;
+			}
+
+			str += " ";
+			str += (string.IsNullOrWhiteSpace(actionType) ? "item" : actionType);
+			str += ".";
+			rs.ErrorMessage.Add(str);
+
+			rs.AddExceptionErrorMessage(ex);
+
+			return rs;
 		}
 
 		#region HTTP Status returns
