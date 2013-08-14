@@ -271,5 +271,35 @@ namespace skkyMVC.Controllers
 
 			return msg;
 		}
+﻿
+		// Methods for returning common strings.
+		protected string getDecimalText(Decimal? d)
+		{
+			if (!d.HasValue)
+				return string.Empty;
+
+			return d.Value.ToString("N0");
+		}
+		protected string getDoubleText(double? d)
+		{
+			if (!d.HasValue)
+				return string.Empty;
+
+			return d.Value.ToString("N2");
+		}
+		protected string getBooleanText(bool? b)
+		{
+			if (!b.HasValue)
+				return string.Empty;
+
+			return b.Value.ToString();
+		}
+		protected string getYesNoText(bool? b)
+		{
+			if (!b.HasValue)
+				return string.Empty;
+
+			return b.Value ? "Yes" : "No";
+		}
 	}
 }
