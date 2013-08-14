@@ -157,17 +157,17 @@ namespace skky.util
 
 			return null;
 		}
-		public static ExcelSpreadsheet GetFirstSheet(string excelFileName)
-		{
-			ExcelWorkbook workbook = ExcelWorkbook.Open(excelFileName);
-			if (workbook != null)
-			{
-				return workbook.LoadFirstSheet();
-			}
+        public static ExcelSpreadsheet GetFirstSheet(string excelFileName, string sheetStartsWith = null)
+        {
+            ExcelWorkbook workbook = ExcelWorkbook.Open(excelFileName);
+            if (workbook != null)
+            {
+                return workbook.LoadFirstSheet(sheetStartsWith);
+            }
 
-			return null;
-		}
-		public ExcelSpreadsheet GetFirstSheet()
+            return null;
+        }
+        public ExcelSpreadsheet GetFirstSheet()
 		{
 			return LoadFirstSheet();
 		}
@@ -436,15 +436,54 @@ namespace skky.util
 
 			return sheet;
 		}
-		private ExcelSpreadsheet LoadFirstSheet()
+		private ExcelSpreadsheet LoadFirstSheet(string sheetStartsWith = null)
 		{
+			string[] excludeSuffixes = {
+										   "_FilterDatabase"
+									   };
+			int i = 0;
+			string sheetNameToLoad = string.Empty;
+
 			EnsureSchemaLoaded();
-			if (SheetNames.Count() > 0)
-			{
-				return LoadSheet(SheetNames[0]);
+
+            for (i = 0; i < SheetNames.Count(); ++i)
+            {
+				string sheetName = SheetNames[i];
+				skky.util.Trace.MethodInformation(this.GetType().Name, "LoadFirstSheet", "Sheet #" + (i + 1) + ": " + sheetName + ".");
+            }
+
+			string sheetStartsWithLower = (sheetStartsWith ?? string.Empty).ToLower();
+            for (i = 0; i < SheetNames.Count() && string.IsNullOrEmpty(sheetNameToLoad); ++i)
+            {
+                string name = SheetNames[i];
+                string nameLower = name.ToLower().Replace("'", string.Empty);
+
+                if (nameLower.StartsWith(sheetStartsWithLower))
+                {
+					if (null != excludeSuffixes && excludeSuffixes.Length > 0)
+					{
+						foreach (var excludeSuffix in excludeSuffixes)
+						{
+							if (!name.EndsWith(excludeSuffix))
+							{
+								sheetNameToLoad = name;
+								break;
+							}
+						}
+					}
+                }
 			}
 
-			return null;
+			// Take the forst on if nothing came up.
+			if (string.IsNullOrEmpty(sheetNameToLoad) && SheetNames.Count() > 0)// && string.IsNullOrEmpty(sheetStartsWith))
+			{
+				sheetNameToLoad = SheetNames[0];
+			}
+
+			if (string.IsNullOrEmpty(sheetNameToLoad))
+				return null;
+
+			return LoadSheet(sheetNameToLoad);
 		}
 		/*
 				public void LoadSchema()

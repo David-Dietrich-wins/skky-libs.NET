@@ -148,6 +148,8 @@ namespace skky.util
 
 		public DataTable LoadRows(bool TrimStrings = true)
 		{
+            int numRows = 0;
+
 			MyDataTable = null;
 
 			if (null == Workbook)
@@ -163,6 +165,8 @@ namespace skky.util
 				//** build a query to get all this sheet's data
 				var query = "SELECT * FROM " + this.Name.WrapInBrackets();
 
+                skky.util.Trace.MethodInformation(this.GetType().Name, "LoadRows", query);
+
 				DataRow row;
 				Object value;
 
@@ -171,10 +175,12 @@ namespace skky.util
 				{
 					using (var reader = cmd.ExecuteReader())
 					{
-						//** add all the data to the datatable
+                        skky.util.Trace.MethodInformation(this.GetType().Name, "LoadRows", "Beginning to Read Worksheet.");
+                        //** add all the data to the datatable
 						var blank = false;
 						while (reader.Read())
 						{
+                            ++numRows;
 							//** get a new row for the datatable
 							row = table.NewRow();
 							blank = true;
@@ -205,6 +211,8 @@ namespace skky.util
 						}
 					}
 				}
+
+                skky.util.Trace.MethodInformation(this.GetType().Name, "LoadRows", "Completed Reading of " + numRows + " rows in worksheet.");
 
 				//** set the local data table for cached access
 				MyDataTable = table;
