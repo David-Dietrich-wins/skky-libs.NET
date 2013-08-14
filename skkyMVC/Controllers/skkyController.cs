@@ -9,6 +9,9 @@ using System.Net;
 using System.Configuration;
 using System.Reflection;
 using skky.jqGrid;
+using System.Text;
+using System.Web.UI;
+using System.IO;
 
 namespace skkyMVC.Controllers
 {
@@ -301,5 +304,57 @@ namespace skkyMVC.Controllers
 
 			return b.Value ? "Yes" : "No";
 		}
+
+		#region Razor Render to string
+		public string RazorRender(string DefaultAction)
+		{
+			string Cache = string.Empty;
+
+			System.Text.StringBuilder sb = new System.Text.StringBuilder();
+			System.IO.TextWriter tw = new System.IO.StringWriter(sb);
+
+			RazorView view_ = new RazorView(ControllerContext, DefaultAction, null, false, null);
+			view_.Render(new ViewContext(ControllerContext, view_, new ViewDataDictionary(), new TempDataDictionary(), tw), tw);
+
+			Cache = sb.ToString();
+
+			return Cache;
+		}
+
+		public string RenderRazorViewToString(string viewName, object model)
+		{
+			ViewData.Model = model;
+			using (var sw = new StringWriter())
+			{
+				var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
+				var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+				viewResult.View.Render(viewContext, sw);
+				return sw.GetStringBuilder().ToString();
+			}
+		}
+
+		public static string RenderPartialToString(ControllerContext context, string partialViewName, ViewDataDictionary viewData, TempDataDictionary tempData)
+		{
+			ViewEngineResult result = ViewEngines.Engines.FindPartialView(context, partialViewName);
+
+			if (result.View != null)
+			{
+				StringBuilder sb = new StringBuilder();
+
+				using (StringWriter sw = new StringWriter(sb))
+				{
+					using (HtmlTextWriter output = new HtmlTextWriter(sw))
+					{
+						ViewContext viewContext = new ViewContext(context, result.View, viewData, tempData, output);
+						result.View.Render(viewContext, output);
+					}
+				}
+
+				return sb.ToString();
+			}
+
+			return String.Empty;
+		}
+		#endregion
 	}
 }
