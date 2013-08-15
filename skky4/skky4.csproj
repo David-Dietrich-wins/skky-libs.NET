@@ -126,6 +126,7 @@
     <Compile Include="EmissionsCalc\Trip.cs" />
     <Compile Include="jqGrid\ActionParams.cs" />
     <Compile Include="jqGrid\colModel.cs" />
+    <Compile Include="jqGrid\GridModelBase.cs" />
     <Compile Include="jqGrid\gridInitModelObjectArray.cs" />
     <Compile Include="jqGrid\gridInitModel.cs" />
     <Compile Include="jqGrid\gridModel.cs" />

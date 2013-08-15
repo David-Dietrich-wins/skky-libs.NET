@@ -480,5 +480,44 @@ namespace skky.util
 
 			return query;
 		}
+
+		public static IQueryable<T> PagedList<T>(this IQueryable<T> query, GridModelBase gm, ActionParams ap = null, int defaultPageSize = 0)
+		{
+			int pagesize = (null != ap && ap.rows > 0 ? ap.rows : defaultPageSize);
+			int totalNumberOfRecords = query.Count();
+			//persons.Count % rows > 0 ? (persons.Count / rows) + 1 : (persons.Count / rows)
+			int totalNumberOfPages = totalNumberOfRecords / pagesize;
+			if ((totalNumberOfRecords % pagesize) > 0)
+				++totalNumberOfPages;
+
+			// Handle paging.
+			// Start with skipping rows.
+			if (null != ap && ap.rows > 1 && ap.page > 1)
+			{
+				var skipquery = query.Skip(ap.rows * (ap.page - 1));
+				query = skipquery;
+			}
+
+			if (null != ap && ap.rows > 0)
+			{
+				var takequery = query.Take(ap.rows);
+				query = takequery;
+			}
+			else if ((null == ap || ap.rows < 1) && pagesize > 0)
+			{
+				// Need to have a check for the first load.
+				var tempquery = query.Take(pagesize);
+				query = tempquery;
+			}
+
+			if (null != gm)
+			{
+				gm.page = (null != ap && ap.page > 0 ? ap.page : 1);
+				gm.records = totalNumberOfRecords;
+				gm.total = totalNumberOfPages;
+			}
+
+			return query;
+		}
 	}
 }

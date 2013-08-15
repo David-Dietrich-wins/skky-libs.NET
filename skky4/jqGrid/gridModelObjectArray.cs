@@ -6,7 +6,7 @@ using System.Runtime.Serialization;
 
 namespace skky.jqGrid
 {
-	public class gridModelObjectArray
+	public class gridModelObjectArray : GridModelBase
 	{
 		[DataContract]
 		public class Row
@@ -30,7 +30,6 @@ namespace skky.jqGrid
 
 		public gridModelObjectArray()
 		{
-			sord = "asc";
 			rows = new List<Row>();
 		}
 		public Row getNewRow(int numCells)
@@ -39,24 +38,6 @@ namespace skky.jqGrid
 		}
 
 		[DataMember]
-		public int page;
-
-		[DataMember]
-		public int total;
-
-		[DataMember(IsRequired=false)]
-		public int? records;
-
-		[DataMember]
-		public int? sidx;
-
-		[DataMember]
-		public string sord;
-
-		[DataMember]
 		public List<Row> rows;
-
-		[DataMember]
-		public Dictionary<string, string> userdata;
 	}
 }
