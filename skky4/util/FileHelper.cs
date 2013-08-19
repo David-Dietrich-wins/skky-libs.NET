@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -7,6 +8,47 @@ namespace skky.util
 {
 	public static class FileHelper
 	{
+		public static string GetContentType(string path = null, string ext = null)
+		{
+			if (ext == null && path == null)
+				return string.Empty;
+
+			if (ext == null && path != null)
+				ext = System.IO.Path.GetExtension(path).ToLower();
+
+			switch (ext.Replace(".", ""))
+			{
+				case "gif":
+					return "image/gif";
+				case "jpg":
+					return "image/jpeg";
+				case "bmp":
+					return "image/bmp";
+				case "png":
+					return "image/png";
+			}
+
+			return string.Empty;
+		}
+
+		/// <summary>
+		/// Used to Create a directory path if needed.
+		/// Verifies that the directory exists first, if not then one is created.
+		/// </summary>
+		/// <param name="path">The full path name of the directory to create.</param>
+		/// <returns>True or False indicator of whether the directory was created or not.</returns>
+		public static bool CreateDirectoryPath(string path)
+		{
+			bool created = false;
+			if (!Directory.Exists(path))
+			{
+				created = true;
+				Directory.CreateDirectory(path);
+			}
+
+			return created;
+		}
+
 		public static string getFileDateStyle(DateTime? dateTime = null)
 		{
 			string fileDateStyle = string.Empty;

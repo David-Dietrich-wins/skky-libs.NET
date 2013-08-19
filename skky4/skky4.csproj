@@ -210,6 +210,7 @@
     <Compile Include="util\Extensions.cs" />
     <Compile Include="util\FileHelper.cs" />
     <Compile Include="util\FileNameRotator.cs" />
+    <Compile Include="util\ImageHelper.cs" />
     <Compile Include="util\ITrace.cs" />
     <Compile Include="util\LinqExtensions.cs" />
     <Compile Include="util\Mail.cs" />
