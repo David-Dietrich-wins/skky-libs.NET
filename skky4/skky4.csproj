@@ -226,6 +226,7 @@
     <Compile Include="web\config.cs" />
     <Compile Include="web\HttpRequestOptions.cs" />
     <Compile Include="web\json.cs" />
+    <Compile Include="web\JsonRequestor.cs" />
     <Compile Include="web\OAuthAppSettings.cs" />
     <Compile Include="web\PopupMenu.cs" />
     <Compile Include="web\skkyjson.cs" />
