@@ -573,21 +573,43 @@ namespace skky.util
 			return Color.Empty;
 		}
 
-		public static List<string> ToStringList(this string sCommaList)
+		/// <summary>
+		/// Converts a comma-delimited string to an array of strings.
+		/// Optionally you can pass a string of characters to trim each string in the returned array.
+		/// </summary>
+		/// <param name="sCommaList">A comma-delimited string.</param>
+		/// <param name="trimChars">A string of characters to trim from each string array element.</param>
+		/// <returns>A List of strings.</returns>
+		public static List<string> ToStringList(this string sCommaList, string trimChars = null)
 		{
 			Regex regex = new Regex("(?<=,(\"|\')).*?(?=(\"|\'),)|(^.*?(?=,))|((?<=,).*?(?=,))|((?<=,).*?$)");
 
 			List<string> lint = new List<string>();
-			Match match = regex.Match(sCommaList);
-			while (match.Success)
+			if (!string.IsNullOrEmpty(sCommaList))
 			{
-				lint.Add(match.Value);
-				//Console.WriteLine ( j++ + " \t" + match) ;
-				match = match.NextMatch();
-			}
+				char[] trimCharArray = null;
+				if (!string.IsNullOrEmpty(trimChars))
+					trimCharArray = trimChars.ToCharArray();
 
-            if (lint.Count < 1 && !string.IsNullOrEmpty(sCommaList))
-                lint.Add(sCommaList);
+				Match match = regex.Match(sCommaList);
+				while (match.Success)
+				{
+					if (null == trimCharArray)
+						lint.Add(match.Value);
+					else
+						lint.Add((match.Value ?? string.Empty).Trim(trimCharArray));
+
+					match = match.NextMatch();
+				}
+
+				if (lint.Count < 1 && !string.IsNullOrEmpty(sCommaList))
+				{
+					if(null == trimCharArray)
+						lint.Add(sCommaList);
+					else
+						lint.Add(sCommaList.Trim(trimCharArray));
+				}
+			}
 
 			return lint;
 		}
