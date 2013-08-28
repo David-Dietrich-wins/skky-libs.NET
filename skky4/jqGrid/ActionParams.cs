@@ -31,7 +31,7 @@ namespace skky.jqGrid
 			[DataMember]
 			public string groupOp { get; set; }
 			[DataMember]
-			public Rule[] rules { get; set; }
+			public List<Rule> rules { get; set; }
 
 			public static Filter Create(string jsonData)
 			{
