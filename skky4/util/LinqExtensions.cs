@@ -459,7 +459,7 @@ namespace skky.util
 			if(!string.IsNullOrWhiteSpace(ap.sord))
 				sordDefault = ap.sord;
 
-			if (!string.IsNullOrEmpty(sidxDefault))
+			if (!string.IsNullOrEmpty(sidxDefault) && "\"null\"" != sidxDefault && "null" != sidxDefault && "'null'" != sidxDefault)
 			{
 				if (string.IsNullOrEmpty(sordDefault))
 					sordDefault = "asc";
