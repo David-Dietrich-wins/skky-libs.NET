@@ -675,13 +675,16 @@ namespace skky.util
 
 		private static string ExtractFormatPattern(string data)
 		{
-			string pattern = String.Empty;
+			string pattern = string.Empty;
 
-			int start = data.IndexOf("{");
-			int end = data.IndexOf("}");
+			if (!string.IsNullOrEmpty(data))
+			{
+				int start = data.IndexOf("{");
+				int end = data.IndexOf("}");
 
-			if (start > 0 && end > 0)
-				pattern = data.Substring(start + 1, end - start - 1);
+				if (start > 0 && end > 0)
+					pattern = data.Substring(start + 1, end - start - 1);
+			}
 
 			return pattern;
 		}

@@ -19,7 +19,7 @@ namespace skky.web
 		public string DemoUserName = "demo@skky.net";
 		public string DemoPassword = "skkyWins";
 
-		public string MembershipConnectionString = "";
+		//public string MembershipConnectionString = "";
 
 			// Facebook assigned keys.
 		public string APIKey = "";

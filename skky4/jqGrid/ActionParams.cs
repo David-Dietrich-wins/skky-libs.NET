@@ -31,7 +31,7 @@ namespace skky.jqGrid
 			[DataMember]
 			public string groupOp { get; set; }
 			[DataMember]
-			public List<Rule> rules { get; set; }
+			public Rule[] rules { get; set; }
 
 			public static Filter Create(string jsonData)
 			{
@@ -127,5 +127,17 @@ namespace skky.jqGrid
 		//    }
 		//}
 		//public string filters { get; set; }
+
+		public bool Fixup()
+		{
+			bool neededFixup = false;
+			if ("\"null\"" == sidx || "null" == sidx || "'null'" == sidx)
+			{
+				sidx = null;
+				neededFixup = true;
+			}
+
+			return neededFixup;
+		}
 	}
 }
