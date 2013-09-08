@@ -31,7 +31,8 @@ namespace skky.jqGrid
 			[DataMember]
 			public string groupOp { get; set; }
 			[DataMember]
-			public Rule[] rules { get; set; }
+			public List<Rule> rules { get; set; }
+			//public Rule[] rules { get; set; }
 
 			public static Filter Create(string jsonData)
 			{
@@ -138,6 +139,29 @@ namespace skky.jqGrid
 			}
 
 			return neededFixup;
+		}
+
+		public string FindAndRemoveRule(string ruleName)
+		{
+			string ruleData = null;
+
+			if (null != theFilter
+				&& null != theFilter.rules
+				&& theFilter.rules.Count() > 0
+				&& !string.IsNullOrEmpty(ruleName))
+			{
+				foreach (var rule in theFilter.rules)
+				{
+					if (ruleName == rule.field)
+					{
+						ruleData = rule.data;
+						theFilter.rules.Remove(rule);
+						break;
+					}
+				}
+			}
+
+			return ruleData;
 		}
 	}
 }
