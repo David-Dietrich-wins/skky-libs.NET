@@ -20,6 +20,7 @@ namespace skky.Types
 		ew,	// Ends With
 		en,	// Does not End With
 		cn,	// Contains
+		cni, // Contains case insensitive comparison
 		nc,	// Does not contain
 		nn,	// Not Null
 		nu	// Null

@@ -352,6 +352,11 @@ namespace skky.util
 				case WhereOperation.cn:
 					condition = Expression.Call(memberAccess, typeof(string).GetMethod("Contains"), Expression.Constant(value));
 					break;
+				case WhereOperation.cni:
+					var methodInfo = typeof(string).GetMethod("IndexOf", new[] { typeof(string), typeof(StringComparison) });
+					var callEx = Expression.Call(memberAccess, methodInfo, Expression.Constant(value), Expression.Constant(StringComparison.OrdinalIgnoreCase));
+					condition = Expression.NotEqual(callEx, Expression.Constant(-1)); 
+					break;
 				case WhereOperation.en:
 					condition = Expression.Call(memberAccess, typeof(string).GetMethod("EndsWith", new[] { typeof(string) }), Expression.Constant(value));
 					condition = Expression.Not(condition);
