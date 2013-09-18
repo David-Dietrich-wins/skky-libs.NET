@@ -79,9 +79,9 @@ namespace skkyWeb.Google
 			if (null == lng)
 				throw new Exception("Invalid longitude passed to GetSQLPoint().");
 
-			string point = lat.Value.ToString();
+			string point = lng.Value.ToString();
 			point += " ";
-			point += lng.Value.ToString();
+			point += lat.Value.ToString();
 
 			return "POINT(" + point + ")";
 		}
