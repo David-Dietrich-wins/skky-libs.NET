@@ -40,7 +40,7 @@
     <Reference Include="System.Web" />
     <Reference Include="System.Web.ApplicationServices" />
     <Reference Include="System.Web.DataVisualization" />
-    <Reference Include="System.Web.Mvc, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -60,6 +60,8 @@
     <Compile Include="Charts\skkyChartBase.cs" />
     <Compile Include="Charts\SeriesData.cs" />
     <Compile Include="Charts\SeriesSettings.cs" />
+    <Compile Include="Google\Geocode.cs" />
+    <Compile Include="Google\GeocodeResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AuthenticationController.cs" />
     <Compile Include="Security\PortalUser.cs" />
