@@ -8,15 +8,9 @@ namespace skky.util
 {
 	public static class FileHelper
 	{
-		public static string GetContentType(string path = null, string ext = null)
+		﻿public static string GetContentType(string ext = null)
 		{
-			if (ext == null && path == null)
-				return string.Empty;
-
-			if (ext == null && path != null)
-				ext = System.IO.Path.GetExtension(path).ToLower();
-
-			switch (ext.Replace(".", ""))
+			switch ((ext ?? string.Empty).Replace(".", "").ToLower())
 			{
 				case "gif":
 					return "image/gif";
@@ -29,6 +23,17 @@ namespace skky.util
 			}
 
 			return string.Empty;
+		}
+		 
+		public static string GetContentType(string path = null, string ext = null)
+		{
+			if (ext == null && path == null)
+				return string.Empty;
+
+			if (ext == null && path != null)
+				ext = System.IO.Path.GetExtension(path);
+
+			return GetContentType(ext);
 		}
 
 		/// <summary>
