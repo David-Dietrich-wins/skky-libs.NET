@@ -38,6 +38,37 @@ namespace skkyWeb.Google
 			}
 		}
 
+		public double? GetLatitude()
+		{
+			if (null != results && results.Count() > 0)
+			{
+				results r = results.First();
+				if (null != r.geometry
+					&& null != r.geometry.location
+					&& null != r.geometry.location.lat)
+				{
+					return r.geometry.location.lat;
+				}
+			}
+
+			return null;
+		}
+		public double? GetLongitude()
+		{
+			if (null != results && results.Count() > 0)
+			{
+				results r = results.First();
+				if (null != r.geometry
+					&& null != r.geometry.location
+					&& null != r.geometry.location.lng)
+				{
+					return r.geometry.location.lng;
+				}
+			}
+
+			return null;
+		}
+
 		public string GetSQLPoint()
 		{
 			if (hasLatLng)
