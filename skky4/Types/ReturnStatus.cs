@@ -33,7 +33,7 @@ namespace skky.Types
 
 		public bool HasErrors()
 		{
-			return ErrorMessage.Count() > 0 ? true : false;
+			return ReturnCode < 0 || ErrorMessage.Count() > 0 ? true : false;
 		}
 		public bool ErrorFree()
 		{
@@ -42,6 +42,11 @@ namespace skky.Types
 		public bool HasMessages()
 		{
 			return Message.Count() > 0 ? true : false;
+		}
+
+		public void AddMessage(string message)
+		{
+			Message.Add(message);
 		}
 
 		public int AddMessages(ReturnStatus rs)
