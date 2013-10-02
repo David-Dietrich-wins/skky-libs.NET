@@ -486,14 +486,23 @@ namespace skky.util
 			return query;
 		}
 
-		public static IQueryable<T> PagedList<T>(this IQueryable<T> query, GridModelBase gm, ActionParams ap = null, int defaultPageSize = 0)
+		public static IQueryable<T> PagedList<T>(this IQueryable<T> query,
+			ActionParams ap = null,
+			int defaultPageSize = 0)
 		{
-			int pagesize = (null != ap && ap.rows > 0 ? ap.rows : defaultPageSize);
-			int totalNumberOfRecords = query.Count();
-			//persons.Count % rows > 0 ? (persons.Count / rows) + 1 : (persons.Count / rows)
-			int totalNumberOfPages = totalNumberOfRecords / pagesize;
-			if ((totalNumberOfRecords % pagesize) > 0)
-				++totalNumberOfPages;
+			int pagesize = 0;
+			int totalNumberOfRecords = 0;
+
+			return PagedList(query, ref pagesize, ref totalNumberOfRecords, ap, defaultPageSize);
+		}
+		public static IQueryable<T> PagedList<T>(this IQueryable<T> query,
+			ref int pagesize,
+			ref int totalNumberOfRecords,
+			ActionParams ap = null,
+			int defaultPageSize = 0)
+		{
+			pagesize = (null != ap && ap.rows > 0 ? ap.rows : defaultPageSize);
+			totalNumberOfRecords = query.Count();
 
 			// Handle paging.
 			// Start with skipping rows.
@@ -514,6 +523,21 @@ namespace skky.util
 				var tempquery = query.Take(pagesize);
 				query = tempquery;
 			}
+
+			return query;
+		}
+
+		public static IQueryable<T> PagedList<T>(this IQueryable<T> query, GridModelBase gm, ActionParams ap = null, int defaultPageSize = 0)
+		{
+			int pagesize = 0;
+			int totalNumberOfRecords = 0;
+
+			query = PagedList(query, ref pagesize, ref totalNumberOfRecords, ap, defaultPageSize);
+
+			//persons.Count % rows > 0 ? (persons.Count / rows) + 1 : (persons.Count / rows)
+			int totalNumberOfPages = totalNumberOfRecords / pagesize;
+			if ((totalNumberOfRecords % pagesize) > 0)
+				++totalNumberOfPages;
 
 			if (null != gm)
 			{
