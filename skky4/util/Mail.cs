@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Net.Mail;
+using System.Reflection;
 
 namespace skky.util
 {
@@ -63,7 +64,9 @@ namespace skky.util
 			}
 			catch (Exception ex)
 			{
-				System.Console.WriteLine(ex.ToString());
+				string methodName = MethodBase.GetCurrentMethod().Name;
+				Trace.MethodException(methodName, ex);
+
 				throw;
 			}
 		}
