@@ -17,7 +17,7 @@ namespace skky.util
 			string[] ret = null;
 			if (!string.IsNullOrEmpty(str))
 			{
-				ret = str.Split(',');
+				ret = str.Split(splitChar);
 				if (null != ret)
 				{
 					for (int i = 0; i < ret.Length; ++i)
