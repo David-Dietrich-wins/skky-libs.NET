@@ -9,11 +9,11 @@ namespace skky.util
 {
 	public static class Mail
 	{
-		public static void Send(string to, string cc, string subject, string body)
+		public static void Send(string to, string cc, string subject, string body, List<string> attachmentFileNames = null)
 		{
-			Send(null, to, cc, subject, body);
+			Send(null, to, cc, subject, body, attachmentFileNames);
 		}
-		public static void Send(string from, string to, string cc, string subject, string body)
+		public static void Send(string from, string to, string cc, string subject, string body, List<string> attachmentFileNames = null)
 		{
 			string[] toArray = new string[1];
 			toArray[0] = to;
@@ -22,10 +22,22 @@ namespace skky.util
 			if (!string.IsNullOrEmpty(cc))
 				ccArray[0] = cc;
 
-			Send(from, toArray, ccArray, subject, body);
+			Send(from, toArray, ccArray, subject, body, attachmentFileNames);
 		}
 
-		public static void Send(string from, string[] to, string[] cc, string subject, string body)
+		public static void Send(string from, string[] to, string[] cc, string subject, string body, string attachmentFileName = null)
+		{
+			List<string> attachmentFileNames = null;
+			if (!string.IsNullOrWhiteSpace(attachmentFileName))
+			{
+				attachmentFileNames = new List<string>();
+				attachmentFileNames.Add(attachmentFileName);
+			}
+
+			Send(from, to, cc, subject, body, attachmentFileNames);
+		}
+
+		public static void Send(string from, string[] to, string[] cc, string subject, string body, List<string> attachmentFileNames = null)
 		{
 			if(string.IsNullOrEmpty(from))
 				from = "skkyHost@skky.net";
@@ -51,12 +63,20 @@ namespace skky.util
 						objMail.CC.Add(new MailAddress(ccAddress.Trim()));
 					}
 				}
-				//var a = new MailAttachment("C:\a.jpg");
-				//objMail.Attachments.Add(a);
+
+				objMail.Subject = subject;
+
 				objMail.IsBodyHtml = true;
 				objMail.Body = body;
-				objMail.Subject = subject;
-				objMail.Body = body;
+
+				if (null != attachmentFileNames && attachmentFileNames.Count() > 0)
+				{
+					foreach (var attachmentFileName in attachmentFileNames)
+					{
+						Attachment attachment = new Attachment(attachmentFileName);
+						objMail.Attachments.Add(attachment);
+					}
+				}
 
 				//var smtp = new System.Net.Mail.SmtpClient(emailHost);
 				var smtp = new SmtpClient();

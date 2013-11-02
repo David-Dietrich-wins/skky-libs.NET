@@ -151,7 +151,7 @@ namespace skkyWeb.util
 					TraceSession(action);
 					TraceRequestForm(action);
 				}
-
+				/*
 				//Only proceed if the user is authenticated
 				if (Request.IsAuthenticated)
 				{
@@ -183,6 +183,7 @@ namespace skkyWeb.util
 						}
 					}
 				}
+				*/
 			}
 			catch (Exception ex)
 			{
