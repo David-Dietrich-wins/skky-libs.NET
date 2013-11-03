@@ -549,7 +549,7 @@ namespace skkyWeb.util
 										 valueDelimiter.Length;
 			int viewStateEndPosition = s.IndexOf("\"", viewStateStartPosition);
 
-			return HttpUtility.UrlEncodeUnicode(
+			return HttpUtility.UrlEncode(
 					 s.Substring(
 						viewStateStartPosition,
 						viewStateEndPosition - viewStateStartPosition

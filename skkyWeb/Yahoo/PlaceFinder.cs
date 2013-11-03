@@ -31,7 +31,7 @@ namespace skkyWeb.Yahoo
 
 		public string getGeoCodeURL(string address)
 		{
-			string encodedAddress = HttpUtility.UrlEncodeUnicode(address ?? "");
+			string encodedAddress = HttpUtility.UrlEncode(address ?? "");
 			return string.Format(CONST_GeoCodeURL, curOAuthAppSettings.ApplicationID, encodedAddress);
 		}
 		public ResultSet GeoCode(string address)
