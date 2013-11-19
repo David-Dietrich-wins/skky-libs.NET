@@ -356,5 +356,14 @@ namespace skkyMVC.Controllers
 			return String.Empty;
 		}
 		#endregion
+
+		public FileResult GetFileResult(string filename, string mimeType)
+		{
+			return File(filename, mimeType);
+		}
+		public FileResult GetPdf(string filename)
+		{
+			return GetFileResult(filename, System.Net.Mime.MediaTypeNames.Application.Pdf);
+		}
 	}
 }
