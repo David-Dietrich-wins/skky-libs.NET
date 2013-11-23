@@ -90,9 +90,9 @@ namespace skky.util
 
 			return rmsg;
 		}
-		public static void MethodInformation(string methodName, string msg)
+		public static string MethodInformation(string methodName, string msg)
 		{
-			Information(string.Empty, methodName, msg);
+			return MethodInformation(string.Empty, methodName, msg);
 		}
 
 		public static void MethodException(string className, string methodName, Exception ex, string format, params object[] args)
