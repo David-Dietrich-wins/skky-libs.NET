@@ -8,6 +8,11 @@ namespace skky.util
 {
 	public static class FileHelper
 	{
+		public const string CONST_DefaultTempDirectory = "C:\\temp";
+		public const string Const_DefaultFileForStrings = CONST_DefaultTempDirectory + "\\temp.txt";
+		public const string Const_DefaultFileForHtmlStrings = CONST_DefaultTempDirectory + "\\temp.htm";
+		public const string Const_DefaultFileForXmlStrings = CONST_DefaultTempDirectory + "\\temp.xml";
+
 		﻿public static string GetContentType(string ext = null)
 		{
 			switch ((ext ?? string.Empty).Replace(".", "").ToLower())
@@ -111,5 +116,110 @@ namespace skky.util
 
 			return str;
 		}
+
+		#region Extension methods for writing to Temporary files.
+		public static long WriteToTempFile(this string str)
+		{
+			return WriteToFile(str, Const_DefaultFileForStrings);
+		}
+		public static long WriteToTempHtmlFile(this string str)
+		{
+			return WriteToFile(str, Const_DefaultFileForHtmlStrings);
+		}
+		public static long WriteToTempXmlFile(this string str)
+		{
+			return WriteToFile(str, Const_DefaultFileForXmlStrings);
+		}
+		public static long WriteToFile(this string str, string fileName)
+		{
+			if (!string.IsNullOrEmpty(fileName))
+				return SaveToDisk(str, fileName);
+
+			return 0L;
+		}
+		#endregion
+
+		#region CopyStreamToDisk
+		/// <summary>
+		/// Creates a file from a stream by saving that stream-data to the specified filePath.
+		/// </summary>
+		/// <param name="stream">The stream containing the file.</param>
+		/// <param name="filePath">The destination file path to create.</param>
+		public static void CopyStreamToDisk(Stream stream, string filePath)
+		{
+			byte[] buffer = new byte[4096];
+
+			//Copy to a temp file first so that if anything goes wrong with the network
+			//while downloading the file, it does not actually update the real file  on the disk.
+			//This essentially gives us transaction like semantics.
+			Random rand = new Random();
+			string tempPath = Environment.GetEnvironmentVariable("temp") + "\\";
+			tempPath += filePath.Remove(0, filePath.LastIndexOf("\\") + 1);
+			tempPath += rand.Next(10000).ToString() + ".tmp";
+
+			FileStream fs = File.Open(tempPath, FileMode.Create, FileAccess.ReadWrite);
+
+			int length = stream.Read(buffer, 0, 4096);
+			while (length > 0)
+			{
+				fs.Write(buffer, 0, length);
+				length = stream.Read(buffer, 0, 4096);
+			}
+			fs.Close();
+
+			// If the file that we need to write exists, delete it first.
+			if (File.Exists(filePath))
+			{
+				File.Delete(filePath);
+			}
+			// Perform a copy and a delete because on XP there were permission issues
+			// specifically around inheritable permissions in the destination folder.
+			File.Copy(tempPath, filePath, true);
+			File.Delete(tempPath);
+		}
+		public static long SaveToDisk(string str, string filePath)
+		{
+			long totalLength = 0;
+			if (!string.IsNullOrEmpty(str))
+			{
+				byte[] buffer = new byte[4096];
+
+				//Copy to a temp file first so that if anything goes wrong with the network
+				//while downloading the file, it does not actually update the real file  on the disk.
+				//This essentially gives us transaction like semantics.
+
+				FileStream fs = File.Open(filePath, FileMode.Create, FileAccess.ReadWrite);
+				MemoryStream stream = new MemoryStream((str ?? string.Empty).Encode(0));
+				int length = stream.Read(buffer, 0, 4096);
+				totalLength = length;
+				while (length > 0)
+				{
+					fs.Write(buffer, 0, length);
+					length = stream.Read(buffer, 0, 4096);
+					totalLength += length;
+				}
+
+				fs.Close();
+			}
+
+			return totalLength;
+		}
+		public static long SaveToDiskInDateDirectory(string str, string filePath = null, string fileName = null)
+		{
+			DateTime dt = DateTime.Now;
+			string dirToSaveIn = Path.Combine(filePath ?? CONST_DefaultTempDirectory, FileHelper.getFileDateStyle(dt));
+			if (!Directory.Exists(dirToSaveIn))
+				Directory.CreateDirectory(dirToSaveIn);
+
+			if (string.IsNullOrEmpty(fileName))
+			{
+				fileName = FileHelper.getFileDateTimeWithGuid("txt", dt);
+			}
+			// Make the full file path.
+			string exportFileNameWithPath = Path.Combine(dirToSaveIn, fileName);
+
+			return SaveToDisk(str, exportFileNameWithPath);
+		}
+		#endregion
 	}
 }

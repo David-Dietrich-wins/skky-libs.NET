@@ -12,6 +12,23 @@ namespace skky.util
 {
 	public static class XMLHelper
 	{
+		#region Extenstion Methods
+		public static void WriteHrTag(this XmlWriter writer)
+		{
+			writer.WriteStartElement("hr");
+			writer.WriteEndElement();
+		}
+		public static void WriteBreakTag(this XmlWriter writer)
+		{
+			writer.WriteStartElement("br");
+			writer.WriteEndElement();
+		}
+		public static void WriteNonBreakingSpaceEntity(this XmlWriter writer)
+		{
+			writer.WriteEntityRef("nbsp");
+		}
+		#endregion
+
 		public static string StartTag(string tagName)
 		{
 			return StartTag(tagName, string.Empty, string.Empty);

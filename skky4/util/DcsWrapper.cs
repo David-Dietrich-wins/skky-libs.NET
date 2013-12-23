@@ -157,22 +157,5 @@ namespace skky.util
 			return instance;
 		}
 		#endregion
-
-		#region ToPublicDateTimeFormat
-		public static string ToPublicDateTimeFormat(DateTime date)
-		{
-			string result = null;
-			if (date != DateTime.MinValue)
-			{
-				result = date.ToString(PublicDateTimeFormat, CultureInfo.InvariantCulture);
-			}
-			return result;
-		}
-
-		public static string PublicDateTimeFormat
-		{
-			get { return "yyyy-MM-ddTHH:mm:ss.fffzzz"; }
-		}
-		#endregion
 	}
 }

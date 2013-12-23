@@ -14,11 +14,7 @@ namespace skky.util
 {
 	public static class Extensions
 	{
-		public const string Const_DefaultFileForStrings = "c:\\temp\\temp.txt";
-		public const string Const_DefaultFileForHtmlStrings = "c:\\temp\\temp.htm";
-		public const string Const_DefaultFileForXmlStrings = "c:\\temp\\temp.xml";
-
-		// String extensions
+		#region String extensions
 		public static string Left(this string str, int length)
 		{
 			//we start at 0 since we want to get the characters starting from the
@@ -80,56 +76,6 @@ namespace skky.util
 
 			return string.Empty;
 		}
-		//public static bool IsNumeric(this string str)
-		//{
-		//    string s = str ?? string.Empty;
-		//    if (s.Length > 0)
-		//    {
-		//        for (int i = 0; i < s.Length; ++i)
-		//        {
-		//            string sTemp = s.Substring(i, 1);
-		//            if ("0123456789".IndexOf(sTemp) < 0)
-		//                return false;
-		//        }
-
-		//        return true;
-		//    }
-		//    return false;
-		//}
-		//public static string CopyNumerics(this string src)
-		//{
-		//    string dest = string.Empty;
-		//    string CurChar = string.Empty;
-
-		//    int StrLen = src.Length;
-		//    for (int i = 0; i < StrLen; ++i)
-		//    {
-		//        CurChar = src.Substring(i, 1);
-		//        if (CurChar.IsNumeric())
-		//        {
-		//            dest += CurChar;
-		//        }
-		//        else
-		//        {
-		//            break;
-		//        }
-		//    }
-
-		//    return dest;
-		//}
-
-		//public static int IndexOf(this string str, string find)
-		//{
-		//    if (!string.IsNullOrEmpty(str) && !string.IsNullOrEmpty(find))
-		//        return str.IndexOf(find);
-
-		//    return -1;
-		//}
-		//public static int Val(string s)
-		//{
-		//    string str = CopyNumerics(s);
-		//    return str.GetInteger();
-		//}
 
 		public static int InStr(this string str, string sSearch)
 		{
@@ -209,6 +155,58 @@ namespace skky.util
 		{
 			return XMLHelper.AddTag(tagName, str);
 		}
+		#endregion
+
+		//public static bool IsNumeric(this string str)
+		//{
+		//    string s = str ?? string.Empty;
+		//    if (s.Length > 0)
+		//    {
+		//        for (int i = 0; i < s.Length; ++i)
+		//        {
+		//            string sTemp = s.Substring(i, 1);
+		//            if ("0123456789".IndexOf(sTemp) < 0)
+		//                return false;
+		//        }
+
+		//        return true;
+		//    }
+		//    return false;
+		//}
+		//public static string CopyNumerics(this string src)
+		//{
+		//    string dest = string.Empty;
+		//    string CurChar = string.Empty;
+
+		//    int StrLen = src.Length;
+		//    for (int i = 0; i < StrLen; ++i)
+		//    {
+		//        CurChar = src.Substring(i, 1);
+		//        if (CurChar.IsNumeric())
+		//        {
+		//            dest += CurChar;
+		//        }
+		//        else
+		//        {
+		//            break;
+		//        }
+		//    }
+
+		//    return dest;
+		//}
+
+		//public static int IndexOf(this string str, string find)
+		//{
+		//    if (!string.IsNullOrEmpty(str) && !string.IsNullOrEmpty(find))
+		//        return str.IndexOf(find);
+
+		//    return -1;
+		//}
+		//public static int Val(string s)
+		//{
+		//    string str = CopyNumerics(s);
+		//    return str.GetInteger();
+		//}
 
 		/// <summary>
 		/// Replaces characters that interfere with Javascript functions.
@@ -418,40 +416,6 @@ namespace skky.util
 			return hex.ToString();
 		}
 
-		public static DateTime ToDateTime(this string str)
-		{
-			DateTime date = DateTime.MinValue;
-			if (!string.IsNullOrEmpty(str))
-				if (DateTime.TryParse(str.Trim(), out date))
-					return date;
-
-			return DateTime.MinValue;
-		}
-		public static DateTime? ToNullableDateTime(this string str)
-		{
-			DateTime date = str.ToDateTime();
-			if (date == DateTime.MinValue)
-				return null;
-
-			return date;
-		}
-		//public static DateTime GetDateTimeFromObject(this object o)
-		//{
-		//    if (o != null)
-		//    {
-		//        try
-		//        {
-		//            return (DateTime)o;
-		//        }
-		//        catch (Exception)
-		//        {
-		//            return o.ToString().ToDateTime();
-		//        }
-		//    }
-
-		//    return new DateTime();
-		//}
-
 		public static Color ToColor(this string str)
 		{
 			return str.ToColor(Color.Empty);
@@ -644,7 +608,7 @@ namespace skky.util
 
 		public static byte[] Encode(this string str, int encoding)
 		{
-			return str.Encode(Encoding.GetEncoding(encoding));
+			return (str ?? string.Empty).Encode(Encoding.GetEncoding(encoding));
 		}
 		public static byte[] Encode(this string str, Encoding encoding)
 		{
@@ -652,90 +616,11 @@ namespace skky.util
 		}
 		public static byte[] EncodeAscii(this string str)
 		{
-			return str.Encode(new ASCIIEncoding());
+			return (str ?? string.Empty).Encode(new ASCIIEncoding());
 		}
 		public static byte[] EncodeUnicode(this string str)
 		{
-			return str.Encode(new UnicodeEncoding());
-		}
-
-		public static string HashString(this string s)
-		{
-			byte[] data1ToHash = s.EncodeUnicode();
-			byte[] hashvalue = (new MD5CryptoServiceProvider()).ComputeHash(data1ToHash);
-
-			return BitConverter.ToString(hashvalue);
-		}
-
-		public static bool CompareHashString(this string str1, string str2)
-		{
-			byte[] data1ToHash = str1.EncodeUnicode();
-			byte[] data2ToHash = str2.EncodeUnicode();
-			byte[] hashvalue1 = (new MD5CryptoServiceProvider()).ComputeHash(data1ToHash);
-			byte[] hashvalue2 = (new MD5CryptoServiceProvider()).ComputeHash(data2ToHash);
-			int i = 0;
-			bool bval = true;
-			do
-			{
-				if (hashvalue1[i] != hashvalue2[i])
-				{
-					bval = false;
-					break;
-				}
-
-				i++;
-			} while (i < hashvalue1.Length);
-
-			return bval;
-		}
-
-		public static long WriteToTempFile(this string str)
-		{
-			return WriteToFile(str, Const_DefaultFileForStrings);
-		}
-		public static long WriteToTempHtmlFile(this string str)
-		{
-			return WriteToFile(str, Const_DefaultFileForHtmlStrings);
-		}
-		public static long WriteToTempXmlFile(this string str)
-		{
-			return WriteToFile(str, Const_DefaultFileForXmlStrings);
-		}
-		public static long WriteToFile(this string str, string fileName)
-		{
-			if (!string.IsNullOrEmpty(fileName))
-				return StreamHelper.SaveToDisk(str, fileName);
-
-			return 0L;
-		}
-
-		public static int ToDateKey(this DateTime date)
-		{
-			return date.Year * 10000 + date.Month * 100 + date.Day;
-		}
-		public static DateTime FromDateKey(this int dateKey)
-		{
-			string s = dateKey.ToString();
-			if (!string.IsNullOrEmpty(s) && s.Length == 8)
-			{
-				int year = s.Left(4).ToInteger();
-				int month = s.Mid(4, 2).ToInteger();
-				int day = s.Mid(6, 2).ToInteger();
-				return new DateTime(year, month, day);
-			}
-
-			return new DateTime(1977, 7, 7);
-		}
-		public static string ToSummaryString(this DateTime instance)
-		{
-			return instance.ToString("yyyy-MM-dd");
-		}
-		public static long? ToUnixTimestamp(this DateTime? dateTime)
-		{
-			if (!dateTime.HasValue)
-				return null;
-			
-			return (long) (dateTime.Value - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
+			return (str ?? string.Empty).Encode(new UnicodeEncoding());
 		}
 
 		#region LinkedResourceCollection.AddGif
@@ -773,19 +658,5 @@ namespace skky.util
 			return false;
 		}
 		#endregion
-		public static void WriteHrTag(this XmlWriter writer)
-		{
-			writer.WriteStartElement("hr");
-			writer.WriteEndElement();
-		}
-		public static void WriteBreakTag(this XmlWriter writer)
-		{
-			writer.WriteStartElement("br");
-			writer.WriteEndElement();
-		}
-		public static void WriteNonBreakingSpaceEntity(this XmlWriter writer)
-		{
-			writer.WriteEntityRef("nbsp");
-		}
 	}
 }

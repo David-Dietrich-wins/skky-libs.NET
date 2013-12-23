@@ -8,6 +8,38 @@ namespace skky.util
 {
 	public static class Security
 	{
+		#region Extension Methods
+		public static string HashString(this string s)
+		{
+			byte[] data1ToHash = s.EncodeUnicode();
+			byte[] hashvalue = (new MD5CryptoServiceProvider()).ComputeHash(data1ToHash);
+
+			return BitConverter.ToString(hashvalue);
+		}
+
+		public static bool CompareHashString(this string str1, string str2)
+		{
+			byte[] data1ToHash = str1.EncodeUnicode();
+			byte[] data2ToHash = str2.EncodeUnicode();
+			byte[] hashvalue1 = (new MD5CryptoServiceProvider()).ComputeHash(data1ToHash);
+			byte[] hashvalue2 = (new MD5CryptoServiceProvider()).ComputeHash(data2ToHash);
+			int i = 0;
+			bool bval = true;
+			do
+			{
+				if (hashvalue1[i] != hashvalue2[i])
+				{
+					bval = false;
+					break;
+				}
+
+				i++;
+			} while (i < hashvalue1.Length);
+
+			return bval;
+		}
+		#endregion
+
 		public static string HashPassword(string password)
 		{
 			byte[] bytes = Encoding.Unicode.GetBytes(password);

@@ -171,7 +171,7 @@ namespace skky.util
 			{
 				respStream = Response.GetResponseStream();
 				// Get the file saved to the destination file path.
-				CopyStreamToDisk(respStream, filePath);
+				FileHelper.CopyStreamToDisk(respStream, filePath);
 			}
 			catch (Exception e)
 			{
@@ -191,87 +191,6 @@ namespace skky.util
 					Response.Close();
 				}
 			}
-		}
-		#endregion
-
-		#region CopyStreamToDisk
-		/// <summary>
-		/// Creates a file from a stream by saving that stream-data to the specified filePath.
-		/// </summary>
-		/// <param name="stream">The stream containing the file.</param>
-		/// <param name="filePath">The destination file path to create.</param>
-		public static void CopyStreamToDisk(Stream stream, string filePath)
-		{
-			byte[] buffer = new byte[4096];
-			int length;
-
-			//Copy to a temp file first so that if anything goes wrong with the network
-			//while downloading the file, it does not actually update the real file  on the disk.
-			//This essentially gives us transaction like semantics.
-			Random rand = new Random();
-			string tempPath = Environment.GetEnvironmentVariable("temp") + "\\";
-			tempPath += filePath.Remove(0, filePath.LastIndexOf("\\") + 1);
-			tempPath += rand.Next(10000).ToString() + ".tmp";
-
-			FileStream fs = System.IO.File.Open(tempPath, FileMode.Create, FileAccess.ReadWrite);
-
-			length = stream.Read(buffer, 0, 4096);
-			while (length > 0)
-			{
-				fs.Write(buffer, 0, length);
-				length = stream.Read(buffer, 0, 4096);
-			}
-			fs.Close();
-
-			// If the file that we need to write exists, delete it first.
-			if (System.IO.File.Exists(filePath))
-			{
-				System.IO.File.Delete(filePath);
-			}
-			// Perform a copy and a delete because on XP there were permission issues
-			// specifically around inheritable permissions in the destination folder.
-			System.IO.File.Copy(tempPath, filePath, true);
-			System.IO.File.Delete(tempPath);
-
-		}
-		public static long SaveToDisk(string str, string filePath)
-		{
-			byte[] buffer = new byte[4096];
-
-			//Copy to a temp file first so that if anything goes wrong with the network
-			//while downloading the file, it does not actually update the real file  on the disk.
-			//This essentially gives us transaction like semantics.
-
-			FileStream fs = System.IO.File.Open(filePath, FileMode.Create, FileAccess.ReadWrite);
-			MemoryStream stream = new MemoryStream(str.Encode(0));
-			int length = stream.Read(buffer, 0, 4096);
-			long totalLength = length;
-			while (length > 0)
-			{
-				fs.Write(buffer, 0, length);
-				length = stream.Read(buffer, 0, 4096);
-				totalLength += length;
-			}
-
-			fs.Close();
-
-			return totalLength;
-		}
-		public static long SaveToDiskInDateDirectory(string str, string filePath = null, string fileName = null)
-		{
-			DateTime dt = DateTime.Now;
-			string dirToSaveIn =  System.IO.Path.Combine(filePath ?? "c:\\temp", FileHelper.getFileDateStyle(dt));
-			if (!Directory.Exists(dirToSaveIn))
-				Directory.CreateDirectory(dirToSaveIn);
-
-			if (string.IsNullOrEmpty(fileName))
-			{
-				fileName = FileHelper.getFileDateTimeWithGuid("txt", dt);
-			}
-			// Make the full file path.
-			string exportFileNameWithPath = System.IO.Path.Combine(dirToSaveIn, fileName);
-
-			return SaveToDisk(str, exportFileNameWithPath);
 		}
 		#endregion
 	}
