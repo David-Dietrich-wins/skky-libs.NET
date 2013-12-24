@@ -20,6 +20,8 @@ namespace skkyMVC.Controllers
 		public const string CONST_Date4DigitYear = "MMM d, yyyy";
 		public const string CONST_DateTimeLong = "MMMM dd, yyyy hh:mm:ss.ff tt";
 
+		protected ReturnStatus rs = new ReturnStatus();
+
 		public static bool getSortOrder(string sord)
 		{
 			return !("desc" == sord);
@@ -47,9 +49,8 @@ namespace skkyMVC.Controllers
 			return skky.util.Trace.MethodException(className, methodName, ex, msg);
 		}
 
-		public static ReturnStatus GridExceptionReturnStatus(string action, Exception ex, string actionType = "")
+		public string AddGridExceptionToReturnStatus(string action, Exception ex, string actionType = "")
 		{
-			ReturnStatus rs = new ReturnStatus();
 			string str = "Exception while ";
 			switch (action)
 			{
@@ -72,14 +73,15 @@ namespace skkyMVC.Controllers
 
 			rs.AddExceptionErrorMessage(ex);
 
-			return rs;
+			return str;
 		}
 
 		#region HTTP Status returns
 		// Return Status errors and exceptions
 		protected JsonResult ReturnStatusConflictIfError(ReturnStatus rs, int rc)
 		{
-			if (rs == null)
+			ReturnStatus stat = rs ?? new ReturnStatus(rc);
+			if (!rs.HasErrors())
 				return Json(rc);
 
 			return ReturnStatusConflict(rs);
