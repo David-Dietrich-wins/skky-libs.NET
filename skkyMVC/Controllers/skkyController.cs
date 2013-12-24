@@ -80,9 +80,11 @@ namespace skkyMVC.Controllers
 		// Return Status errors and exceptions
 		protected JsonResult ReturnStatusConflictIfError(ReturnStatus rs, int rc)
 		{
-			ReturnStatus stat = rs ?? new ReturnStatus(rc);
+			if(null == rs)
+				rs = new ReturnStatus(rc);
+
 			if (!rs.HasErrors())
-				return Json(rc);
+				return Json(rs);
 
 			return ReturnStatusConflict(rs);
 		}
