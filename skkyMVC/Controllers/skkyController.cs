@@ -17,6 +17,8 @@ namespace skkyMVC.Controllers
 {
 	public class skkyController : Controller
 	{
+		public const string Const_FileURLPath = "/App_Data";
+
 		public const string CONST_Date4DigitYear = "MMM d, yyyy";
 		public const string CONST_DateTimeLong = "MMMM dd, yyyy hh:mm:ss.ff tt";
 
@@ -243,7 +245,16 @@ namespace skkyMVC.Controllers
 		{
 			string savePath = getFileDateStyle();
 
-			string dirToSaveIn = System.IO.Path.Combine(Server.MapPath("~/App_Data"), savePath);
+			string dirToSaveIn = Path.Combine(Server.MapPath(Const_FileURLPath), savePath);
+			return dirToSaveIn;
+		}
+
+		protected string getTempDirectory()
+		{
+			string savePath = FileHelper.getFileDateStyle();
+			string serverMapPath = Server.MapPath(Const_FileURLPath);
+
+			string dirToSaveIn = System.IO.Path.Combine(serverMapPath, savePath);
 			return dirToSaveIn;
 		}
 ﻿
