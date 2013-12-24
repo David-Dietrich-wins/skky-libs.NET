@@ -44,11 +44,6 @@ namespace skky.Types
 			return Message.Count() > 0 ? true : false;
 		}
 
-		public void AddMessage(string message)
-		{
-			Message.Add(message);
-		}
-
 		public int AddMessages(ReturnStatus rs)
 		{
 			int messagesAdded = 0;
@@ -101,9 +96,32 @@ namespace skky.Types
 			return ReturnStatus.AddExceptionErrorMessage(this, ex);
 		}
 
+		public static ReturnStatus AddError(ReturnStatus rs, string errorString)
+		{
+			if (null == rs)
+				rs = new ReturnStatus();
+
+			rs.AddError(errorString);
+
+			return rs;
+		}
 		public void AddError(string errorString)
 		{
 			ErrorMessage.Add(errorString);
+		}
+
+		public static ReturnStatus AddMessage(ReturnStatus rs, string msg)
+		{
+			if (null == rs)
+				rs = new ReturnStatus();
+
+			rs.AddError(msg);
+
+			return rs;
+		}
+		public void AddMessage(string msg)
+		{
+			Message.Add(msg);
 		}
 	}
 }
