@@ -7,6 +7,7 @@ using System.Data.OleDb;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace skky.util
 {
@@ -148,7 +149,11 @@ namespace skky.util
 
 		public DataTable LoadRows(bool TrimStrings = true)
 		{
+			string methodName = MethodBase.GetCurrentMethod().Name;
+			string msg = string.Empty;
             int numRows = 0;
+			int curColumn = 0;
+			string curColumnName = string.Empty;
 
 			MyDataTable = null;
 
@@ -184,9 +189,12 @@ namespace skky.util
 							//** get a new row for the datatable
 							row = table.NewRow();
 							blank = true;
+							curColumn = 1;
 
 							foreach (ExcelColumn col in this.Columns)
 							{
+								curColumnName = col.Name ?? string.Empty;
+
 								//** make sure at least one column has data, otherwise, dont import the row
 								if (!reader.IsDBNull(col.Ordinal))
 									blank = false;
@@ -203,6 +211,8 @@ namespace skky.util
 
 								//** set the column's value
 								row[col.Ordinal] = value;
+
+								++curColumn;
 							}
 
 							//** add the row to the table
@@ -220,7 +230,9 @@ namespace skky.util
 			}
 			catch(Exception ex)
 			{
-				throw new Exception("[ExcelSpreadsheet.Load] There was a problem loading the spreadsheet \"" + this.Name + "\".", ex);
+				msg = "[ExcelSpreadsheet.Load] Row " + numRows + ", Column " + curColumn + "(" + curColumnName + ") encountered a problem loading the spreadsheet " + this.Name + ".";
+				Trace.MethodException(methodName, ex, msg);
+				throw new Exception(msg, ex);
 			}
 			finally
 			{

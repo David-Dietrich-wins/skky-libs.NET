@@ -25,7 +25,14 @@ namespace skky.util
 			Send(from, toArray, ccArray, subject, body, attachmentFileNames);
 		}
 
-		public static void Send(string from, string[] to, string[] cc, string subject, string body, string attachmentFileName = null)
+		public static void Send(string from, string[] to, string[] cc, string subject, string body)
+		{
+			List<string> attachmentFileNames = null;
+
+			Send(from, to, cc, subject, body, attachmentFileNames);
+		}
+
+		public static void Send(string from, string[] to, string[] cc, string subject, string body, string attachmentFileName)
 		{
 			List<string> attachmentFileNames = null;
 			if (!string.IsNullOrWhiteSpace(attachmentFileName))
@@ -37,7 +44,7 @@ namespace skky.util
 			Send(from, to, cc, subject, body, attachmentFileNames);
 		}
 
-		public static void Send(string from, string[] to, string[] cc, string subject, string body, List<string> attachmentFileNames = null)
+		public static void Send(string from, string[] to, string[] cc, string subject, string body, List<string> attachmentFileNames)
 		{
 			if(string.IsNullOrEmpty(from))
 				from = "skkyHost@skky.net";
