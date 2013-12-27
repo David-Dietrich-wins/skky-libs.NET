@@ -97,7 +97,7 @@ namespace skkyMVC.Controllers
 
 			return Content(str);
 		}
-		protected JsonResult NotAcceptableStatus(ReturnStatus rs, Exception ex)
+		protected JsonResult NotAcceptableStatus(Exception ex)
 		{
 			Response.TrySkipIisCustomErrors = true;
 
@@ -115,7 +115,8 @@ namespace skkyMVC.Controllers
 		}
 		protected JsonResult ReturnStatusConflict(string errorMessage)
 		{
-			ReturnStatus rs = new ReturnStatus(errorMessage);
+			rs.AddError(errorMessage);
+
 			return ReturnStatusConflict(rs);
 		}
 		protected JsonResult ReturnStatusConflict(ReturnStatus rs)
@@ -136,12 +137,11 @@ namespace skkyMVC.Controllers
 		}
 		protected JsonResult ReturnStatusNotFound(string errorMessage)
 		{
-			ReturnStatus rs = new ReturnStatus(errorMessage);
+			rs.AddError(errorMessage);
 			return ReturnStatusNotFound(rs);
 		}
 		protected ReturnStatus GetAddEditItemException(Exception ex, string objectName)
 		{
-			ReturnStatus rs = new ReturnStatus();
 			rs.ErrorMessage.Add("Error editing item.");
 
 			if (ex.Message.Contains("duplicate") || (null != ex.InnerException && ex.InnerException.Message.Contains("duplicate")))
@@ -162,9 +162,9 @@ namespace skkyMVC.Controllers
 		}
 		protected ReturnStatus GetEmptyFieldError(string operation, string objectName, string fieldName)
 		{
-			ReturnStatus rs = new ReturnStatus();
 			if (string.IsNullOrWhiteSpace(operation))
 				operation = "adding";
+
 			rs.ErrorMessage.Add("Error " + operation.ToLower() + " " + objectName + ".");
 
 			rs.Message.Add(fieldName + " cannot be empty.");
@@ -174,9 +174,9 @@ namespace skkyMVC.Controllers
 		}
 		protected ReturnStatus GetNumberError(string operation, string field, string rate, string objectName)
 		{
-			ReturnStatus rs = new ReturnStatus();
 			if (string.IsNullOrWhiteSpace(operation))
 				operation = "adding";
+
 			rs.ErrorMessage.Add("Error " + operation.ToLower() + " " + objectName + ".");
 
 			string s = field ?? "EMPTY";
@@ -378,6 +378,9 @@ namespace skkyMVC.Controllers
 		}
 		public FileResult GetPdf(string filename)
 		{
+			if(!System.IO.File.Exists(filename))
+				throw new Exception("Unable to retrieve PDF: " + filename + ". The file could not be found.");
+
 			return GetFileResult(filename, System.Net.Mime.MediaTypeNames.Application.Pdf);
 		}
 	}
