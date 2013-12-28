@@ -48,7 +48,11 @@ namespace skkyMVC.Controllers
 		{
 			string className = this.GetType().Name;
 
-			return skky.util.Trace.MethodException(className, methodName, ex, msg);
+			string s = skky.util.Trace.MethodException(className, methodName, ex, msg);
+
+			rs.AddError(s);
+
+			return s;
 		}
 
 		public string AddGridExceptionToReturnStatus(string action, Exception ex, string actionType = "")
