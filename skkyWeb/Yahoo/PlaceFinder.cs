@@ -7,7 +7,6 @@ using System.Text;
 using System.Web;
 using System.Xml;
 using System.Xml.Linq;
-using skky.db;
 using skky.util;
 using skky.web;
 using skkyWeb.util;
@@ -62,18 +61,6 @@ namespace skkyWeb.Yahoo
 				{
 					XDocument xmldoc = XMLHelper.getXDocument(xmlResponse);
 
-					using (var db = new ObjectsDataContext())
-					{
-						XMLHttp xh = new XMLHttp()
-						{
-							url = sendURL.Left(1000),
-							response = (xmlResponse ?? string.Empty).Left(2500),
-							responseXML = xmldoc,
-						};
-
-						db.XMLHttps.InsertOnSubmit(xh);
-						db.SubmitChanges();
-					}
 				}
 				catch (Exception ex)
 				{

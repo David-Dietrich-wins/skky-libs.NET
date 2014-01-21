@@ -54,8 +54,6 @@ namespace skkyWeb.util
 			cp.DepartmentName = request.GetRequestParamString(SkkyCallParams.CallParam_DepartmentName);
 			cp.DepartmentId = request.GetRequestParamInt(SkkyCallParams.CallParam_DepartmentId);
 
-			cp.EmissionType = request.GetRequestParamString(SkkyCallParams.CallParam_EmissionType);
-
 			cp.CityName = request.GetRequestParamString(SkkyCallParams.CallParam_CityName);
 			cp.CityCode = request.GetRequestParamString(SkkyCallParams.CallParam_CityCode);
 			cp.CityId = request.GetRequestParamInt(SkkyCallParams.CallParam_CityId);

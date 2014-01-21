@@ -131,12 +131,36 @@ namespace skkyMVC.Models
 
 			return dtNow;
 		}
+		/// <summary>
+		/// Returns a DateTime based on the month passed in.
+		/// 
+		/// </summary>
+		/// <param name="month">The long text of the month to return with the year.</param>
+		/// <returns>A DateTime representing a Month and a Year.</returns>
+		public static DateTime GetMonthYearBasedDateTime(string monthYear)
+		{
+			DateTime dtNow = DateTime.Now;
+			if (!string.IsNullOrEmpty(monthYear))
+			{
+				DateTime dtParsed = DateTime.ParseExact(monthYear, "MMMM yyyy", null);
+				return (dtParsed > dtNow ? dtParsed.AddMonths(-1) : dtParsed);
+			}
+
+			return dtNow;
+		}
 
 		public static string DefaultMonthText()
 		{
 			DateTime dtMonth = getMonthBasedDateTime(string.Empty);
 
 			return dtMonth.ToString("MMMM");
+		}
+
+		public static string DefaultMonthYearText()
+		{
+			DateTime dtMonth = getMonthBasedDateTime(string.Empty);
+
+			return dtMonth.ToString("MMMM yyyy");
 		}
 		public static int DefaultMonthInt()
 		{

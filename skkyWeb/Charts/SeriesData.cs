@@ -90,10 +90,10 @@ namespace skkyWeb.Charts
 				}
 				else
 				{
-					MainColor = seriesSettings.MainColor.ToColor(ChartManager.Const_DefaultSeriesColorMain);
-					BorderColor = seriesSettings.BorderColor.ToColor(ChartManager.Const_DefaultSeriesColorBorder);
-					MarkerColor = seriesSettings.MarkerColor.ToColor(ChartManager.Const_DefaultMarkerColor);
-					MarkerBorderColor = seriesSettings.MarkerBorderColor.ToColor(ChartManager.Const_DefaultMarkerBorderColor);
+					MainColor = seriesSettings.MainColor.ToColor(Color.Blue);
+					BorderColor = seriesSettings.BorderColor.ToColor(Color.Gray);
+					MarkerColor = seriesSettings.MarkerColor.ToColor(Color.Orange);
+					MarkerBorderColor = seriesSettings.MarkerBorderColor.ToColor(Color.Green);
 				}
 			}
 		}

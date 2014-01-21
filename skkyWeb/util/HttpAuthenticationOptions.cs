@@ -151,10 +151,5 @@ namespace skkyWeb.util
 
 			return cc;
 		}
-
-		static public HttpAuthenticationOptions GetDefault()
-		{
-			return new HttpAuthenticationOptions(Const_DefaultLoginURI, skky.app.WebConfig.DemoUserName, skky.app.WebConfig.DemoPassword);
-		}
 	}
 }

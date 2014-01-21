@@ -61,18 +61,6 @@ namespace skky.Types
 		public int DepartmentId { get; set; }
 
 		[DataMember]
-		public string EmissionType { get; set; }
-
-		public Namer.Type GetEmissionType()
-		{
-			return EmissionsHelper.GetType(EmissionType);
-		}
-		public int GetEmissionsFieldOffset()
-		{
-			return EmissionsHelper.GetFromType(EmissionType).id - EmissionsHelper.CO2.id;
-		}
-
-		[DataMember]
 		public string CityName { get; set; }
 		[DataMember]
 		public string CityCode { get; set; }
@@ -121,6 +109,8 @@ namespace skky.Types
 
 		[DataMember]
 		public string PropertyName { get; set; }
+		[DataMember]
+		public string SourceName { get; set; }
 
 		[DataMember]
 		public string ReportName { get; set; }

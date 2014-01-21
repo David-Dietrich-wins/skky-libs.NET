@@ -71,9 +71,6 @@ namespace skkyWeb.util
 
 		private HttpWebResponse GetAuthenticationResponse()
 		{
-			if (AuthHelper == null)
-				AuthHelper = HttpAuthenticationOptions.GetDefault();
-
 			HttpWebRequest request = (HttpWebRequest)WebRequest.Create(HttpOptions.Uri);
 			request.Method = HttpOptions.Method;
 			request.KeepAlive = true;

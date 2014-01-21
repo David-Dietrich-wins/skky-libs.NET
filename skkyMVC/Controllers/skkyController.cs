@@ -23,6 +23,7 @@ namespace skkyMVC.Controllers
 		public const string CONST_DateTimeLong = "MMMM dd, yyyy hh:mm:ss.ff tt";
 
 		protected ReturnStatus rs = new ReturnStatus();
+		protected DateTime dtNow = DateTime.Now;
 
 		public static bool getSortOrder(string sord)
 		{

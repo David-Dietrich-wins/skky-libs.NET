@@ -49,9 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Charts\AxisSettings.cs" />
-    <Compile Include="Charts\ChartManager.cs" />
     <Compile Include="Charts\ChartSettings.cs" />
-    <Compile Include="Charts\ChartToHtml.cs" />
     <Compile Include="Charts\SeriesDataReflection.cs" />
     <Compile Include="Charts\SeriesDataRowManager.cs" />
     <Compile Include="Charts\StripLineSettings.cs" />
@@ -64,8 +62,6 @@
     <Compile Include="Google\GeocodeResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\AuthenticationController.cs" />
-    <Compile Include="Security\PortalUser.cs" />
-    <Compile Include="Security\UserController.cs" />
     <Compile Include="Security\UserPageSettings.cs" />
     <Compile Include="Security\UserWebSettings.cs" />
     <Compile Include="util\ExcelFileResult.cs" />
@@ -85,7 +81,6 @@
     <Compile Include="util\UnitedStates.cs" />
     <Compile Include="util\WebError.cs" />
     <Compile Include="util\WebEvent.cs" />
-    <Compile Include="Yahoo\HotelGeoFix.cs" />
     <Compile Include="Yahoo\PlaceFinder.cs" />
     <Compile Include="Yahoo\ResultSet.cs" />
   </ItemGroup>

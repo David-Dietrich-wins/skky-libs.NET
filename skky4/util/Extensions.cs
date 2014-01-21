@@ -577,6 +577,17 @@ namespace skky.util
 
 			return lint;
 		}
+		public static List<int> ToIntegerList(this IEnumerable<string> strList)
+		{
+			List<int> lst = new List<int>();
+			if (null != strList)
+			{
+				foreach (var str in strList)
+					lst.Add(str.ToInteger());
+			}
+
+			return lst;
+		}
 		public static List<int> ToIntegerList(this string sCommaList)
 		{
 			Regex regex = new Regex("(?<=,(\"|\')).*?(?=(\"|\'),)|(^.*?(?=,))|((?<=,).*?(?=,))|((?<=,).*?$)");

@@ -16,7 +16,6 @@ using System.Web.UI.WebControls;
 using System.Xml.Linq;
 using System.Web.SessionState;
 using skky.Conversions;
-using skky.db;
 using skky.Types;
 using skky.util;
 using skky.web;
@@ -192,159 +191,6 @@ namespace skkyWeb.util
 			}
 		}
 
-		public virtual PortalUser GetUser()
-		{
-			return GetUserStatic();
-		}
-		public virtual UserWebSettings GetUserSettings()
-		{
-			return GetUser().Settings;
-		}
-
-		public void writeImageTag(string file, string alt)
-		{
-			Response.Write(Html.BuildImg(skky.app.WebConfig.CompanyImageBaseUri + file, 0, 0, alt));
-		}
-
-		public virtual Client GetClient()
-		{
-			return GetUser().Client;
-		}
-		public virtual int GetClientID()
-		{
-			return GetClient().id;
-		}
-		public virtual string GetClientName()
-		{
-			return GetClient().Name;
-		}
-		public virtual string GetClientLogoPath()
-		{
-			return GetClient().LogoPath ?? string.Empty;
-		}
-		public virtual string GetClientURL()
-		{
-			return GetClient().url ?? string.Empty;
-		}
-		public virtual string GetClientHREFLogo()
-		{
-			return Html.GetHREFImage(GetClient().Name, GetClient().url, GetClient().LogoPath, GetClient().LogoWidth, GetClient().LogoHeight);
-		}
-
-		public virtual Customer GetCustomer()
-		{
-			return GetUser().Customer;
-		}
-		public virtual int GetCustomerID()
-		{
-			return GetCustomer().id;
-		}
-		public virtual string GetCustomerName()
-		{
-			return GetCustomer().Name;
-		}
-		public virtual string GetCustomerLogoPath()
-		{
-			return GetCustomer().LogoPath ?? string.Empty;
-		}
-		public virtual string GetCustomerURL()
-		{
-			return GetCustomer().url ?? string.Empty;
-		}
-		public virtual string GetCustomerHREFLogo()
-		{
-			return Html.GetHREFImage(GetCustomerName(), GetCustomerURL(), GetCustomerLogoPath(), GetCustomer().LogoWidth, GetCustomer().LogoHeight);
-		}
-
-		public static PortalUser GetUserStatic()
-		{
-			return UserController.CurrentPortalUser;
-		}
-		public static UserWebSettings GetUserSettingsStatic()
-		{
-			return GetUserStatic().Settings;
-		}
-
-		public static Client GetClientStatic()
-		{
-			return GetUserStatic().Client;
-		}
-		public static int GetClientIDStatic()
-		{
-			return GetClientStatic().id;
-		}
-		public static string GetClientNameStatic()
-		{
-			return GetClientStatic().Name;
-		}
-		public static string GetClientLogoPathStatic()
-		{
-			return GetClientStatic().LogoPath ?? string.Empty;
-		}
-		public static string GetClientURLStatic()
-		{
-			return GetClientStatic().url ?? string.Empty;
-		}
-
-		public static Customer GetCustomerStatic()
-		{
-			return GetUserStatic().Customer;
-		}
-		public static int GetCustomerIDStatic()
-		{
-			return GetCustomerStatic().id;
-		}
-		public static string GetCustomerNameStatic()
-		{
-			return GetCustomerStatic().Name;
-		}
-		public static string GetCustomerLogoPathStatic()
-		{
-			return GetCustomerStatic().LogoPath ?? string.Empty;
-		}
-		public static string GetCustomerURLStatic()
-		{
-			return GetCustomerStatic().url ?? string.Empty;
-		}
-
-		protected virtual Namer.Type GetEmissionTypeEnum()
-		{
-			return GetUserSettings().GetEmissionType();
-		}
-		protected virtual string GetEmissionType()
-		{
-			return GetUserSettings().EmissionType;
-		}
-		protected virtual DateSettings GetDateRange()
-		{
-			return GetUserSettings().DateRange;
-		}
-		protected virtual List<string> GetSelectedSources()
-		{
-			return GetUserSettings().GetSelectedSources();
-		}
-		protected virtual string GetAccountName()
-		{
-			return GetUserSettings().AccountName;
-		}
-		protected virtual string GetAccountNumber()
-		{
-			return GetUserSettings().AccountNumber;
-		}
-		protected virtual string GetDepartmentName()
-		{
-			return GetUserSettings().DepartmentName;
-		}
-		protected virtual int GetDepartmentId()
-		{
-			return GetUserSettings().DepartmentId;
-		}
-
-		protected virtual bool UserIsMetric()
-		{
-			return GetUserSettings().UseMetric;
-		}
-
 		public string GetRequestString(string name)
 		{
 			return Http.GetRequestString(Request, name);
@@ -373,18 +219,6 @@ namespace skkyWeb.util
 		protected int GetSessionInt(string name)
 		{
 			return Http.GetSessionInt(Session, name);
-		}
-
-		public virtual bool IsMetric
-		{
-			get
-			{
-				return GetUserSettings().UseMetric;
-			}
-			set
-			{
-				;
-			}
 		}
 
 		protected void WriteIntegerNoZero(int i)
@@ -432,42 +266,17 @@ namespace skkyWeb.util
 				Html.AddLabelToControl(Page.Controls, str);
 		}
 
-		public string KilometersMilesLongName()
-		{
-			return KilometersToMiles.GetLongName(IsMetric);
-		}
-		public string KilometersMilesShortName()
-		{
-			return KilometersToMiles.GetShortName(IsMetric);
-		}
-		public string KilogramsPoundsLongName()
-		{
-			return KilogramsToPounds.GetLongName(IsMetric);
-		}
-		public string KilogramsPoundsShortName()
-		{
-			return KilogramsToPounds.GetShortName(IsMetric);
-		}
-		public string LitresGallonsLongName()
-		{
-			return LitersToGallons.GetLongName(IsMetric);
-		}
-		public string LitresGallonsShortName()
-		{
-			return LitersToGallons.GetShortName(IsMetric);
-		}
-
-		public List<StringIntDoubleDateTime> PerformMetricConversions(IEnumerable<StringIntDoubleDateTime> siddCollection)
+		public List<StringIntDoubleDateTime> PerformMetricConversions(IEnumerable<StringIntDoubleDateTime> siddCollection, bool useMetric = false)
 		{
 			List<StringIntDoubleDateTime> siList = siddCollection.ToList();
 			// The field is metric=true, because the db is all in metric.
 			IConversion converter = new KilometersToMiles();
 			foreach (StringInt si in siList)
-				Converters.ConvertIntUnits(si, converter, false, GetUserSettings().UseMetric);
+				Converters.ConvertIntUnits(si, converter, false, useMetric);
 
 			converter = new KilogramsToPounds();
 			foreach (StringIntDouble sid in siList)
-				Converters.ConvertDoubleUnits(sid, converter, false, GetUserSettings().UseMetric);
+				Converters.ConvertDoubleUnits(sid, converter, false, useMetric);
 			/*
 			for (int i = 0; i < siList.Count(); ++i)
 			{
@@ -528,106 +337,8 @@ namespace skkyWeb.util
 			return paramFound;
 		}
 
-		protected Control GetChart(ChartManager cm, skkyjson sj)
-		{
-			if (cm == null)
-				return null;
-
-			try
-			{
-				if (string.IsNullOrEmpty(cm.AccountName))
-					cm.AccountName = GetAccountName();
-				if (string.IsNullOrEmpty(cm.AccountNumber))
-					cm.AccountNumber = GetAccountNumber();
-				if (cm.DepartmentId == 0)
-					cm.DepartmentId = GetDepartmentId();
-				if (string.IsNullOrEmpty(cm.DepartmentName))
-					cm.DepartmentName = GetDepartmentName();
-				if (string.IsNullOrEmpty(cm.EmissionType))
-					cm.EmissionType = GetEmissionType();
-
-				cm.ChartSettings.DateRange = GetDateRange();
-
-				return ChartToHtml.GetChart(cm, Server, sj, this, this);
-			}
-			catch (Exception ex)
-			{
-				ChartErrorEvent e = new ChartErrorEvent(GetUser().DisplayName, GetCustomerName(), cm.Name, "ChartFactory.GetChart", this, ex);
-				e.Raise();
-			}
-
-			return null;
-		}
-
-		protected Control AddChartToControl(Control ctl, ChartManager cm)
-		{
-			return AddChartToControl(ctl, cm, null);
-		}
-		protected Control SetChartToControl(Control ctl, ChartManager cm)
-		{
-			if (ctl != null)
-				ctl.Controls.Clear();
-
-			return AddChartToControl(ctl, cm, null);
-		}
-
-		protected Control AddChartToControl(Control ctl, ChartManager cm, skkyjson js)
-		{
-			Control chart = GetChart(cm, js);
-			ctl.AddChild(chart);
-
-			return chart;
-		}
-
 		protected virtual ChartSettings GetChartSettings() {
 			return new ChartSettings();
-		}
-		protected virtual ChartManager GetChartManager(ChartSettings cs)
-		{
-			return new ChartManager(cs, IsMetric);
-		}
-		protected skkyjson BuildChart(bool isJSON)
-		{
-			string callType = isJSON ? "JSON" : "AJAX";
-
-			skkyjson sjson = null;
-			ChartSettings cs = new ChartSettings();
-			try
-			{
-				Request.LoadSkkyCallParams(cs);
-				UpdatePageState(cs);
-
-				string str = string.Empty;
-
-				if (cs.act == "chart")
-				{
-					LogActivity(callType + " retrieve of chart named: " + cs.Name);
-
-					ChartManager cm = GetChartManager(cs);
-					if (isJSON)
-					{
-						sjson = new skkyjson();
-						Control ctl = AddChartToControl(this.Page, cm, sjson);
-						str = Html.GetRawHTML(ctl);
-						sjson.innerHTML = str;
-					}
-					else
-					{
-						AddChartToControl(this.Page, cm);
-					}
-				}
-				else
-				{
-					str = "The action selected is: " + cs.act;
-				}
-			}
-			catch (Exception ex)
-			{
-				WebError we = new WebError(GetCustomerName(), GetUser().DisplayName, callType + " call failed", this, 1, ex);
-				we.Raise();
-			}
-
-			return sjson;
 		}
 	}
 }
