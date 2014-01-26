@@ -14,6 +14,9 @@ namespace skky.jqGrid
 		public const string CONST_ActionDelete = "del";
 		public const string CONST_ActionEdit = "edit";
 
+		public const string CONST_sordAsc = "asc";
+		public const string CONST_sordDesc = "desc";
+
 		[DataContract]
 		public class Rule
 		{
@@ -141,9 +144,9 @@ namespace skky.jqGrid
 			return neededFixup;
 		}
 
-		public string FindAndRemoveRule(string ruleName)
+		public Rule FindAndRemoveRuleRaw(string ruleName)
 		{
-			string ruleData = null;
+			Rule ruleToRemove = null;
 
 			if (null != theFilter
 				&& null != theFilter.rules
@@ -154,14 +157,22 @@ namespace skky.jqGrid
 				{
 					if (ruleName == rule.field)
 					{
-						ruleData = rule.data;
+						ruleToRemove = rule;
 						theFilter.rules.Remove(rule);
 						break;
 					}
 				}
 			}
 
-			return ruleData;
+			return ruleToRemove;
+		}
+		public string FindAndRemoveRule(string ruleName)
+		{
+			Rule rule = FindAndRemoveRuleRaw(ruleName);
+			if(null != rule)
+				return rule.data;
+
+			return null;
 		}
 	}
 }

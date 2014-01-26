@@ -34,14 +34,10 @@ namespace skky.util
 				var sortExpression = Expression.Lambda<Func<T, object>>
 					(Expression.Convert(Expression.Property(param, sortBy), typeof(object)), param);
 
-				switch (sortDirection.ToLower())
-				{
-					case "asc":
-						return source.AsQueryable<T>().OrderBy<T, object>(sortExpression);
-					default:
+				if (ActionParams.CONST_sordDesc == (sortDirection ?? string.Empty).ToLower())
 						return source.AsQueryable<T>().OrderByDescending<T, object>(sortExpression);
 
-				}
+				return source.AsQueryable<T>().OrderBy<T, object>(sortExpression);
 			}
 
 			return source;
@@ -535,8 +531,8 @@ namespace skky.util
 			query = PagedList(query, ref pagesize, ref totalNumberOfRecords, ap, defaultPageSize);
 
 			//persons.Count % rows > 0 ? (persons.Count / rows) + 1 : (persons.Count / rows)
-			int totalNumberOfPages = totalNumberOfRecords / pagesize;
-			if ((totalNumberOfRecords % pagesize) > 0)
+			int totalNumberOfPages = (pagesize < 1 ? 0 : totalNumberOfRecords / pagesize);
+			if (pagesize < 1 || ((totalNumberOfRecords % pagesize) > 0))
 				++totalNumberOfPages;
 
 			if (null != gm)
@@ -554,8 +550,8 @@ namespace skky.util
 			int pagesize = (null != ap && ap.rows > 0 ? ap.rows : defaultPageSize);
 			int totalNumberOfRecords = query.Count();
 			//persons.Count % rows > 0 ? (persons.Count / rows) + 1 : (persons.Count / rows)
-			int totalNumberOfPages = totalNumberOfRecords / pagesize;
-			if ((totalNumberOfRecords % pagesize) > 0)
+			int totalNumberOfPages = (pagesize < 1 ? 0 : totalNumberOfRecords / pagesize);
+			if (pagesize < 1 || ((totalNumberOfRecords % pagesize) > 0))
 				++totalNumberOfPages;
 
 			// Handle paging.

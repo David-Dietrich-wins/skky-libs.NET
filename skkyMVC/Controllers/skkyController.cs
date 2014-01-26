@@ -145,7 +145,7 @@ namespace skkyMVC.Controllers
 			rs.AddError(errorMessage);
 			return ReturnStatusNotFound(rs);
 		}
-		protected ReturnStatus GetAddEditItemException(Exception ex, string objectName)
+		protected void AddEditItemException(Exception ex, string objectName)
 		{
 			rs.ErrorMessage.Add("Error editing item.");
 
@@ -162,10 +162,8 @@ namespace skkyMVC.Controllers
 					rs.Message.Add(ex.Message);
 			}
 			rs.Message.Add("Please try again.");
-
-			return rs;
 		}
-		protected ReturnStatus GetEmptyFieldError(string operation, string objectName, string fieldName)
+		protected void AddEmptyFieldError(string operation, string objectName, string fieldName)
 		{
 			if (string.IsNullOrWhiteSpace(operation))
 				operation = "adding";
@@ -174,10 +172,8 @@ namespace skkyMVC.Controllers
 
 			rs.Message.Add(fieldName + " cannot be empty.");
 			rs.Message.Add("Please try again.");
-
-			return rs;
 		}
-		protected ReturnStatus GetNumberError(string operation, string field, string rate, string objectName)
+		protected void AddNumberError(string operation, string field, string rate, string objectName)
 		{
 			if (string.IsNullOrWhiteSpace(operation))
 				operation = "adding";
@@ -191,8 +187,6 @@ namespace skkyMVC.Controllers
 
 			rs.Message.Add(s);
 			rs.Message.Add("Please try again.");
-
-			return rs;
 		}
 		#endregion
 
