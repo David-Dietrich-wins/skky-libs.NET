@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using skky.util;
 
 namespace skkyMVC.Models
 {
@@ -167,6 +168,49 @@ namespace skkyMVC.Models
 			DateTime dtMonth = getMonthBasedDateTime(string.Empty);
 
 			return dtMonth.Month;
+		}
+
+		/// <summary>
+		/// Returns a new DateTime with the first day of the month and year passed in.
+		/// </summary>
+		/// <param name="monthYear">Month year string.</param>
+		/// <returns>DateTime of the month/year passed in. If monthYear is invalid, returns the first day of the previous month</returns>
+		public static DateTime GetStartDateFromMonthYear(string monthYear, bool usePreviousMonthIfBadString = true)
+		{
+			DateTime? dt = monthYear.ToNullableDateTime();
+			if (null == dt)
+			{
+				DateTime dtNow = DateTime.Now;
+				if (usePreviousMonthIfBadString)
+					dt = dtNow.AddMonths(-1);
+				else
+					dt = dtNow;
+			}
+
+			dt = new DateTime(dt.Value.Year, dt.Value.Month, 1);
+
+			return dt.Value;
+		}
+
+		/// <summary>
+		/// We want to set everything to the first of the next month passed in.
+		/// If an empty DateTime is passed in, use the current month.
+		/// </summary>
+		/// <param name="dt">A month and year DateTime to get the next month for.</param>
+		/// <returns>A month and year one month ahead with the day being the first.</returns>
+		public static DateTime GetFirstDayOfNextMonth(DateTime? dt)
+		{
+			if (null == dt)
+			{
+				DateTime dtNow = DateTime.Now;
+				dt = new DateTime(dtNow.Year, dtNow.Month, 1);
+			}
+			else
+			{
+				dt = new DateTime(dt.Value.Year, dt.Value.Month, 1);
+			}
+
+			return dt.Value.AddMonths(1);
 		}
 
 		#region JqGrid support methods
