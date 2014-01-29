@@ -146,6 +146,13 @@ namespace skky.util
 				ConvertToStandardDouble(listStringIntDouble, converter);
 		}
 
+		public static string SingleQuoteGuidList(IEnumerable<Guid> guids, bool addSingleQuotesAroundSources = false, string defaultIfNone = null)
+		{
+			if (null == guids || !guids.Any())
+				return string.Empty;
+
+			return SingleQuoteStringList(guids.Select(x => x.ToString()));
+		}
 		public static string SingleQuoteStringList(IEnumerable<string> strs, bool addSingleQuotesAroundSources = false, string defaultIfNone = null)
 		{
 			string str = string.Empty;

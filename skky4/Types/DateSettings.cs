@@ -23,6 +23,22 @@ namespace skky.Types
 		public DateSettings()
 		{ }
 
+		public static DateSettings GetDefault()
+		{
+			return new DateSettings
+			{
+				TimeConfigOption = 1,
+				TimeFrame = CONST_prev,
+				TimePeriod = CONST_week,
+				NumberOfPeriods = 2,
+			};
+		}
+
+		public bool IsEmpty()
+		{
+			return (this == new DateSettings());
+		}
+
 		public override int GetHashCode()
 		{
 			return NumberOfDays.GetHashCode() ^ NumberOfPeriods.GetHashCode() ^ GetStartDateTime().GetHashCode() ^ GetEndDateTime().GetHashCode();
@@ -210,11 +226,16 @@ namespace skky.Types
 			}
 			else
 			{
+				// Remove any trailing s's.
+				string timePeriod = (TimePeriod ?? string.Empty).ToLower();
+				if(timePeriod.EndsWith("s"))
+					timePeriod = timePeriod.Substring(0, timePeriod.Length - 1);
+
 				DateTime current = DateTime.Now;
 				switch ((TimeFrame ?? string.Empty).Left(4).ToLower())
 				{
 					case CONST_prev:
-						switch ((TimePeriod ?? string.Empty).ToLower())
+						switch (timePeriod)
 						{
 							case CONST_week:
 								return current.AddDays(-7 * NumberOfPeriods).Date;
@@ -232,7 +253,7 @@ namespace skky.Types
 						}
 						//break;
 					case CONST_toda:	// todate
-						switch ((TimePeriod ?? string.Empty).ToLower())
+						switch (timePeriod)
 						{
 							case CONST_week:
 								return current.AddDays((-7 * (NumberOfPeriods - 1)) + (-1 * (int)current.DayOfWeek) + 1).Date;
@@ -250,7 +271,7 @@ namespace skky.Types
 						}
 						//break;
 					default:	// past
-						switch ((TimePeriod ?? string.Empty).ToLower())
+						switch (timePeriod)
 						{
 							case CONST_week:
 								return current.AddDays(-7 * NumberOfPeriods).Date;
@@ -278,6 +299,18 @@ namespace skky.Types
 		public int GetStartDateKey()
 		{
 			return GetStartDate().ToDateKey();
+		}
+		public long GetStartDateTicks()
+		{
+			return GetStartDate().Ticks;
+		}
+		public long? GetStartDateJsMillis()
+		{
+			DateTime? dt = GetStartDateWithNull();
+			if (null == dt)
+				return null;
+
+			return dt.Value.ToJavaScriptMilliseconds();
 		}
 		public DateTime? GetStartDateWithNull()
 		{
@@ -335,11 +368,16 @@ namespace skky.Types
 			}
 			else
 			{
+				// Remove any trailing s's.
+				string timePeriod = (TimePeriod ?? string.Empty).ToLower();
+				if (timePeriod.EndsWith("s"))
+					timePeriod = timePeriod.Substring(0, timePeriod.Length - 1);
+
 				DateTime current = DateTime.Now;
 				switch ((TimeFrame ?? string.Empty).Left(4).ToLower())
 				{
 					case CONST_prev:
-						switch ((TimePeriod ?? string.Empty).ToLower())
+						switch (timePeriod)
 						{
 							case CONST_week:
 								return current.AddDays((-1 * (int)current.DayOfWeek) + 1).Date;
@@ -371,6 +409,18 @@ namespace skky.Types
 		public int GetEndDateKey()
 		{
 			return GetEndDate().ToDateKey();
+		}
+		public long GetEndDateTicks()
+		{
+			return GetEndDate().Ticks;
+		}
+		public long? GetEndDateJsMillis()
+		{
+			DateTime? dt = GetEndDateWithNull();
+			if (null == dt)
+				return null;
+
+			return dt.Value.ToJavaScriptMilliseconds();
 		}
 		public DateTime? GetEndDateWithNull()
 		{
@@ -406,7 +456,7 @@ namespace skky.Types
 			return s;
 		}
 
-		public string getDateText(bool forHTML = true)
+		public string GetDateText(bool forHTML = true)
 		{
 			string s = string.Empty;
 

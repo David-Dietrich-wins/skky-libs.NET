@@ -129,18 +129,17 @@ namespace skky.Types
 
 		//-DD 1/19/13 - Need to have access to UserWebSettings and ChartSettings.
 		[DataMember]
-		public List<string> SelectedSources { get; set; }
+		public List<Guid> SelectedSources { get; set; }
 
 		[DataMember]
 		public bool ShowAllSources { get; set; }
 
-		public List<string> GetSelectedSources()
+		public List<Guid> GetSelectedSources()
 		{
 			if (ShowAllSources || (null != SelectedSources && SelectedSources.Count() < 1))
 				return null;
 
 			return SelectedSources;
 		}
-
 	}
 }

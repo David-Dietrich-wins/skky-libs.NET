@@ -9,30 +9,26 @@ namespace skky.util
 {
 	public static class Mail
 	{
-		public static void Send(string to, string cc, string subject, string body, List<string> attachmentFileNames = null)
+		public static void Send(string to, string cc, string subject, string body, IEnumerable<string> attachmentFileNames = null)
 		{
-			Send(null, to, cc, subject, body, attachmentFileNames);
-		}
-		public static void Send(string from, string to, string cc, string subject, string body, List<string> attachmentFileNames = null)
-		{
-			string[] toArray = new string[1];
-			toArray[0] = to;
+			List<string> toArray = new List<string>();
+			toArray.Add(to);
 
-			string[] ccArray = new string[string.IsNullOrEmpty(cc) ? 0 : 1];
+			List<string> ccArray = new List<string>();
 			if (!string.IsNullOrEmpty(cc))
-				ccArray[0] = cc;
+				ccArray.Add(cc);
 
-			Send(from, toArray, ccArray, subject, body, attachmentFileNames);
+			Send(toArray, ccArray, subject, body, attachmentFileNames);
 		}
 
-		public static void Send(string from, string[] to, string[] cc, string subject, string body)
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body)
 		{
 			List<string> attachmentFileNames = null;
 
-			Send(from, to, cc, subject, body, attachmentFileNames);
+			Send(to, cc, subject, body, attachmentFileNames);
 		}
 
-		public static void Send(string from, string[] to, string[] cc, string subject, string body, string attachmentFileName)
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, string attachmentFileName)
 		{
 			List<string> attachmentFileNames = null;
 			if (!string.IsNullOrWhiteSpace(attachmentFileName))
@@ -41,25 +37,20 @@ namespace skky.util
 				attachmentFileNames.Add(attachmentFileName);
 			}
 
-			Send(from, to, cc, subject, body, attachmentFileNames);
+			Send(to, cc, subject, body, attachmentFileNames);
 		}
 
-		public static void Send(string from, string[] to, string[] cc, string subject, string body, List<string> attachmentFileNames)
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, IEnumerable<string> attachmentFileNames)
 		{
-			if(string.IsNullOrEmpty(from))
-				from = "skkyHost@skky.net";
-			//string emailHost = "mail.skky.net";
-
 			try
 			{
-				var objMail = new MailMessage();
-				objMail.From = new MailAddress(from.Trim());
+				var mm = new MailMessage();
 
 				if (null != to)
 				{
 					foreach (var toAddress in to)
 					{
-						objMail.To.Add(new MailAddress(toAddress.Trim()));
+						mm.To.Add(new MailAddress(toAddress.Trim()));
 					}
 				}
 
@@ -67,27 +58,27 @@ namespace skky.util
 				{
 					foreach (var ccAddress in cc)
 					{
-						objMail.CC.Add(new MailAddress(ccAddress.Trim()));
+						mm.CC.Add(new MailAddress(ccAddress.Trim()));
 					}
 				}
 
-				objMail.Subject = subject;
+				mm.Subject = subject;
 
-				objMail.IsBodyHtml = true;
-				objMail.Body = body;
+				mm.IsBodyHtml = true;
+				mm.Body = body;
 
 				if (null != attachmentFileNames && attachmentFileNames.Count() > 0)
 				{
 					foreach (var attachmentFileName in attachmentFileNames)
 					{
 						Attachment attachment = new Attachment(attachmentFileName);
-						objMail.Attachments.Add(attachment);
+						mm.Attachments.Add(attachment);
 					}
 				}
 
 				//var smtp = new System.Net.Mail.SmtpClient(emailHost);
 				var smtp = new SmtpClient();
-				smtp.Send(objMail);
+				smtp.Send(mm);
 			}
 			catch (Exception ex)
 			{

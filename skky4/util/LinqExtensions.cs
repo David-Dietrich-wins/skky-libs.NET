@@ -402,7 +402,7 @@ namespace skky.util
 
 			return condition;
 		}
-		public static IQueryable<T> SortedList<T>(this IQueryable<T> query, ActionParams ap, string sidxDefault, string sordDefault = "asc")
+		public static IQueryable<T> SortedList<T>(this IQueryable<T> query, ActionParams ap, string sidxDefault = null, string sordDefault = "asc")
 		{
 			if (null == ap)
 				ap = new ActionParams();

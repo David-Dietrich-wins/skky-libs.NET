@@ -11,6 +11,9 @@ namespace skky.util
 		public const string PublicDateFormat = "yyyy-MM-dd";
 		public const string PublicDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
 
+		public static readonly long DatetimeMinTimeTicks =
+		   (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
+
 		public static string ToPublicDateTimeFormat(this DateTime dt)
 		{
 			string result = null;
@@ -97,6 +100,11 @@ namespace skky.util
 				return null;
 
 			return (long)(dateTime.Value - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
+		}
+
+		public static long ToJavaScriptMilliseconds(this DateTime dt)
+		{
+			return (long)((dt.ToUniversalTime().Ticks - DatetimeMinTimeTicks) / 10000);
 		}
 	}
 }
