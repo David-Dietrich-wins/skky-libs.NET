@@ -46,10 +46,19 @@ namespace skky.util
 		/// Verifies that the directory exists first, if not then one is created.
 		/// </summary>
 		/// <param name="path">The full path name of the directory to create.</param>
+		/// <param name="isFileName">If this is a filename, only the directory part will be created.</param>
 		/// <returns>True or False indicator of whether the directory was created or not.</returns>
-		public static bool CreateDirectoryPath(string path)
+		public static bool CreateDirectoryPath(string path, bool isFileName = false)
 		{
 			bool created = false;
+
+			if (isFileName)
+			{
+				int offset = path.LastIndexOf(Path.DirectorySeparatorChar);
+				if (offset >= 0)
+					path = path.Left(offset);
+			}
+
 			if (!Directory.Exists(path))
 			{
 				created = true;
