@@ -140,6 +140,7 @@
     <Compile Include="util\Converters.cs" />
     <Compile Include="util\DateTimeHelper.cs" />
     <Compile Include="util\ExcelColumn.cs" />
+    <Compile Include="util\ExcelHelper.cs" />
     <Compile Include="util\ExcelSpreadsheet.cs" />
     <Compile Include="util\DcsWrapper.cs" />
     <Compile Include="util\EnvironmentHelper.cs" />
