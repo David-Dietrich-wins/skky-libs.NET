@@ -10,6 +10,8 @@ namespace skky.util
 	{
 		public const string PublicDateFormat = "yyyy-MM-dd";
 		public const string PublicDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
+
+		public const string CONST_DefaultDateFormat = ﻿"M/d/yy";
 		public const string CONST_DefaultDateTimeFormat = ﻿"M/d/yy h:mm:ss tt";
 
 		public static readonly string[] CONST_MonthNames = {
@@ -30,6 +32,15 @@ namespace skky.util
 		public static readonly long DatetimeMinTimeTicks =
 		   (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
 
+		public static string GetDefaultDateString(DateTime? dtDateTime)
+		{
+			if (dtDateTime.HasValue && dtDateTime.Value != DateTime.MinValue)
+			{
+				return dtDateTime.Value.ToString(CONST_DefaultDateFormat);
+			}
+
+			return string.Empty;
+		}
 		public static string GetDefaultDateTimeString(DateTime? dtDateTime)
 		{
 			if (dtDateTime.HasValue && dtDateTime.Value != DateTime.MinValue)
