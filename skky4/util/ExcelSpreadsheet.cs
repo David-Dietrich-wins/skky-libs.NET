@@ -308,7 +308,8 @@ namespace skky.util
 
 				//** run the query
 				cmd = new OleDbCommand(query, workbook.ExcelConnection);
-				cmd.ExecuteNonQuery();
+				int numRowsModified = cmd.ExecuteNonQuery();
+				skky.util.Trace.Information(numRowsModified + " - " + query);
 			}
 
 			//** close the connection

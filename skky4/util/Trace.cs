@@ -46,7 +46,15 @@ namespace skky.util
 			return msg;
 		}
 
-		public static string GetExceptionMessageString(Exception ex, bool showAsHTML = false)
+		public static string GetBreak(bool showAsHtml = false)
+		{
+			if (showAsHtml)
+				return "<br />";
+
+			return "\n";
+		}
+
+		public static string GetExceptionMessageString(Exception ex, bool showAsHtml = false)
 		{
 			string str = string.Empty;
 			if (null != ex)
@@ -54,12 +62,12 @@ namespace skky.util
 				str = ex.Message;
 				if (null != ex.InnerException)
 				{
-					if (showAsHTML)
+					if (showAsHtml)
 						str += "<br />";
 					else
 						str += "\n";
 
-					str += GetExceptionMessageString(ex.InnerException);
+					str += GetBreak(showAsHtml) + GetExceptionMessageString(ex.InnerException);
 				}
 			}
 

@@ -9,7 +9,7 @@ namespace skky.util
 {
 	public static class Mail
 	{
-		public static void Send(string to, string cc, string subject, string body, IEnumerable<string> attachmentFileNames = null)
+		public static void Send(string to, string cc, string subject, string body, IEnumerable<string> attachmentFileNames = null, string from = "")
 		{
 			List<string> toArray = new List<string>();
 			toArray.Add(to);
@@ -18,17 +18,17 @@ namespace skky.util
 			if (!string.IsNullOrEmpty(cc))
 				ccArray.Add(cc);
 
-			Send(toArray, ccArray, subject, body, attachmentFileNames);
+			Send(toArray, ccArray, subject, body, attachmentFileNames, from);
 		}
 
-		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body)
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, string from = "")
 		{
 			List<string> attachmentFileNames = null;
 
-			Send(to, cc, subject, body, attachmentFileNames);
+			Send(to, cc, subject, body, attachmentFileNames, from);
 		}
 
-		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, string attachmentFileName)
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, string attachmentFileName, string from = "")
 		{
 			List<string> attachmentFileNames = null;
 			if (!string.IsNullOrWhiteSpace(attachmentFileName))
@@ -37,14 +37,17 @@ namespace skky.util
 				attachmentFileNames.Add(attachmentFileName);
 			}
 
-			Send(to, cc, subject, body, attachmentFileNames);
+			Send(to, cc, subject, body, attachmentFileNames, from);
 		}
 
-		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, IEnumerable<string> attachmentFileNames)
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, IEnumerable<string> attachmentFileNames, string from = "")
 		{
 			try
 			{
 				var mm = new MailMessage();
+
+				if (!string.IsNullOrWhiteSpace(from))
+					mm.From = new MailAddress(from);
 
 				if (null != to)
 				{
