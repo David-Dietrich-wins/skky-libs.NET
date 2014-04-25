@@ -234,5 +234,29 @@ namespace skky.util
 
 			return dt.Value.AddMonths(1);
 		}
+
+		public static string TimeDifferenceMessage(DateTime dtStart, DateTime dtEnd)
+		{
+			string msg = string.Empty;
+			TimeSpan ts = dtEnd - dtStart;
+			if (ts.Minutes > 0)
+				msg += ts.Minutes.ToString() + "m";
+			if (ts.Seconds > 0 || ts.Minutes > 0)
+			{
+				if (!string.IsNullOrEmpty(msg))
+					msg += " ";
+
+				msg += ts.Seconds.ToString() + "s";
+			}
+			if (ts.Milliseconds > 0 || ts.Seconds > 0 || ts.Minutes > 0)
+			{
+				if (!string.IsNullOrEmpty(msg))
+					msg += " ";
+
+				msg += ts.Milliseconds.ToString() + "ms";
+			}
+
+			return msg;
+		}
 	}
 }

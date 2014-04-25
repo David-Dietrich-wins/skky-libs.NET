@@ -264,30 +264,6 @@ namespace skkyMVC.Controllers
 			string res = string.Format("/{0}", path.Replace(appPath, "").Replace("\\", "/"));
 			return res;
 		}
-		
-		public static string TimeDifferenceMessage(DateTime dtStart, DateTime dtEnd)
-		{
-			string msg = string.Empty;
-			TimeSpan ts = dtEnd - dtStart;
-			if (ts.Minutes > 0)
-				msg += ts.Minutes.ToString() + "m";
-			if (ts.Seconds > 0 || ts.Minutes > 0)
-			{
-				if (!string.IsNullOrEmpty(msg))
-					msg += " ";
-
-				msg += ts.Seconds.ToString() + "s";
-			}
-			if (ts.Milliseconds > 0 || ts.Seconds > 0 || ts.Minutes > 0)
-			{
-				if (!string.IsNullOrEmpty(msg))
-					msg += " ";
-
-				msg += ts.Milliseconds.ToString() + "ms";
-			}
-
-			return msg;
-		}
 ﻿
 		// Methods for returning common strings.
 		protected string getDecimalText(Decimal? d)
@@ -381,6 +357,24 @@ namespace skkyMVC.Controllers
 				throw new Exception("Unable to retrieve PDF: " + filename + ". The file could not be found.");
 
 			return GetFileResult(filename, System.Net.Mime.MediaTypeNames.Application.Pdf);
+		}
+
+		public List<int> GetCheckBoxInts(string ids)
+		{
+			List<string> chkboxStrings = GetCheckBoxStrings(ids);
+
+			List<int> chkboxInts = new List<int>();
+			foreach (var str in chkboxStrings)
+				chkboxInts.Add(str.ToInteger());
+
+			return chkboxInts;
+		}
+		public List<string> GetCheckBoxStrings(string ids)
+		{
+			ids = (ids ?? string.Empty).Trim().TrimStart('[').TrimEnd(']').Trim();
+			List<string> chkboxids = ids.ToStringList("\"");
+
+			return chkboxids;
 		}
 	}
 }
