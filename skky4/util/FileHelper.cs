@@ -68,6 +68,12 @@ namespace skky.util
 			return created;
 		}
 
+		/// <summary>
+		/// Return a string in the format yymmdd.
+		/// For example, February 15, 2005 would be 050215.
+		/// </summary>
+		/// <param name="dateTime">The DateTime to extract the date. If none is passed in, uses today's date.</param>
+		/// <returns>A string in the form yymmdd. For example, February 15, 2005 would be 050215.</returns>
 		public static string getFileDateStyle(DateTime? dateTime = null)
 		{
 			string fileDateStyle = string.Empty;

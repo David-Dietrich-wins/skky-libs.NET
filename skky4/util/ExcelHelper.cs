@@ -22,12 +22,26 @@ namespace skky.util
 				}
 				catch (Exception ex)
 				{
-					skky.util.Trace.Warning("Error getting Excel row named: " + columnName + ".", ex);
+					skky.util.Trace.Warning("Error getting Excel column named: " + columnName + ".", ex);
 					throw ex;
 				}
 			}
 
 			return s;
+		}
+		public static string GetExcelColumnStringSafe(DataRow row, string columnName)
+		{
+			if (null != row && !string.IsNullOrEmpty(columnName))
+			{
+				try
+				{
+					return GetExcelColumnString(row, columnName);
+				}
+				catch
+				{ }
+			}
+
+			return string.Empty;
 		}
 		public static bool? GetExcelColumnBoolean(DataRow row, string columnName)
 		{
