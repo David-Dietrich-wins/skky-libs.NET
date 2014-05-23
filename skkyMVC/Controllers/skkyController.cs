@@ -264,6 +264,11 @@ namespace skkyMVC.Controllers
 			string res = string.Format("/{0}", path.Replace(appPath, "").Replace("\\", "/"));
 			return res;
 		}
+		
+		public static string TimeDifferenceMessage(DateTime dtStart, DateTime dtEnd)
+		{
+			return DateTimeHelper.TimeDifferenceMessage(dtStart, dtEnd);
+		}
 ﻿
 		// Methods for returning common strings.
 		protected string getDecimalText(Decimal? d)
