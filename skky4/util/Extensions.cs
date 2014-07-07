@@ -248,6 +248,15 @@ namespace skky.util
 
 			return str + "=" + value.WrapInQuotes();
 		}
+
+		public static string LogValue(this string str, string value, string delimiter = ": ", string suffix = ".\n")
+		{
+			string msg = (str ?? string.Empty) + (delimiter ?? string.Empty) + (value ?? string.Empty);
+			msg += (suffix ?? string.Empty);
+
+			return msg;
+		}
+
 		public static bool IsNumber(this string str)
 		{
 			if (string.IsNullOrEmpty(str))

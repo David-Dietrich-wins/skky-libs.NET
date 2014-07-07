@@ -18,14 +18,14 @@ namespace skky.util
 			if (!string.IsNullOrEmpty(cc))
 				ccArray.Add(cc);
 
-			Send(toArray, ccArray, subject, body, attachmentFileNames, from);
+			Send(toArray, ccArray, null, subject, body, attachmentFileNames, from);
 		}
 
 		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, string from = "")
 		{
 			List<string> attachmentFileNames = null;
 
-			Send(to, cc, subject, body, attachmentFileNames, from);
+			Send(to, cc, null, subject, body, attachmentFileNames, from);
 		}
 
 		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, string attachmentFileName, string from = "")
@@ -37,10 +37,10 @@ namespace skky.util
 				attachmentFileNames.Add(attachmentFileName);
 			}
 
-			Send(to, cc, subject, body, attachmentFileNames, from);
+			Send(to, cc, null, subject, body, attachmentFileNames, from);
 		}
 
-		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, IEnumerable<string> attachmentFileNames, string from = "")
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, IEnumerable<string> bcc, string subject, string body, IEnumerable<string> attachmentFileNames = null, string from = "")
 		{
 			try
 			{
@@ -57,11 +57,19 @@ namespace skky.util
 					}
 				}
 
-				if(null != cc)
+				if (null != cc)
 				{
 					foreach (var ccAddress in cc)
 					{
 						mm.CC.Add(new MailAddress(ccAddress.Trim()));
+					}
+				}
+
+				if (null != bcc)
+				{
+					foreach (var address in bcc)
+					{
+						mm.Bcc.Add(new MailAddress(address.Trim()));
 					}
 				}
 
