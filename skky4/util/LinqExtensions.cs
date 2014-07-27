@@ -25,7 +25,7 @@ namespace skky.util
 
 			return source;
 		}
-		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, string sortBy, string sortDirection = "asc")
+		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, string sortBy, string sortDirection = ActionParams.CONST_sordAsc)
 		{
 			if (!string.IsNullOrEmpty(sortBy))
 			{
@@ -124,10 +124,10 @@ namespace skky.util
 		/// <param name="query">The query.</param>
 		/// <param name="sortColumn">The sort column.</param>
 		/// <param name="ascending">if set to true [ascending].</param>
-		public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, string sortColumn, string direction)
+		public static IQueryable<T> OrderBy<T>(this IQueryable<T> query, string sortColumn, string direction = ActionParams.CONST_sordAsc)
 		{
 			string methodName = string.Format("OrderBy{0}",
-				(direction ?? string.Empty).ToLower() == "desc" ? "Descending" : "");
+				(direction ?? string.Empty).ToLower() == ActionParams.CONST_sordDesc ? "Descending" : "");
 
 			ParameterExpression parameter = Expression.Parameter(query.ElementType, "p");
 
@@ -402,7 +402,7 @@ namespace skky.util
 
 			return condition;
 		}
-		public static IQueryable<T> SortedList<T>(this IQueryable<T> query, ActionParams ap, string sidxDefault = null, string sordDefault = "asc")
+		public static IQueryable<T> SortedList<T>(this IQueryable<T> query, ActionParams ap, string sidxDefault = null, string sordDefault = ActionParams.CONST_sordAsc)
 		{
 			if (null == ap)
 				ap = new ActionParams();
@@ -456,14 +456,22 @@ namespace skky.util
 			}
 
 			if (!string.IsNullOrWhiteSpace(ap.sidx) && "\"null\"" != ap.sidx && "null" != ap.sidx && "'null'" != ap.sidx)
+			{
 				sidxDefault = ap.sidx;
-			if (!string.IsNullOrWhiteSpace(ap.sord))
+
+				// We only want to change the sort order if there is and index column.
+				if (!string.IsNullOrWhiteSpace(ap.sord))
+					sordDefault = ap.sord;
+			}
+
+			if(string.IsNullOrWhiteSpace(sordDefault))
 				sordDefault = ap.sord;
+			
 
 			if (!string.IsNullOrEmpty(sidxDefault))
 			{
 				if (string.IsNullOrEmpty(sordDefault))
-					sordDefault = "asc";
+					sordDefault = ActionParams.CONST_sordAsc;
 				var orderbyquery = query.OrderBy<T>(sidxDefault, sordDefault);
 				query = orderbyquery;
 			}
