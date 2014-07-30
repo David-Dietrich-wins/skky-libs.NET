@@ -328,6 +328,14 @@ namespace skky.util
 
 			return 0;
 		}
+		public static float ToFloat(this string str)
+		{
+			float d = 0;
+			if (float.TryParse(GetIntegerReady(str), out d))
+				return d;
+
+			return 0;
+		}
 		public static decimal ToDecimal(this string str)
 		{
 			decimal d = 0;
