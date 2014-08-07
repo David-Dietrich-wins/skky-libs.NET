@@ -62,6 +62,13 @@ namespace skky.util
 			return result;
 		}
 
+		public static DateTime? ToDateTimeNullable(this string str)
+		{
+			if (string.IsNullOrWhiteSpace(str))
+				return null;
+
+			return str.ToDateTime();
+		}
 		public static DateTime ToDateTime(this string str)
 		{
 			DateTime date = DateTime.MinValue;
@@ -71,14 +78,7 @@ namespace skky.util
 
 			return DateTime.MinValue;
 		}
-		public static DateTime? ToNullableDateTime(this string str)
-		{
-			DateTime date = (str ?? string.Empty).ToDateTime();
-			if (date == DateTime.MinValue)
-				return null;
 
-			return date;
-		}
 		//public static DateTime GetDateTimeFromObject(this object o)
 		//{
 		//    if (o != null)
@@ -210,7 +210,7 @@ namespace skky.util
 		/// <returns>DateTime of the month/year passed in. If monthYear is invalid, returns the first day of the previous month</returns>
 		public static DateTime GetStartDateFromMonthYear(string monthYear, bool usePreviousMonthIfBadString = true)
 		{
-			DateTime? dt = monthYear.ToNullableDateTime();
+			DateTime? dt = monthYear.ToDateTimeNullable();
 			if (null == dt)
 			{
 				DateTime dtNow = DateTime.Now;

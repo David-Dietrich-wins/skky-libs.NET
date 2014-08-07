@@ -322,53 +322,13 @@ namespace skky.util
 			return sint.Trim().Replace(",", "");
 		}
 
-		public static double ToDouble(this string str)
-		{
-			double d = 0;
-			if (double.TryParse(GetIntegerReady(str), out d))
-				return d;
-
-			return 0;
-		}
-		public static float ToFloat(this string str)
-		{
-			float d = 0;
-			if (float.TryParse(GetIntegerReady(str), out d))
-				return d;
-
-			return 0;
-		}
-		public static decimal ToDecimal(this string str)
-		{
-			decimal d = 0;
-			if (decimal.TryParse(GetIntegerReady(str), out d))
-				return d;
-
-			return 0;
-		}
-		public static decimal? ToNullableDecimal(this string str)
+		#region Basic type converters
+		public static bool? ToBooleanNullable(this string str)
 		{
 			if (string.IsNullOrEmpty(str))
 				return null;
 
-			decimal d = ToDecimal(str);
-			return d;
-		}
-		public static int ToInteger(this string str)
-		{
-			int i = 0;
-			if (int.TryParse(GetIntegerReady(str), out i))
-				return i;
-
-			return 0;
-		}
-		public static long ToLong(this string str)
-		{
-			long l = 0;
-			if (long.TryParse(GetIntegerReady(str), out l))
-				return l;
-
-			return 0;
+			return str.ToBoolean();
 		}
 		public static bool ToBoolean(this string str)
 		{
@@ -410,6 +370,58 @@ namespace skky.util
 
 			return b;
 		}
+		public static decimal? ToDecimalNullable(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return null;
+
+			return ToDecimal(str);
+		}
+		public static decimal ToDecimal(this string str)
+		{
+			decimal d = 0;
+			if (decimal.TryParse(GetIntegerReady(str), out d))
+				return d;
+
+			return 0;
+		}
+		public static double? ToDoubleNullable(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return null;
+
+			return ToDouble(str);
+		}
+		public static double ToDouble(this string str)
+		{
+			double d = 0;
+			if (double.TryParse(GetIntegerReady(str), out d))
+				return d;
+
+			return 0;
+		}
+		public static float? ToFloatNullable(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return null;
+
+			return ToFloat(str);
+		}
+		public static float ToFloat(this string str)
+		{
+			float d = 0;
+			if (float.TryParse(GetIntegerReady(str), out d))
+				return d;
+
+			return 0;
+		}
+		public static Guid? ToGuidNullable(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return null;
+
+			return str.ToGuid();
+		}
 		public static Guid ToGuid(this string str)
 		{
 			Guid g;
@@ -418,6 +430,52 @@ namespace skky.util
 
 			return Guid.Empty;
 		}
+		public static int? ToIntegerNullable(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return null;
+
+			return str.ToInteger();
+		}
+		public static int ToInteger(this string str)
+		{
+			int i = 0;
+			if (int.TryParse(GetIntegerReady(str), out i))
+				return i;
+
+			return 0;
+		}
+		public static Guid? ToLongNullable(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return null;
+
+			return str.ToGuid();
+		}
+		public static long ToLong(this string str)
+		{
+			long l = 0;
+			if (long.TryParse(GetIntegerReady(str), out l))
+				return l;
+
+			return 0;
+		}
+		public static short? ToShortNullable(this string str)
+		{
+			if (string.IsNullOrEmpty(str))
+				return null;
+
+			return ToShort(str);
+		}
+		public static short ToShort(this string str)
+		{
+			short d = 0;
+			if (short.TryParse(GetIntegerReady(str), out d))
+				return d;
+
+			return 0;
+		}
+		#endregion
 
 		public static string ToHexString(this byte byteToHex)
 		{
@@ -690,6 +748,13 @@ namespace skky.util
 		#endregion
 
 		#region NameValueCollection
+		public static T FillObject<T>(this NameValueCollection coll, T item = default(T))
+		{
+			List<string> updatedFields;
+
+			return FillObject<T>(coll, item, out updatedFields);
+		}
+
 		/// <summary>
 		/// Fills an object from a NameValueCollection. Typically a web request form.
 		/// </summary>
@@ -697,14 +762,15 @@ namespace skky.util
 		/// <param name="coll">The NameValueCollection to pull data from.</param>
 		/// <param name="item">The object to fill. If null, a new object using the default constructor is generated.</param>
 		/// <returns>The filled object. Will never be null.</returns>
-		public static T FillObject<T>(this NameValueCollection coll, T item = default(T))
+		public static T FillObject<T>(this NameValueCollection coll, T item, out List<string> updatedFields)
 		{
+			if (null == coll)
+				throw new Exception("Null collection received when trying to save form data.");
+
 			if (null == item)
 				item = default(T);
 
-			// Wait to return the item after item is set.
-			if (null != coll)
-				return item;
+			updatedFields = new List<string>();
 
 			Type t = item.GetType();
 			foreach (string formDataKey in coll)
@@ -712,12 +778,14 @@ namespace skky.util
 				PropertyInfo pi = t.GetProperty(formDataKey, BindingFlags.Public | BindingFlags.Instance);
 				if (null != pi && pi.CanWrite)
 				{
+					updatedFields.Add(formDataKey);
+
 					string formDataValue = coll[formDataKey];
 
 					Type propType = pi.PropertyType;
 					if (propType.IsArray)
 					{
-						if (propType == typeof(int))
+						if (propType == typeof(int) || propType == typeof(System.Nullable<Int32>))
 							pi.SetValue(item, formDataValue.ToIntegerList());
 						else
 							pi.SetValue(item, formDataValue.ToStringList());
@@ -726,19 +794,39 @@ namespace skky.util
 					{
 						if (propType == typeof(bool))
 							pi.SetValue(item, formDataValue.ToBoolean());
+						else if (propType == typeof(System.Nullable<Boolean>))
+							pi.SetValue(item, formDataValue.ToBooleanNullable());
 						else if (propType == typeof(decimal))
 							pi.SetValue(item, formDataValue.ToDecimal());
+						else if (propType == typeof(System.Nullable<decimal>))
+							pi.SetValue(item, formDataValue.ToDecimalNullable());
 						else if (propType == typeof(double))
 							pi.SetValue(item, formDataValue.ToDouble());
-						else if (propType == typeof(float)
-							|| propType == typeof(Single)
-							|| propType == typeof(System.Nullable<Single>))
+						else if (propType == typeof(System.Nullable<double>))
+							pi.SetValue(item, formDataValue.ToDoubleNullable());
+						else if (propType == typeof(float) || propType == typeof(Single))
 							pi.SetValue(item, formDataValue.ToFloat());
-						else if (propType == typeof(int))
+						else if (propType == typeof(System.Nullable<float>) || propType == typeof(System.Nullable<Single>))
+							pi.SetValue(item, formDataValue.ToFloatNullable());
+						else if (propType == typeof(short))
+							pi.SetValue(item, formDataValue.ToShort());
+						else if (propType == typeof(System.Nullable<Int16>))
+							pi.SetValue(item, formDataValue.ToShortNullable());
+						else if (propType == typeof(int) || propType == typeof(Int32))
 							pi.SetValue(item, formDataValue.ToInteger());
+						else if (propType == typeof(System.Nullable<Int32>))
+							pi.SetValue(item, formDataValue.ToIntegerNullable());
+						else if (propType == typeof(long) || propType == typeof(Int64))
+							pi.SetValue(item, formDataValue.ToLong());
+						else if (propType == typeof(System.Nullable<Int64>))
+							pi.SetValue(item, formDataValue.ToLongNullable());
 						else if (propType == typeof(Guid))
 							pi.SetValue(item, formDataValue.ToGuid());
+						else if (propType == typeof(System.Nullable<Guid>))
+							pi.SetValue(item, formDataValue.ToGuidNullable());
 						else if (propType == typeof(DateTime))
+							pi.SetValue(item, formDataValue.ToDateTime());
+						else if (propType == typeof(System.Nullable<DateTime>))
 							pi.SetValue(item, formDataValue.ToDateTime());
 						else
 							pi.SetValue(item, formDataValue);
