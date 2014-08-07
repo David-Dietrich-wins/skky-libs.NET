@@ -9,6 +9,8 @@ using System.IO;
 using System.Drawing.Imaging;
 using System.Net.Mail;
 using System.Xml;
+using System.Collections.Specialized;
+using System.Reflection;
 
 namespace skky.util
 {
@@ -684,6 +686,67 @@ namespace skky.util
 					return true;
 
 			return false;
+		}
+		#endregion
+
+		#region NameValueCollection
+		/// <summary>
+		/// Fills an object from a NameValueCollection. Typically a web request form.
+		/// </summary>
+		/// <typeparam name="T">An object that has a default constructor.</typeparam>
+		/// <param name="coll">The NameValueCollection to pull data from.</param>
+		/// <param name="item">The object to fill. If null, a new object using the default constructor is generated.</param>
+		/// <returns>The filled object. Will never be null.</returns>
+		public static T FillObject<T>(this NameValueCollection coll, T item = default(T))
+		{
+			if (null == item)
+				item = default(T);
+
+			// Wait to return the item after item is set.
+			if (null != coll)
+				return item;
+
+			Type t = item.GetType();
+			foreach (string formDataKey in coll)
+			{
+				PropertyInfo pi = t.GetProperty(formDataKey, BindingFlags.Public | BindingFlags.Instance);
+				if (null != pi && pi.CanWrite)
+				{
+					string formDataValue = coll[formDataKey];
+
+					Type propType = pi.PropertyType;
+					if (propType.IsArray)
+					{
+						if (propType == typeof(int))
+							pi.SetValue(item, formDataValue.ToIntegerList());
+						else
+							pi.SetValue(item, formDataValue.ToStringList());
+					}
+					else
+					{
+						if (propType == typeof(bool))
+							pi.SetValue(item, formDataValue.ToBoolean());
+						else if (propType == typeof(decimal))
+							pi.SetValue(item, formDataValue.ToDecimal());
+						else if (propType == typeof(double))
+							pi.SetValue(item, formDataValue.ToDouble());
+						else if (propType == typeof(float)
+							|| propType == typeof(Single)
+							|| propType == typeof(System.Nullable<Single>))
+							pi.SetValue(item, formDataValue.ToFloat());
+						else if (propType == typeof(int))
+							pi.SetValue(item, formDataValue.ToInteger());
+						else if (propType == typeof(Guid))
+							pi.SetValue(item, formDataValue.ToGuid());
+						else if (propType == typeof(DateTime))
+							pi.SetValue(item, formDataValue.ToDateTime());
+						else
+							pi.SetValue(item, formDataValue);
+					}
+				}
+			}
+
+			return item;
 		}
 		#endregion
 	}
