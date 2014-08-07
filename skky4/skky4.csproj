@@ -92,6 +92,7 @@
     <Compile Include="Types\CallParams.cs" />
     <Compile Include="Types\IEntityObjectWithId.cs" />
     <Compile Include="Types\JqueryAutocomplete.cs" />
+    <Compile Include="Types\SkkyRepository.cs" />
     <Compile Include="Types\StringLong.cs" />
     <Compile Include="Types\StringIntGuid.cs" />
     <Compile Include="Types\StringObject.cs" />
