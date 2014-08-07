@@ -13,6 +13,7 @@ namespace skky.jqGrid
 		public const string CONST_ActionAdd = "add";
 		public const string CONST_ActionDelete = "del";
 		public const string CONST_ActionEdit = "edit";
+		public const string CONST_ActionUpdate = "update";
 
 		public const string CONST_sordAsc = "asc";
 		public const string CONST_sordDesc = "desc";

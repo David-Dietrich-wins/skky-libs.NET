@@ -16,23 +16,7 @@ namespace skkyWeb.util
 {
 	public static class Html
 	{
-		public const string Const_Break = "<br />";
-		public const string Const_Class = "class";
-		public const string Const_NbSp = "&nbsp;";
-		public const string Const_Strong = "strong";
-		public const string Const_Label = "label";
-		public const string Const_Style = "style";
-		public const string Const_table = "table";
-		public const string Const_td = "td";
-		public const string Const_tr = "tr";
-
-		public static string AddTagTD(string str)
-		{
-			if (string.IsNullOrEmpty(str))
-				str = Const_NbSp;
-
-			return XMLHelper.AddTag(Const_td, str);
-		}
+		#region WebControl implementations
 		public static string GetRawHTML(Control ctl)
 		{
 			if (ctl == null)
@@ -211,7 +195,7 @@ namespace skkyWeb.util
 
 		public static LiteralControl GetLiteralControl(string text)
 		{
-			return new LiteralControl(string.IsNullOrEmpty(text) ? Const_NbSp : text);
+			return new LiteralControl(string.IsNullOrEmpty(text) ? XMLHelper.CONST_NbSp : text);
 		}
 		public static Control AddChild(ControlCollection ctls, Control ctlToAdd)
 		{
@@ -231,7 +215,7 @@ namespace skkyWeb.util
 			if (ctls != null && !string.IsNullOrEmpty(str))
 			{
 				System.Web.UI.WebControls.Label label = new System.Web.UI.WebControls.Label();
-				label.Text = str + Const_Break;
+				label.Text = str + XMLHelper.CONST_Break;
 				ctls.Add(label);
 			}
 		}
@@ -297,7 +281,7 @@ namespace skkyWeb.util
 		}
 		public static void SetClass(this HtmlControl html, string className)
 		{
-			html.SetAttribute(Const_Class, className);
+			html.SetAttribute(XMLHelper.CONST_Class, className);
 		}
 
 		public static HtmlTableRow AddTableRowIfValue(HtmlTable tbl, string name, int value)
@@ -327,180 +311,6 @@ namespace skkyWeb.util
 			tbl.Rows.Add(tr);
 			return tr;
 		}
-
-		public static string Base64EncodeString(string strUrl)
-		{
-			return Convert.ToBase64String(Encoding.ASCII.GetBytes(strUrl));
-		}
-		public static string Base64EncodeGuid(Guid guid)
-		{
-			return Base64EncodeString(guid.ToString());
-		}
-
-		public static string Base64DecodeString(string strUrl)
-		{
-			return Encoding.ASCII.GetString(Convert.FromBase64String(strUrl));
-		}
-		public static Guid Base64DecodeGuid(string strUrl)
-		{
-			return new Guid(Base64DecodeString(strUrl));
-		}
-
-		//** base64 decodes a utf16 string thats been converted to utf8, then base64 encoded.  .net only deals in utf8 when base64 enc/decoding
-		public static string Utf16Base64Decode(string value)
-		{
-			var utf8value = Convert.FromBase64String(value);
-			return Encoding.Unicode.GetString(utf8value);
-		}
-
-		public static string Utf16Base64Encode(string value)
-		{
-			var utf8value = Encoding.UTF8.GetBytes(value);
-			return Convert.ToBase64String(utf8value);
-		}
-
-		public static string BuildHref(string text, string url)
-		{
-			return BuildHref(text, url, null);
-		}
-		public static string BuildHref(string text, string url, string target)
-		{
-			string str = string.Empty;
-			if (!string.IsNullOrEmpty(url))
-			{
-				if (!url.Contains("//"))
-					url = "http://" + url;
-
-				str = "<a";
-				str += XMLHelper.AddAttribute("href", url);
-				if (target != null)
-					str += XMLHelper.AddAttribute("target", string.IsNullOrEmpty(target) ? "_blank" : target);
-				str += ">";
-			}
-
-			if (!string.IsNullOrEmpty(text))
-			{
-				str += text;
-				str += "</a>";
-			}
-
-			return str;
-		}
-		public static string Href(string text, string url)
-		{
-			return Href(text, url, null);
-		}
-		public static string Href(string text, string url, string target)
-		{
-			string str = string.Empty;
-			if (!string.IsNullOrEmpty(url))
-			{
-				//if (!url.Contains("//"))
-				//	url = "http://" + url;
-
-				str = "<a";
-				str += XMLHelper.AddAttribute("href", url);
-				if (target != null)
-					str += XMLHelper.AddAttribute("target", string.IsNullOrEmpty(target) ? "_blank" : target);
-				str += ">";
-			}
-
-			if (!string.IsNullOrEmpty(text))
-			{
-				str += text;
-				str += "</a>";
-			}
-
-			return str;
-		}
-		public static string GetHREFImage(string alt, string url, string imagePath)
-		{
-			return GetHREFImage(alt, url, imagePath);
-		}
-		public static string GetHREFImage(string alt, string url, string imagePath, int width, int height)
-		{
-			string str = string.Empty;
-			if (!string.IsNullOrEmpty(url))
-			{
-				if (!url.Contains("//"))
-					url = "http://" + url;
-
-				str = "<a";
-				str += XMLHelper.AddAttribute("href", url);
-				str += XMLHelper.AddAttribute("target", "_blank");
-				str += ">";
-			}
-
-			str += BuildImg(imagePath, width, height, alt);
-
-			if (!string.IsNullOrEmpty(url))
-				str += "</a>";
-
-			return str;
-		}
-		public static string BuildImg(string imagePath, int width, int height, string alt)
-		{
-			string str = string.Empty;
-			if (string.IsNullOrEmpty(imagePath))
-			{
-				str = alt;
-			}
-			else
-			{
-				str += "<img";
-				str += XMLHelper.AddAttribute("src", imagePath);
-				if (height > 0)
-					str += XMLHelper.AddAttribute("height", height.ToString());
-				if (width > 0)
-					str += XMLHelper.AddAttribute("width", width.ToString());
-				str += XMLHelper.AddAttribute("alt", alt);
-				str += XMLHelper.AddAttribute("border", "0");
-				str += " />";
-			}
-
-			return str;
-		}
-
-		public static string Strong(string str)
-		{
-			return XMLHelper.AddTag(Const_Strong, str);
-		}
-		public static string Bold(string str)
-		{
-			return XMLHelper.AddTag("b", str);
-		}
-		public static string Label(string str, Color color)
-		{
-			return XMLHelper.AddTag(Const_Label, str, Const_Style, "background-color:" + color.ToHtmlString() + ";");
-		}
-
-		public static string PadRightNbsp(string s, int totalLength)
-		{
-			string str = s ?? string.Empty;
-			int spacesToAdd = 1;
-			if (str.Length < totalLength)
-				spacesToAdd = totalLength - str.Length;
-
-			for(int i = 0; i < spacesToAdd; ++i)
-			{
-				str += Const_NbSp;
-			}
-
-			return str;
-		}
-
-		public static string buildURL(string startURL, string file)
-		{
-			if (startURL == null)
-				startURL = "";
-
-			if (file == null)
-				file = "";
-
-			if (startURL.EndsWith("/") && file.StartsWith("/"))
-				file = file.Mid(1);
-
-			return startURL + file;
-		}
+		#endregion
 	}
 }

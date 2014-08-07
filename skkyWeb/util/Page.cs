@@ -241,7 +241,7 @@ namespace skkyWeb.util
 
 		private void WriteMessageLabel(string msg, Color color)
 		{
-			Response.Write(Html.Label(msg, color));
+			Response.Write(XMLHelper.Label(msg, color));
 		}
 		protected void WriteResponseMessages()
 		{

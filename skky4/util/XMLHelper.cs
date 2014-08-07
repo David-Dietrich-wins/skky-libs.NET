@@ -7,12 +7,23 @@ using System.Xml.Serialization;
 using System.Xml;
 using System.Xml.Linq;
 using System.Runtime.Serialization;
+using System.Drawing;
 
 namespace skky.util
 {
 	public static class XMLHelper
 	{
-		#region Extenstion Methods
+		public const string CONST_Break = "<br />";
+		public const string CONST_Class = "class";
+		public const string CONST_NbSp = "&nbsp;";
+		public const string CONST_Strong = "strong";
+		public const string CONST_Label = "label";
+		public const string CONST_Style = "style";
+		public const string CONST_table = "table";
+		public const string CONST_td = "td";
+		public const string CONST_tr = "tr";
+
+		#region Extension Methods
 		public static void WriteHrTag(this XmlWriter writer)
 		{
 			writer.WriteStartElement("hr");
@@ -91,11 +102,7 @@ namespace skky.util
 		{
 			return StartTag(tagName, attributeName, attributeValue) + (value ?? string.Empty) + EndTag(tagName);
 		}
-		public static string AddTag(string tagName, string value)
-		{
-			return AddTag(tagName, value, string.Empty, string.Empty);
-		}
-		public static string AddTag(string tagName, string value, string className)
+		public static string AddTag(string tagName, string value, string className = null)
 		{
 			if(string.IsNullOrEmpty(className))
 				return AddTag(tagName, value, string.Empty, string.Empty);
@@ -125,7 +132,217 @@ namespace skky.util
 			return strXml;
 		}
 
-        public static T Deserialize<T>(string xml)
+		#region HTML encoding and decoding
+		public static string Base64EncodeString(string strUrl)
+		{
+			return Convert.ToBase64String(Encoding.ASCII.GetBytes(strUrl));
+		}
+		public static string Base64EncodeGuid(Guid guid)
+		{
+			return Base64EncodeString(guid.ToString());
+		}
+
+		public static string Base64DecodeString(string strUrl)
+		{
+			return Encoding.ASCII.GetString(Convert.FromBase64String(strUrl));
+		}
+		public static Guid Base64DecodeGuid(string strUrl)
+		{
+			return new Guid(Base64DecodeString(strUrl));
+		}
+
+		//** base64 decodes a utf16 string thats been converted to utf8, then base64 encoded.  .net only deals in utf8 when base64 enc/decoding
+		public static string Utf16Base64Decode(string value)
+		{
+			var utf8value = Convert.FromBase64String(value);
+			return Encoding.Unicode.GetString(utf8value);
+		}
+
+		public static string Utf16Base64Encode(string value)
+		{
+			var utf8value = Encoding.UTF8.GetBytes(value);
+			return Convert.ToBase64String(utf8value);
+		}
+		#endregion
+
+		#region string based HTML builders
+		public static string AddTagTD(string str, string className = null)
+		{
+			if (string.IsNullOrEmpty(str))
+				str = CONST_NbSp;
+
+			return AddTag(CONST_td, str, className);
+		}
+
+		public static string AddTableRowIfValue(string name, int value, string tdclass = null)
+		{
+			if (value == 0)
+				return string.Empty;
+
+			return AddTableRow(name, value.ToString());
+		}
+		public static string AddTableRowIfValue(string name, string value, string tdclass = null)
+		{
+			if (string.IsNullOrEmpty(value))
+				return string.Empty;
+
+			return AddTableRow(name, value, tdclass);
+		}
+		public static string AddTableRow(string name, string value, string tdclass = null, string trclass = null)
+		{
+			string s = AddTagTD(name, tdclass);
+			s += AddTagTD(value, tdclass);
+
+			return AddTag(CONST_tr, s, trclass);
+		}
+
+		public static string BuildHref(string text, string url)
+		{
+			return BuildHref(text, url, null);
+		}
+		public static string BuildHref(string text, string url, string target)
+		{
+			string str = string.Empty;
+			if (!string.IsNullOrEmpty(url))
+			{
+				if (!url.Contains("//"))
+					url = "http://" + url;
+
+				str = "<a";
+				str += AddAttribute("href", url);
+				if (target != null)
+					str += AddAttribute("target", string.IsNullOrEmpty(target) ? "_blank" : target);
+				str += ">";
+			}
+
+			if (!string.IsNullOrEmpty(text))
+			{
+				str += text;
+				str += "</a>";
+			}
+
+			return str;
+		}
+		public static string Href(string text, string url)
+		{
+			return Href(text, url, null);
+		}
+		public static string Href(string text, string url, string target)
+		{
+			string str = string.Empty;
+			if (!string.IsNullOrEmpty(url))
+			{
+				//if (!url.Contains("//"))
+				//	url = "http://" + url;
+
+				str = "<a";
+				str += AddAttribute("href", url);
+				if (target != null)
+					str += AddAttribute("target", string.IsNullOrEmpty(target) ? "_blank" : target);
+				str += ">";
+			}
+
+			if (!string.IsNullOrEmpty(text))
+			{
+				str += text;
+				str += "</a>";
+			}
+
+			return str;
+		}
+		public static string GetHREFImage(string alt, string url, string imagePath)
+		{
+			return GetHREFImage(alt, url, imagePath);
+		}
+		public static string GetHREFImage(string alt, string url, string imagePath, int width, int height)
+		{
+			string str = string.Empty;
+			if (!string.IsNullOrEmpty(url))
+			{
+				if (!url.Contains("//"))
+					url = "http://" + url;
+
+				str = "<a";
+				str += AddAttribute("href", url);
+				str += AddAttribute("target", "_blank");
+				str += ">";
+			}
+
+			str += BuildImg(imagePath, width, height, alt);
+
+			if (!string.IsNullOrEmpty(url))
+				str += "</a>";
+
+			return str;
+		}
+		public static string BuildImg(string imagePath, int width, int height, string alt)
+		{
+			string str = string.Empty;
+			if (string.IsNullOrEmpty(imagePath))
+			{
+				str = alt;
+			}
+			else
+			{
+				str += "<img";
+				str += AddAttribute("src", imagePath);
+				if (height > 0)
+					str += AddAttribute("height", height.ToString());
+				if (width > 0)
+					str += AddAttribute("width", width.ToString());
+				str += AddAttribute("alt", alt);
+				str += AddAttribute("border", "0");
+				str += " />";
+			}
+
+			return str;
+		}
+
+		public static string Strong(string str)
+		{
+			return AddTag(CONST_Strong, str);
+		}
+		public static string Bold(string str)
+		{
+			return AddTag("b", str);
+		}
+		public static string Label(string str, Color color)
+		{
+			return AddTag(CONST_Label, str, CONST_Style, "background-color:" + color.ToHtmlString() + ";");
+		}
+
+		public static string PadRightNbsp(string s, int totalLength)
+		{
+			string str = s ?? string.Empty;
+			int spacesToAdd = 1;
+			if (str.Length < totalLength)
+				spacesToAdd = totalLength - str.Length;
+
+			for (int i = 0; i < spacesToAdd; ++i)
+			{
+				str += CONST_NbSp;
+			}
+
+			return str;
+		}
+
+		public static string buildURL(string startURL, string file)
+		{
+			if (startURL == null)
+				startURL = "";
+
+			if (file == null)
+				file = "";
+
+			if (startURL.EndsWith("/") && file.StartsWith("/"))
+				file = file.Mid(1);
+
+			return startURL + file;
+		}
+		#endregion
+
+		#region XML Serialization
+		public static T Deserialize<T>(string xml)
 		{
 			T inst;
 			using (StringReader sr = new StringReader(xml))
@@ -214,5 +431,6 @@ namespace skky.util
 
 			return doc;
 		}
+		#endregion
 	}
 }
