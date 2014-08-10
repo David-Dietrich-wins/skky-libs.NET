@@ -208,7 +208,7 @@ namespace skky.util
 		/// </summary>
 		/// <param name="monthYear">Month year string.</param>
 		/// <returns>DateTime of the month/year passed in. If monthYear is invalid, returns the first day of the previous month</returns>
-		public static DateTime GetStartDateFromMonthYear(string monthYear, bool usePreviousMonthIfBadString = true)
+		public static DateTime GetDateFromMonthYear(string monthYear, bool usePreviousMonthIfBadString = true)
 		{
 			DateTime? dt = monthYear.ToDateTimeNullable();
 			if (null == dt)
