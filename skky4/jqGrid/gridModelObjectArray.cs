@@ -22,6 +22,11 @@ namespace skky.jqGrid
 				id = oid;
 				cell = new object[numCells];
 			}
+			public Row(object oid, object[] cells)
+			{
+				id = oid;
+				cell = cells;
+			}
 
 			public Row(int numCells)
 				: this(null, numCells)
@@ -35,6 +40,13 @@ namespace skky.jqGrid
 		public Row getNewRow(int numCells)
 		{
 			return new Row(numCells);
+		}
+		public Row AddRow(object rowId, object[] objects)
+		{
+			Row row = new Row(rowId, objects);
+			rows.Add(row);
+
+			return row;
 		}
 
 		[DataMember]
