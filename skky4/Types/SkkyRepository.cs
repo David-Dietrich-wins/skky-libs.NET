@@ -15,7 +15,10 @@ namespace skky.Types
 		public const string CONST_Country = "Country";
 		public const string CONST_Created = "Created";
 		public const string CONST_CreationDateTime = "CreationDateTime";
+		public const string CONST_DateKey = "DateKey";
+		public const string CONST_Description = "Description";
 		public const string CONST_Email = "Email";
+		public const string CONST_Enabled = "Enabled";
 		public const string CONST_Exception = "Exception";
 		public const string CONST_Filename = "Filename";
 		public const string CONST_FirstName = "FirstName";
@@ -25,7 +28,9 @@ namespace skky.Types
 		public const string CONST_LastName = "LastName";
 		public const string CONST_LastUpdatedDateTime = "LastUpdatedDateTime";
 		public const string CONST_MiddleName = "MiddleName";
+		public const string CONST_Name = "Name";
 		public const string CONST_NickName = "NickName";
+		public const string CONST_Price = "Price";
 		public const string CONST_PropertyName = "PropertyName";
 		public const string CONST_Success = "Success";
 		public const string CONST_Suffix = "Suffix";
