@@ -80,6 +80,14 @@ namespace skky.Types
 		[DataMember]
 		public List<string> ErrorMessage { get; set; }
 
+		public string GetErrorMessage()
+		{
+			if (HasErrors())
+				return string.Join(", ", ErrorMessage);
+
+			return string.Empty;
+		}
+
 		public static ReturnStatus AddExceptionErrorMessage(ReturnStatus rs, Exception ex)
 		{
 			string exceptionMessage = skky.util.Trace.GetExceptionMessageString(ex);

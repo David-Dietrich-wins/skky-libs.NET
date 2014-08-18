@@ -12,6 +12,7 @@ using skky.jqGrid;
 using System.Text;
 using System.Web.UI;
 using System.IO;
+using System.Runtime.CompilerServices;
 
 namespace skkyMVC.Controllers
 {
@@ -102,8 +103,10 @@ namespace skkyMVC.Controllers
 
 			return Content(str);
 		}
-		protected JsonResult NotAcceptableStatus(Exception ex)
+		protected JsonResult NotAcceptableStatus(Exception ex, string methodName = null, [CallerMemberName]string callerMethodName = "")
 		{
+			TraceException(string.IsNullOrEmpty(methodName) ? callerMethodName : methodName, ex);
+
 			Response.TrySkipIisCustomErrors = true;
 
 			// There was some kind of error or exception.
