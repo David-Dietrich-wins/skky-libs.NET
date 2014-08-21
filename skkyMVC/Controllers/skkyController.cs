@@ -57,7 +57,7 @@ namespace skkyMVC.Controllers
 			return s;
 		}
 
-		public string AddGridExceptionToReturnStatus(string action, Exception ex, string actionType = "")
+		public string AddGridExceptionToReturnStatus(string action, Exception ex, string actionType = "", [CallerMemberName]string callerMethodName = "")
 		{
 			string str = "Exception while ";
 			switch (action)
@@ -76,17 +76,19 @@ namespace skkyMVC.Controllers
 
 			str += " ";
 			str += (string.IsNullOrWhiteSpace(actionType) ? "item" : actionType);
-			str += ".";
-			rs.ErrorMessage.Add(str);
+			//str += ".";
+			//rs.ErrorMessage.Add(str);
 
-			rs.AddExceptionErrorMessage(ex);
+			TraceException(callerMethodName, ex, str);
+
+			//rs.AddExceptionErrorMessage(ex);
 
 			return str;
 		}
 
 		#region HTTP Status returns
 		// Return Status errors and exceptions
-		protected JsonResult ReturnStatusConflictIfError(ReturnStatus rs, int rc)
+		protected JsonResult ReturnStatusConflictIfError(ReturnStatus rs, int rc = 0)
 		{
 			if(null == rs)
 				rs = new ReturnStatus(rc);

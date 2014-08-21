@@ -84,22 +84,5 @@ namespace skkyMVC.Models
 
 			return slis;
 		}
-
-		#region JqGrid support methods
-		public static string GetJqgridSafeString(string jqgridString)
-		{
-			string str = (jqgridString ?? string.Empty).Replace("'", "\\'");
-
-			return str;
-		}
-		public static string GetJqgridSelectItemString(int selectId, string selectValue, bool prependSemicolon = true)
-		{
-			string str = (prependSemicolon ? ";" : string.Empty);
-
-			str += selectId + ":" + GetJqgridSafeString(selectValue);
-
-			return str;
-		}
-		#endregion
 	}
 }

@@ -28,6 +28,17 @@ namespace skky.util
 			Send(to, cc, null, subject, body, attachmentFileNames, from);
 		}
 
+		public static void SendWithAttachment(IEnumerable<string> to, string subject, string body, string attachmentFileName, string from = "")
+		{
+			List<string> attachmentFileNames = null;
+			if (!string.IsNullOrWhiteSpace(attachmentFileName))
+			{
+				attachmentFileNames = new List<string>();
+				attachmentFileNames.Add(attachmentFileName);
+			}
+
+			Send(to, null, null, subject, body, attachmentFileNames, from);
+		}
 		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, string subject, string body, string attachmentFileName, string from = "")
 		{
 			List<string> attachmentFileNames = null;

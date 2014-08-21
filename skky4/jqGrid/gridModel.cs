@@ -30,5 +30,22 @@ namespace skky.jqGrid
 
 		[DataMember]
 		public List<Row> rows { get; set; }
+
+		#region JqGrid support methods
+		public static string GetSafeString(string jqgridString)
+		{
+			string str = (jqgridString ?? string.Empty).Replace("'", "\\'");
+
+			return str;
+		}
+		public static string GetSelectItemString(int selectId, string selectValue, bool prependSemicolon = true)
+		{
+			string str = (prependSemicolon ? ";" : string.Empty);
+
+			str += selectId + ":" + GetSafeString(selectValue);
+
+			return str;
+		}
+		#endregion
 	}
 }
