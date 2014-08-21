@@ -14,5 +14,11 @@ namespace skky.Types
 
 		[DataMember]
 		public string name;
+
+		public idName(int theid, string theName)
+		{
+			id = theid;
+			name = theName;
+		}
 	}
 }
