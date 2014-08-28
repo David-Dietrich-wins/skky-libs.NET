@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace skky.util
 {
@@ -34,6 +35,8 @@ namespace skky.util
     [Serializable, TypeConverter(typeof(PhoneNumberConverter))]
     public struct PhoneNumber : IComparable, IFormattable, ISerializable
     {
+		public const string CONST_RegexUsPhoneNumber = "^(?:\\([2-9]\\d{2}\\)\\ ?|[2-9]\\d{2}(?:\\-?|\\ ?))[2-9]\\d{2}[- ]?\\d{4}$";
+
         /// <summary>Represents an empty <see cref="PhoneNumber"/> instance.</summary>
         public static readonly PhoneNumber Empty = new PhoneNumber();
 
@@ -212,6 +215,13 @@ namespace skky.util
             this._Phonetic = info.GetString("_Phonetic");
             return;
         }
+
+		public static bool IsValidUsNumber(string phone)
+		{
+			Regex regex = new Regex(CONST_RegexUsPhoneNumber);
+
+			return regex.IsMatch(phone ?? string.Empty);
+		}
 
         /// <summary>Implements the <see cref="ISerializable"/> interface and returns the data needed to serialize the <see cref="PhoneNumber"/> instance.</summary>
         /// <param name="info">A <see cref="SerializationInfo"/> object that contains the information required to serialize the <see cref="PhoneNumber"/> instance.</param>
