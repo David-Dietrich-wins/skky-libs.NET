@@ -46,6 +46,14 @@ namespace skky.jqGrid
 
 			return str;
 		}
+		public static string GetSelectItemString(string selectValue, bool prependSemicolon = true)
+		{
+			string str = (prependSemicolon ? ";" : string.Empty);
+
+			str += selectValue + ":" + GetSafeString(selectValue);
+
+			return str;
+		}
 		#endregion
 	}
 }

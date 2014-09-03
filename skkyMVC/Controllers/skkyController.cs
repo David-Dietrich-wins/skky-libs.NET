@@ -26,6 +26,14 @@ namespace skkyMVC.Controllers
 		protected ReturnStatus rs = new ReturnStatus();
 		protected DateTime dtNow = DateTime.Now;
 
+		public FileResult ExcelFile(byte[] bytes, string fileName = null)
+		{
+			if(!string.IsNullOrWhiteSpace(fileName))
+				return base.File(bytes, "application/vnd.ms-excel", fileName);
+
+			return base.File(bytes, "application/vnd.ms-excel");
+		}
+
 		public static bool getSortOrder(string sord)
 		{
 			return !("desc" == sord);
