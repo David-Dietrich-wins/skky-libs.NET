@@ -32,6 +32,11 @@ namespace skky.util
 		public static readonly long DatetimeMinTimeTicks =
 		   (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
 
+		/// <summary>
+		/// Returns a string in the format M/d/yy.
+		/// </summary>
+		/// <param name="dtDateTime">DateTime object to make a string from.</param>
+		/// <returns>A string in the format M/d/yy.</returns>
 		public static string GetDefaultDateString(DateTime? dtDateTime)
 		{
 			if (dtDateTime.HasValue && dtDateTime.Value != DateTime.MinValue)
@@ -41,6 +46,12 @@ namespace skky.util
 
 			return string.Empty;
 		}
+
+		/// <summary>
+		/// Returns a string in the format M/d/yy h:mm:ss tt.
+		/// </summary>
+		/// <param name="dtDateTime">DateTime object to make a string from.</param>
+		/// <returns>A string in the format M/d/yy h:mm:ss tt.</returns>
 		public static string GetDefaultDateTimeString(DateTime? dtDateTime)
 		{
 			if (dtDateTime.HasValue && dtDateTime.Value != DateTime.MinValue)
