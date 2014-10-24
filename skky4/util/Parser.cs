@@ -12,8 +12,9 @@ namespace skky.util
 	{
 		public const string sClassName = "Parser";
 
-		public static string[] SplitAndTrimString(string str, char splitChar = ',')
+		public static string[] SplitAndTrimString(string str, char splitChar = ',', bool lowerTheString = false)
 		{
+			string s;
 			string[] ret = null;
 			if (!string.IsNullOrEmpty(str))
 			{
@@ -21,7 +22,14 @@ namespace skky.util
 				if (null != ret)
 				{
 					for (int i = 0; i < ret.Length; ++i)
-						ret[i] = ret[i].Trim();
+					{
+						s = ret[i].Trim();
+
+						if (lowerTheString)
+							ret[i] = s.ToLower();
+						else
+							ret[i] = s;
+					}
 				}
 			}
 
