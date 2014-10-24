@@ -37,6 +37,8 @@ namespace skky.Types
 		public const string CONST_Title = "Title";
 		public const string CONST_Updated = "Updated";
 		public const string CONST_UserName = "UserName";
+		public const string CONST_Zip = "Zip";
+		public const string CONST_ZipCode = "ZipCode";
 ﻿
 		// Methods for returning common strings.
 		public static string GetDecimalText(Decimal? d)
