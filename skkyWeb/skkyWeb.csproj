@@ -84,6 +84,12 @@
     <Compile Include="Yahoo\PlaceFinder.cs" />
     <Compile Include="Yahoo\ResultSet.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\skky4\skky4.csproj">
+      <Project>{62e28009-a515-4b4f-b4dc-27fc747acf80}</Project>
+      <Name>skky4</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

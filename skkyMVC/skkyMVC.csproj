@@ -80,6 +80,16 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\skky4\skky4.csproj">
+      <Project>{62e28009-a515-4b4f-b4dc-27fc747acf80}</Project>
+      <Name>skky4</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\skkyWeb\skkyWeb.csproj">
+      <Project>{115ca4b0-1a6b-42a8-910c-0a81bda1b779}</Project>
+      <Name>skkyWeb</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
