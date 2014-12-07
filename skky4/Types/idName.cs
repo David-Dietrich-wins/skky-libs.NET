@@ -10,10 +10,10 @@ namespace skky.Types
 	public class idName
 	{
 		[DataMember]
-		public int id;
+		public int id { get; set; }
 
 		[DataMember]
-		public string name;
+		public string name { get; set; }
 
 		public idName()
 		{ }
