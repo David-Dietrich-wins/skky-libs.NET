@@ -711,22 +711,26 @@ namespace skky.util
 			return (str ?? string.Empty).Encode(new UnicodeEncoding());
 		}
 
-		public static string UrlCombine(this string url1, string url2)
+		/// <summary>
+		/// Combines a base URL with a relative path.
+		/// Accounts for leading and trailing / characters so that only 1 / ever separates paths.
+		/// </summary>
+		/// <param name="baseUrl">The base Url (and path).</param>
+		/// <param name="relativePath">The additional sub path to append to the base URL.</param>
+		/// <returns>The combined baseUrl and relativePath with any extraneous / characters removed.</returns>
+		public static string UrlCombine(this string baseUrl, string relativePath)
 		{
-			if (url1.Length == 0)
+			if (null == baseUrl || baseUrl.Length == 0)
 			{
-				return url2;
+				return (relativePath ?? string.Empty);
 			}
 
-			if (url2.Length == 0)
+			if (null == relativePath || relativePath.Length == 0)
 			{
-				return url1;
+				return baseUrl;
 			}
 
-			url1 = url1.TrimEnd('/', '\\');
-			url2 = url2.TrimStart('/', '\\');
-
-			return string.Format("{0}/{1}", url1, url2);
+			return string.Format("{0}/{1}", baseUrl.TrimEnd('/', '\\'), relativePath.TrimStart('/', '\\'));
 		}
 
 		#region LinkedResourceCollection.AddGif

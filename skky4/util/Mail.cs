@@ -11,12 +11,8 @@ namespace skky.util
 	{
 		public static void Send(string to, string cc, string subject, string body, IEnumerable<string> attachmentFileNames = null, string from = "")
 		{
-			List<string> toArray = new List<string>();
-			toArray.Add(to);
-
-			List<string> ccArray = new List<string>();
-			if (!string.IsNullOrEmpty(cc))
-				ccArray.Add(cc);
+			var toArray = Parser.SplitAndTrimString(to);
+			var ccArray = Parser.SplitAndTrimString(cc);
 
 			Send(toArray, ccArray, null, subject, body, attachmentFileNames, from);
 		}
