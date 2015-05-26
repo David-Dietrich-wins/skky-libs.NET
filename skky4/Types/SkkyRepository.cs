@@ -74,7 +74,7 @@ namespace skky.Types
 		/// Generally used for logging the most recent updates from a web form using the FillObject() method in skky.util.Extensions.
 		/// </summary>
 		protected List<string> _MostRecentlySavedFormUpdates = null;
-		protected List<string> MostRecentlySavedFormUpdates
+		public List<string> MostRecentlySavedFormUpdates
 		{
 			get
 			{
