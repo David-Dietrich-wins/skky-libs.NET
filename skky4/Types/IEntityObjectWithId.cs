@@ -8,7 +8,7 @@ namespace skky.Types
 {
 	public interface IEntityWithId<TEntityId>
 	{
-		TEntityId Id { get; }
+		TEntityId id { get; }
 	}
 
 	public interface IEntityWithIntId : IEntityWithId<int>
@@ -18,5 +18,8 @@ namespace skky.Types
 	{ }
 
 	public interface IEntityWithGuidId : IEntityWithId<Guid>
+	{ }
+
+	public interface IEntityWithStringId : IEntityWithId<string>
 	{ }
 }
