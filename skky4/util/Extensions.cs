@@ -125,33 +125,45 @@ namespace skky.util
 			return str;
 		}
 
-		public static string Wrap(this string str, string prefix, string suffix)
+		/// <summary>
+		/// Wraps a string with a prefix string and a suffix string.
+		/// Guaranteed to always return a non-null string.
+		/// </summary>
+		/// <param name="str">The string to wrap.</param>
+		/// <param name="prefix">The prefix string to wrap str.</param>
+		/// <param name="suffix">The suffix string to wrap str.</param>
+		/// <param name="wrapIfEmpty">Set to false and if str is null or empty, no wrapping will occur</param>
+		/// <returns>A wrapped string with the prefix and suffix, unless the string is empty and wrapIfEmpty is false, then an empty string is returned. Always returns a non-null string.</returns>
+		public static string Wrap(this string str, string prefix, string suffix, bool wrapIfEmpty = true)
 		{
+			if (!wrapIfEmpty && string.IsNullOrEmpty(str))
+				return string.Empty;
+
 			return (prefix ?? string.Empty) + (str ?? string.Empty) + (suffix ?? string.Empty);
 		}
-		public static string Wrap(this string str, string wrapper)
+		public static string Wrap(this string str, string wrapper, bool wrapIfEmpty = true)
 		{
-			return Wrap(str, wrapper, wrapper);
+			return Wrap(str, wrapper, wrapper, wrapIfEmpty);
 		}
-		public static string WrapInBraces(this string str)
+		public static string WrapInBraces(this string str, bool wrapIfEmpty = true)
 		{
-			return Wrap(str, "{", "}");
+			return Wrap(str, "{", "}", wrapIfEmpty);
 		}
-		public static string WrapInBrackets(this string str)
+		public static string WrapInBrackets(this string str, bool wrapIfEmpty = true)
 		{
-			return Wrap(str, "[", "]");
+			return Wrap(str, "[", "]", wrapIfEmpty);
 		}
-		public static string WrapInParens(this string str)
+		public static string WrapInParens(this string str, bool wrapIfEmpty = true)
 		{
-			return Wrap(str, "(", ")");
+			return Wrap(str, "(", ")", wrapIfEmpty);
 		}
-		public static string WrapInQuotes(this string str)
+		public static string WrapInQuotes(this string str, bool wrapIfEmpty = true)
 		{
-			return Wrap(str, "\"");
+			return Wrap(str, "\"", wrapIfEmpty);
 		}
-		public static string WrapInSingleQuotes(this string str)
+		public static string WrapInSingleQuotes(this string str, bool wrapIfEmpty = true)
 		{
-			return Wrap(str, "\'");
+			return Wrap(str, "\'", wrapIfEmpty);
 		}
 		public static string AddTag(this string str, string tagName)
 		{
@@ -474,6 +486,14 @@ namespace skky.util
 				return d;
 
 			return 0;
+		}
+		public static TimeSpan ToTimeSpan(this string str)
+		{
+			TimeSpan ts;
+			if (TimeSpan.TryParse(str, out ts))
+				return ts;
+
+			return new TimeSpan();
 		}
 		#endregion
 
@@ -850,6 +870,9 @@ namespace skky.util
 							pi.SetValue(item, formDataValue.ToDateTime());
 						else if (propType == typeof(System.Nullable<DateTime>))
 							pi.SetValue(item, formDataValue.ToDateTime());
+						else if (propType == typeof(TimeSpan)
+							|| propType == typeof(System.Nullable<TimeSpan>))
+							pi.SetValue(item, formDataValue.ToTimeSpan());
 						else
 							pi.SetValue(item, formDataValue);
 					}
