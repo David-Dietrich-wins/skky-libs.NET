@@ -54,10 +54,13 @@ namespace skky.util
 		/// <returns>A string in the format M/d/yy h:mm:ss tt.</returns>
 		public static string GetDefaultDateTimeString(DateTime? dtDateTime)
 		{
-			if (dtDateTime.HasValue && dtDateTime.Value != DateTime.MinValue)
-			{
-				return dtDateTime.Value.ToString(CONST_DefaultDateTimeFormat);
-			}
+			return GetString(dtDateTime, CONST_DefaultDateTimeFormat);
+		}
+
+		public static string GetString(DateTime? dtDateTime, string format = "M/d/yyyy")
+		{
+			if (dtDateTime.HasValue)
+				return dtDateTime.Value.ToString(format);
 
 			return string.Empty;
 		}
@@ -73,21 +76,36 @@ namespace skky.util
 			return result;
 		}
 
-		public static DateTime? ToDateTimeNullable(this string str)
+		/// <summary>
+		/// Returns a valid date if the string supplied is a valid parseable date.
+		/// </summary>
+		/// <param name="str">A string to parse for a date time.</param>
+		/// <param name="getFirstOfMonth">If true, don't parse day. Set the day to 1.</param>
+		/// <returns>Returns a date if str is valid. Otherwise null.</returns>
+		public static DateTime? ToDateTimeNullable(this string str, bool getFirstOfMonth = false)
 		{
 			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
-			return str.ToDateTime();
+			return str.ToDateTime(getFirstOfMonth);
 		}
-		public static DateTime ToDateTime(this string str)
+		/// <summary>
+		/// Returns a valid date if the string supplied is a valid parseable date.
+		/// </summary>
+		/// <param name="str">A string to parse for a date time.</param>
+		/// <param name="getFirstOfMonth">If true, don't parse day. Set the day to 1.</param>
+		/// <returns>Returns a date if str is valid. Otherwise DateTime.MinValue.</returns>
+		public static DateTime ToDateTime(this string str, bool getFirstOfMonth = false)
 		{
 			DateTime date = DateTime.MinValue;
 			if (!string.IsNullOrWhiteSpace(str))
-				if (DateTime.TryParse(str.Trim(), out date))
-					return date;
+				if (!DateTime.TryParse(str.Trim(), out date))
+					return DateTime.MinValue;
 
-			return DateTime.MinValue;
+			if (getFirstOfMonth)
+				date = new DateTime(date.Year, date.Month, 1);
+
+			return date;
 		}
 
 		//public static DateTime GetDateTimeFromObject(this object o)
@@ -279,6 +297,14 @@ namespace skky.util
 			}
 
 			return msg;
+		}
+
+		public static DateTime DateAtMidnight(DateTime dt)
+		{
+			if (null == dt)
+				dt = new DateTime();
+
+			return new DateTime(dt.Year, dt.Month, dt.Day);
 		}
 	}
 }
