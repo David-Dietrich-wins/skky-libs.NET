@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -108,7 +108,6 @@
     <Compile Include="Types\DataTypeDescription.cs" />
     <Compile Include="Types\DateSettings.cs" />
     <Compile Include="Types\DoubleDouble.cs" />
-    <Compile Include="Types\EmissionsPoint.cs" />
     <Compile Include="Types\SkkyCallParams.cs" />
     <Compile Include="Types\GuidString.cs" />
     <Compile Include="Types\GuidStringDouble.cs" />
@@ -128,10 +127,7 @@
     <Compile Include="Types\PropertyString.cs" />
     <Compile Include="Types\PropertyT.cs" />
     <Compile Include="Types\SerializableKeyValuePair.cs" />
-    <Compile Include="Types\SkkyAirFlifo.cs" />
-    <Compile Include="Types\SkkyEmmissionPnr.cs" />
     <Compile Include="Types\SkkyObject.cs" />
-    <Compile Include="Types\SkkySegment.cs" />
     <Compile Include="Types\StringDouble.cs" />
     <Compile Include="Types\StringGuid.cs" />
     <Compile Include="Types\StringInt.cs" />
@@ -166,6 +162,7 @@
     <Compile Include="util\Trace.cs" />
     <Compile Include="util\TraceBase.cs" />
     <Compile Include="util\TraceListenerRollingFile.cs" />
+    <Compile Include="util\Utility.cs" />
     <Compile Include="web\HttpRequestOptions.cs" />
     <Compile Include="web\json.cs" />
     <Compile Include="web\JsonRequestor.cs" />
@@ -183,21 +180,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="ThirdParty\Amadeus\APIv2_COM.dll" />
-    <Content Include="ThirdParty\Amadeus\Interop.k1aHostConstantsLib.dll" />
-    <Content Include="ThirdParty\Amadeus\Interop.k1aHostInterface.dll" />
-    <Content Include="ThirdParty\Amadeus\Interop.k1aHostToolKit.dll" />
-    <Content Include="ThirdParty\Amadeus\MSXML.DLL" />
-    <Content Include="ThirdParty\Dundas\DundasWebChart.dll" />
-    <Content Include="ThirdParty\Dundas\DundasWebChart.xml" />
     <Content Include="ThirdParty\NPOI.dll" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Hotels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
