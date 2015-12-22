@@ -196,6 +196,48 @@ namespace skky.util
 
         #endregion
 
+		public static string FormatWithSeparator(string phone, string separator = ".")
+		{
+			string tendigit = Make10Digit(phone);
+			switch (tendigit.Length)
+			{
+				case 7:
+					return tendigit.Left(3) + separator + tendigit.Right(4);
+				case 10:
+					return tendigit.Left(3) + separator + tendigit.Mid(3, 3) + separator + tendigit.Right(4);
+			}
+
+			return tendigit;
+		}
+		public static string FormatWithDashes(string phone)
+		{
+			return FormatWithSeparator(phone, "-");
+		}
+
+		public static string Make10Digit(string phone)
+		{
+			string result = (phone ?? string.Empty);
+			try
+			{
+				// Strip all non-tel-digits from phone
+				result = result.Replace("(", "");
+				result = result.Replace(")", "");
+				result = result.Replace(" ", "");
+				result = result.Replace("-", "");
+				result = result.Replace(".", "");
+				// Remove leading 1 from phone numbers
+				if ((result.Length > 10) && (result.Substring(0, 1) == "1"))
+					result = result.Substring(1, result.Length - 1);
+			}
+			catch
+			{
+				// Someting went wrong, return the original value.
+				result = phone;
+			}
+
+			return result;
+		}
+
         /// <summary>Initializes a new instance of the <see cref="PhoneNumber"/> class with serialized data.</summary>
         /// <param name="info">A <see cref="SerializationInfo"/> object that contains the information required to serialize the <see cref="PhoneNumber"/> instance.</param>
         /// <param name="context">A <see cref="StreamingContext"/> structure that contains the source and destination of the serialized stream associated with the <see cref="PhoneNumber"/> instance.</param>
@@ -1418,7 +1460,7 @@ namespace skky.util
                 }
             }
 
-            // A formatting error occured, so lets throw the format exception.
+            // A formatting error occurred, so lets throw the format exception.
             if (v_format_error)
             {
                 throw new FormatException(string.Format(formatProvider, "The passed value ({0}) can not be parsed into a valid phone number.", value));
