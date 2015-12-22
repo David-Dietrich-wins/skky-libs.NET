@@ -243,8 +243,6 @@ namespace skky.util
 			if (isCSV)
 			{
 				fi = new FileInfo(Filename);
-				//fileName = "C:\\SvnRepository\\HotelAuditor\\TempImages\\HRAImport.csv";
-				//fileName = "C:\\SvnRepository\\HotelAuditor\\TempImages\\111101\\";
 				constring = string.Format(Writable ? CONST_ExcelCSVDataSourceWrite : CONST_ExcelCSVDataSourceRead, fi.DirectoryName);
 			}
 			else if (isXLSX)
