@@ -9,10 +9,10 @@ namespace skky.util
 {
 	public static class Mail
 	{
-		public static void Send(string to, string cc, string subject, string body, IEnumerable<string> attachmentFileNames = null, string from = "")
+		public static void Send(string toEmails, string ccEmails, string subject, string body, IEnumerable<string> attachmentFileNames = null, string from = "")
 		{
-			var toArray = Parser.SplitAndTrimString(to);
-			var ccArray = Parser.SplitAndTrimString(cc);
+			var toArray = Parser.SplitAndTrimString(toEmails);
+			var ccArray = Parser.SplitAndTrimString(ccEmails);
 
 			Send(toArray, ccArray, null, subject, body, attachmentFileNames, from);
 		}
