@@ -15,13 +15,20 @@ namespace skky.util
 	{
 		public const string CONST_Break = "<br />";
 		public const string CONST_Class = "class";
+		public const string CONST_Div = "div";
 		public const string CONST_NbSp = "&nbsp;";
-		public const string CONST_Strong = "strong";
+		public const string CONST_hidden = "hidden";
+		public const string CONST_id = "id";
 		public const string CONST_Label = "label";
+		public const string CONST_name = "name";
+		public const string CONST_onclick = "onclick";
+		public const string CONST_option = "option";
+		public const string CONST_Strong = "strong";
 		public const string CONST_Style = "style";
 		public const string CONST_table = "table";
 		public const string CONST_td = "td";
 		public const string CONST_tr = "tr";
+		public const string CONST_value = "value";
 
 		#region Extension Methods
 		public static void WriteHrTag(this XmlWriter writer)
@@ -94,9 +101,13 @@ namespace skky.util
 
 			return tagName.Trim().Wrap("</", ">");
 		}
+		public static string AddTagAnchor(string value, IDictionary<string, string> attributes)
+		{
+			return AddTag("a", value, attributes);
+		}
 		public static string AddTag(string tagName, string value, IDictionary<string, string> attributes)
 		{
-			return StartTag(tagName) + (value ?? string.Empty) + EndTag(tagName);
+			return StartTag(tagName, attributes) + (value ?? string.Empty) + EndTag(tagName);
 		}
 		public static string AddTag(string tagName, string value, string attributeName, string attributeValue)
 		{
@@ -109,6 +120,17 @@ namespace skky.util
 
 			return AddTag(tagName, value, "class", className);
 		}
+		public static string AddDiv(string value, string className = null, IDictionary<string, string> attributes = null)
+		{
+			if (null != attributes && null != className)
+			{
+				attributes.Add(CONST_Class, className);
+				return AddTag(CONST_Div, value, attributes);
+			}
+
+			return AddTag(CONST_Div, value, className);
+		}
+
 		public static string MakeEntitySafe(string xml)
 		{
 			if (string.IsNullOrEmpty(xml))
@@ -172,6 +194,44 @@ namespace skky.util
 				str = CONST_NbSp;
 
 			return AddTag(CONST_td, str, className);
+		}
+
+		public static string AddHidden(string id, string value)
+		{
+			return "<input type=" + CONST_hidden.WrapInQuotes() + " " + CONST_name.EqualsQuotedValue(id) + " " + CONST_id.EqualsQuotedValue(id) + (string.IsNullOrEmpty(value) ? string.Empty : " " + CONST_value.EqualsQuotedValue(value)) + " />";
+		}
+
+		/// <summary>
+		/// Returns an option tag with the selected attribute set if the option value matches the selectedOption.
+		/// </summary>
+		/// <param name="name">The name of the option item.</param>
+		/// <param name="selectedOption">The selected option.</param>
+		/// <returns>An option tag with the selected attribute added if value = selectedOption or name = selectedOption if value is not passed in.</returns>
+		public static string AddOption(string name, string selectedOption)
+		{
+			return AddOption(name, null, selectedOption);
+		}
+		/// <summary>
+		/// Returns an option tag with the selected attribute set if the option value matches the selectedOption.
+		/// </summary>
+		/// <param name="name">The name of the option item.</param>
+		/// <param name="value">The value of the option item. Can be empty and no value will be output.</param>
+		/// <param name="selectedOption">The selected option.</param>
+		/// <returns>An option tag with the selected attribute added if value = selectedOption or name = selectedOption if value is not passed in.</returns>
+		public static string AddOption(string name, string value, string selectedOption)
+		{
+			string s = "<" + CONST_option;
+			if (!string.IsNullOrEmpty(value))
+				s += " value=\"" + value + "\"";
+			if (!string.IsNullOrEmpty(selectedOption)
+				&& ((!string.IsNullOrEmpty(value) && selectedOption == value)
+				|| selectedOption == name))
+				s += " selected=\"selected\"";
+			s += ">";
+			s += name;
+			s += EndTag(CONST_option);;
+
+			return s;
 		}
 
 		public static string AddTableRowIfValue(string name, int value, string tdclass = null)
