@@ -32,6 +32,9 @@ namespace skky.util
 		public static readonly long DatetimeMinTimeTicks =
 		   (new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc)).Ticks;
 
+		public static readonly DateTime UnixEpoch =
+			new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+	
 		/// <summary>
 		/// Returns a string in the format M/d/yy.
 		/// </summary>
@@ -108,6 +111,34 @@ namespace skky.util
 			return date;
 		}
 
+		public static long GetCurrentUnixTimestampMillis()
+		{
+			return (long)(DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
+		}
+
+		public static DateTime DateTimeFromUnixTimestampMillis(long millis)
+		{
+			return UnixEpoch.AddMilliseconds(millis);
+		}
+
+		public static long GetCurrentUnixTimestampSeconds()
+		{
+			return ToUnixTimestamp(DateTime.UtcNow);
+		}
+
+		public static DateTime DateTimeFromUnixTimestampSeconds(long seconds)
+		{
+			return UnixEpoch.AddSeconds(seconds);
+		}
+		
+		public static long ToUnixTimestamp(this DateTime? dateTime)
+		{
+			if (null == dateTime)
+				return 0;
+
+			return (long)(dateTime.Value.ToUniversalTime() - UnixEpoch).TotalSeconds;
+		}
+
 		//public static DateTime GetDateTimeFromObject(this object o)
 		//{
 		//    if (o != null)
@@ -159,13 +190,6 @@ namespace skky.util
 				return string.Empty;
 
 			return instance.ToString(PublicDateFormat);
-		}
-		public static long? ToUnixTimestamp(this DateTime? dateTime)
-		{
-			if (!dateTime.HasValue)
-				return null;
-
-			return (long)(dateTime.Value - new DateTime(1970, 1, 1).ToLocalTime()).TotalSeconds;
 		}
 
 		public static long ToJavaScriptMilliseconds(this DateTime dt)
