@@ -111,9 +111,12 @@ namespace skky.util
 			return date;
 		}
 
-		public static long GetCurrentUnixTimestampMillis()
+		public static long GetUnixTimestampMillis(DateTime? dt = null)
 		{
-			return (long)(DateTime.UtcNow - UnixEpoch).TotalMilliseconds;
+			if (!dt.HasValue)
+				dt = DateTime.UtcNow;
+
+			return (long)(dt.Value - UnixEpoch).TotalMilliseconds;
 		}
 
 		public static DateTime DateTimeFromUnixTimestampMillis(long millis)
@@ -121,9 +124,12 @@ namespace skky.util
 			return UnixEpoch.AddMilliseconds(millis);
 		}
 
-		public static long GetCurrentUnixTimestampSeconds()
+		public static long GetUnixTimestampSeconds(DateTime? dt = null)
 		{
-			return ToUnixTimestamp(DateTime.UtcNow);
+			if (!dt.HasValue)
+				dt = DateTime.UtcNow;
+
+			return ToUnixTimestamp(dt);
 		}
 
 		public static DateTime DateTimeFromUnixTimestampSeconds(long seconds)
