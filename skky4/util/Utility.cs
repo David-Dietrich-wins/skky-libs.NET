@@ -21,29 +21,29 @@ namespace skky.util
 		/// <param name="dest">The T2 destination object to copy to.</param>
 		/// <param name="skipIDCreateActioned">Skip the ID, actionedBy, actionedOn, createdBy and createdOn columns from the copy..</param>
 		/// <returns>The T1 used to call this method.</returns>
-		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, bool skipIDCreateActioned = false)
+		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, bool skipIDCreateActioned = false, bool copyPrimitiveTypesOnly = true)
 			where T1 : class
 			where T2 : class
 		{
 			List<string> changedFields = null;
 
-			return dest.CopyFrom(src, skipIDCreateActioned ? CONST_CopyFromDefaultExcludeColumns : null, ref changedFields);
+			return dest.CopyFrom(src, skipIDCreateActioned ? CONST_CopyFromDefaultExcludeColumns : null, copyPrimitiveTypesOnly, ref changedFields);
 		}
 
-		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, bool skipIDCreateActioned, ref List<string> changedFields)
+		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, bool skipIDCreateActioned, bool copyPrimitiveTypesOnly, ref List<string> changedFields)
 			where T1 : class
 			where T2 : class
 		{
-			return dest.CopyFrom(src, skipIDCreateActioned ? CONST_CopyFromDefaultExcludeColumns : null, ref changedFields);
+			return dest.CopyFrom(src, skipIDCreateActioned ? CONST_CopyFromDefaultExcludeColumns : null, copyPrimitiveTypesOnly, ref changedFields);
 		}
 
-		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, string ignoreList)
+		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, string ignoreList, bool copyPrimitiveTypesOnly = true)
 			where T1 : class
 			where T2 : class
 		{
 			List<string> changedFields = null;
 
-			return CopyFrom(dest, src, ignoreList, ref changedFields);
+			return CopyFrom(dest, src, ignoreList, copyPrimitiveTypesOnly, ref changedFields);
 		}
 
 		/// <summary>
@@ -56,7 +56,7 @@ namespace skky.util
 		/// <param name="src">The T1 source object to copy from.</param>
 		/// <param name="dest">The T2 destination object to copy to.</param>
 		/// <returns>The T1 used to call this method.</returns>
-		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, string ignoreList, ref List<string> changedFields)
+		public static T1 CopyFrom<T1, T2>(this T1 dest, T2 src, string ignoreList, bool copyPrimitiveTypesOnly, ref List<string> changedFields)
 			where T1 : class
 			where T2 : class
 		{
@@ -74,6 +74,22 @@ namespace skky.util
 				{
 					if (lstIgnore.Contains(property.Name) || lstIgnore.Contains(property.Name.ToLower()))
 						continue;
+
+					if (copyPrimitiveTypesOnly)
+					{
+						if(!property.PropertyType.IsPrimitive && !property.PropertyType.IsValueType)
+						{
+						Type type = property.PropertyType;
+						if(type != typeof(string)
+							&& type != typeof(Decimal)
+							&& type != typeof(DateTime)
+							&& type != typeof(DateTimeOffset)
+							&& type != typeof(TimeSpan)
+							&& type != typeof(Guid)
+							&& (type == typeof(object) || Type.GetTypeCode(type) == TypeCode.Object))
+							continue;
+						}
+					}
 
 					var destField = destFields.FirstOrDefault(x => x.Name == property.Name);
 					if (null != destField && destField.CanWrite)
