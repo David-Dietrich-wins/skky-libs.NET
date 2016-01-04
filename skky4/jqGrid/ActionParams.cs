@@ -18,6 +18,17 @@ namespace skky.jqGrid
 		public const string CONST_sordAsc = "asc";
 		public const string CONST_sordDesc = "desc";
 
+		public ActionParams()
+		{ }
+		public ActionParams(string sortField, bool? sortAscending = null)
+		{
+			if (!string.IsNullOrEmpty(sortField))
+				sidx = sortField;
+
+			if (null != sortAscending)
+				sord = (sortAscending.Value ? CONST_sordAsc : CONST_sordDesc);
+		}
+
 		[DataContract]
 		public class Rule
 		{
