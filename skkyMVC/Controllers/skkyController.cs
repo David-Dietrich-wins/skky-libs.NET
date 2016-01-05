@@ -85,7 +85,7 @@ namespace skkyMVC.Controllers
 			str += " ";
 			str += (string.IsNullOrWhiteSpace(actionType) ? "item" : actionType);
 			//str += ".";
-			//rs.ErrorMessage.Add(str);
+			//rs.AddError(str);
 
 			TraceException(callerMethodName, ex, str);
 
@@ -160,46 +160,46 @@ namespace skkyMVC.Controllers
 		}
 		protected void AddEditItemException(Exception ex, string objectName)
 		{
-			rs.ErrorMessage.Add("Error editing item.");
+			rs.AddError("Error editing item.");
 
 			if (ex.Message.Contains("duplicate") || (null != ex.InnerException && ex.InnerException.Message.Contains("duplicate")))
 			{
-				rs.Message.Add("Items are unique.");
-				rs.Message.Add("You attempted to add a " + objectName + " that already exists.");
+				rs.AddMessage("Items are unique.");
+				rs.AddMessage("You attempted to add a " + objectName + " that already exists.");
 			}
 			else
 			{
 				if (null != ex.InnerException && !string.IsNullOrEmpty(ex.InnerException.Message))
-					rs.Message.Add(ex.InnerException.Message);
+					rs.AddMessage(ex.InnerException.Message);
 				else
-					rs.Message.Add(ex.Message);
+					rs.AddMessage(ex.Message);
 			}
-			rs.Message.Add("Please try again.");
+			rs.AddMessage("Please try again.");
 		}
 		protected void AddEmptyFieldError(string operation, string objectName, string fieldName)
 		{
 			if (string.IsNullOrWhiteSpace(operation))
 				operation = "adding";
 
-			rs.ErrorMessage.Add("Error " + operation.ToLower() + " " + objectName + ".");
+			rs.AddError("Error " + operation.ToLower() + " " + objectName + ".");
 
-			rs.Message.Add(fieldName + " cannot be empty.");
-			rs.Message.Add("Please try again.");
+			rs.AddMessage(fieldName + " cannot be empty.");
+			rs.AddMessage("Please try again.");
 		}
 		protected void AddNumberError(string operation, string field, string rate, string objectName)
 		{
 			if (string.IsNullOrWhiteSpace(operation))
 				operation = "adding";
 
-			rs.ErrorMessage.Add("Error " + operation.ToLower() + " " + objectName + ".");
+			rs.AddError("Error " + operation.ToLower() + " " + objectName + ".");
 
 			string s = field ?? "EMPTY";
 			s += " field: ";
 			s += rate ?? "Rate";
 			s += " is not a valid number.";
 
-			rs.Message.Add(s);
-			rs.Message.Add("Please try again.");
+			rs.AddMessage(s);
+			rs.AddMessage("Please try again.");
 		}
 		#endregion
 

@@ -205,9 +205,9 @@ namespace skky.util
 			string s = string.Empty;
 			if (null == row)
 			{
-				rs.ErrorMessage.Add("Attempting to search for an Excel column when there is no row present.");
+				rs.AddError("Attempting to search for an Excel column when there is no row present.");
 			}
-			//rs.ErrorMessage.Add("Attempting to search for an Excel column that is empty and not named. You must provide a column name.");
+			//rs.AddError("Attempting to search for an Excel column that is empty and not named. You must provide a column name.");
 			else if (!string.IsNullOrEmpty(columnName))
 			{
 				try
@@ -221,7 +221,7 @@ namespace skky.util
 				}
 				catch (Exception ex)
 				{
-					rs.ErrorMessage.Add("Error on line " + lineNumber.ToString() + " retrieving String for column: " + columnName + ". Data read is " + s + ".");
+					rs.AddError("Error on line " + lineNumber.ToString() + " retrieving String for column: " + columnName + ". Data read is " + s + ".");
 					skky.util.Trace.Warning("Line #" + lineNumber.ToString() + ". Error getting Excel column named: " + columnName + ".", ex);
 				}
 			}
@@ -266,7 +266,7 @@ namespace skky.util
 						if (bSuccess)
 							return (i == 0 ? false : true);
 
-						rs.ErrorMessage.Add("Error on line " + lineNumber.ToString() + " parsing Boolean on column: " + columnName + ". Data read is " + s + ".");
+						rs.AddError("Error on line " + lineNumber.ToString() + " parsing Boolean on column: " + columnName + ". Data read is " + s + ".");
 						break;
 				}
 			}
@@ -299,7 +299,7 @@ namespace skky.util
 					return i;
 
 				if (!isAcceptableNumericEntry(s))
-					rs.ErrorMessage.Add("Error on line " + lineNumber.ToString() + " parsing Integer on column: " + columnName + ". Data read is " + s + ".");
+					rs.AddError("Error on line " + lineNumber.ToString() + " parsing Integer on column: " + columnName + ". Data read is " + s + ".");
 			}
 
 			return null;
@@ -315,7 +315,7 @@ namespace skky.util
 					return dbl;
 
 				if (!isAcceptableNumericEntry(s))
-					rs.ErrorMessage.Add("Error on line " + lineNumber.ToString() + " parsing DateTime on column: " + columnName + ". Data read is " + s + ".");
+					rs.AddError("Error on line " + lineNumber.ToString() + " parsing DateTime on column: " + columnName + ". Data read is " + s + ".");
 			}
 
 			return null;
@@ -331,7 +331,7 @@ namespace skky.util
 					return dcl;
 
 				if (!isAcceptableNumericEntry(s))
-					rs.ErrorMessage.Add("Error on line " + lineNumber.ToString() + " parsing Double on column: " + columnName + ". Data read is " + s + ".");
+					rs.AddError("Error on line " + lineNumber.ToString() + " parsing Double on column: " + columnName + ". Data read is " + s + ".");
 			}
 
 			return null;
@@ -349,7 +349,7 @@ namespace skky.util
 				if (b)
 					return dt;
 
-				rs.ErrorMessage.Add("Error on line " + lineNumber.ToString() + " parsing DateTime on column: " + columnName + ". Data read is " + s + ".");
+				rs.AddError("Error on line " + lineNumber.ToString() + " parsing DateTime on column: " + columnName + ". Data read is " + s + ".");
 			}
 
 			return null;
@@ -386,7 +386,7 @@ namespace skky.util
 				}
 			}
 
-			//rs.ErrorMessage.Add("Unable to find Excel column named like: " + columnName ?? "NO COLUMN NAME PROVIDED, on line #" + lineNumber.ToString() + ".");
+			//rs.AddError("Unable to find Excel column named like: " + columnName ?? "NO COLUMN NAME PROVIDED, on line #" + lineNumber.ToString() + ".");
 			return string.Empty;
 		}
 
