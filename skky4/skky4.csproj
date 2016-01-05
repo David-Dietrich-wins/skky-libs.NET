@@ -90,10 +90,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Security\PasswordGenerator.cs" />
     <Compile Include="Types\CallParams.cs" />
+    <Compile Include="Types\idts.cs" />
     <Compile Include="Types\IEntityd.cs" />
     <Compile Include="Types\ISkkyEntities.cs" />
     <Compile Include="Types\IEntityObjectWithId.cs" />
     <Compile Include="Types\JqueryAutocomplete.cs" />
+    <Compile Include="Types\ReturnStatusWithoutObject.cs" />
     <Compile Include="Types\SkkyRepository.cs" />
     <Compile Include="Types\StringLong.cs" />
     <Compile Include="Types\StringIntGuid.cs" />

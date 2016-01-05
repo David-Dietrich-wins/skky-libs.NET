@@ -8,89 +8,22 @@ using skky.util;
 namespace skky.Types
 {
 	[DataContract]
-	public class ReturnStatus
+	public class ReturnStatus : ReturnStatusWithoutObject
 	{
 		public ReturnStatus()
-		{
-			Message = new List<string>();
-			ErrorMessage = new List<string>();
-		}
+		{ }
 		public ReturnStatus(int rc)
-			: this()
-		{
-			ReturnCode = rc;
-		}
+			: base(rc)
+		{ }
 		public ReturnStatus(int rc, string errorMessage)
-			: this(rc)
-		{
-			ErrorMessage.Add(errorMessage);
-		}
+			: base(rc, errorMessage)
+		{ }
 		public ReturnStatus(string errorMessage)
-			: this()
-		{
-			ErrorMessage.Add(errorMessage);
-		}
-
-		public bool HasErrors()
-		{
-			return (ReturnCode < 0 || ErrorMessage.Any() ? true : false);
-		}
-		public bool ErrorFree()
-		{
-			return !HasErrors();
-		}
-		public bool HasMessages()
-		{
-			return Message.Any();
-		}
-		public bool HasAnyMessages()
-		{
-			return HasErrors() || HasMessages();
-		}
-
-		public int AddMessages(ReturnStatus rs)
-		{
-			int messagesAdded = 0;
-			if (null != rs)
-			{
-				foreach (var rsErr in rs.ErrorMessage)
-				{
-					ErrorMessage.Add(rsErr);
-					++messagesAdded;
-				}
-
-				foreach (var rsMsg in rs.Message)
-				{
-					Message.Add(rsMsg);
-					++messagesAdded;
-				}
-			}
-
-			return messagesAdded;
-		}
-
-		[DataMember]
-		public int ReturnCode { get; set; }
-
-		[DataMember]
-		public string url { get; set; }
+			: base(errorMessage)
+		{ }
 
 		[DataMember]
 		public object obj { get; set; }
-
-		[DataMember]
-		public List<string> Message { get; set; }
-
-		[DataMember]
-		public List<string> ErrorMessage { get; set; }
-
-		public string GetErrorMessage()
-		{
-			if (HasErrors())
-				return string.Join(", ", ErrorMessage);
-
-			return string.Empty;
-		}
 
 		public static ReturnStatus AddExceptionErrorMessage(ReturnStatus rs, Exception ex)
 		{
@@ -98,7 +31,7 @@ namespace skky.Types
 			if (null == rs)
 				rs = new ReturnStatus(-1, exceptionMessage);
 			else
-				rs.ErrorMessage.Add(exceptionMessage);
+				rs.err.Add(exceptionMessage);
 
 			return rs;
 		}
@@ -108,32 +41,14 @@ namespace skky.Types
 			return ReturnStatus.AddExceptionErrorMessage(this, ex);
 		}
 
-		public static ReturnStatus AddError(ReturnStatus rs, string errorString)
+		public static ReturnStatus AddMessage(ReturnStatus rs, string message)
 		{
 			if (null == rs)
 				rs = new ReturnStatus();
 
-			rs.AddError(errorString);
+			rs.AddError(message);
 
 			return rs;
-		}
-		public void AddError(string errorString)
-		{
-			ErrorMessage.Add(errorString);
-		}
-
-		public static ReturnStatus AddMessage(ReturnStatus rs, string msg)
-		{
-			if (null == rs)
-				rs = new ReturnStatus();
-
-			rs.AddError(msg);
-
-			return rs;
-		}
-		public void AddMessage(string msg)
-		{
-			Message.Add(msg);
 		}
 	}
 }
