@@ -11,6 +11,8 @@ using System.Net.Mail;
 using System.Xml;
 using System.Collections.Specialized;
 using System.Reflection;
+using System.Dynamic;
+using System.ComponentModel;
 
 namespace skky.util
 {
@@ -273,7 +275,7 @@ namespace skky.util
 
 		public static bool IsNumber(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return false;
 
 			Regex r = new Regex(@"(^[-+]?\d+(,?\d*)*\.?\d*([Ee][-+]\d*)?$)|(^[-+]?\d?(,?\d*)*\.\d+([Ee][-+]\d*)?$)");
@@ -281,14 +283,14 @@ namespace skky.util
 		}
 		public static bool IsNonNegativeNumber(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return true;
 
 			return str.IsPositiveNumber();
 		}
 		public static bool IsPositiveNumber(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return false;
 
 			Regex r = new Regex(@"(^[+]?\d+(,?\d*)*\.?\d*([Ee][+]\d*)?$)|(^[+]?\d?(,?\d*)*\.\d+([Ee][+]\d*)?$)");
@@ -296,7 +298,7 @@ namespace skky.util
 		}
 		public static bool IsInteger(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return false;
 
 			int i = 0;
@@ -306,14 +308,14 @@ namespace skky.util
 		}
 		public static bool IsNonNegativeInteger(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return true;
 
 			return str.IsPositiveInteger();
 		}
 		public static bool IsPositiveInteger(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return false;
 
 			int i = 0;
@@ -328,7 +330,7 @@ namespace skky.util
 
 		public static string GetIntegerReady(string sint)
 		{
-			if (string.IsNullOrEmpty(sint))
+			if (string.IsNullOrWhiteSpace(sint))
 				return string.Empty;
 
 			return sint.Trim().Replace(",", "");
@@ -337,14 +339,14 @@ namespace skky.util
 		#region Basic type converters
 		public static bool? ToBooleanNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
 			return str.ToBoolean();
 		}
 		public static bool ToBoolean(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return false;
 
 			bool b = false;
@@ -384,7 +386,7 @@ namespace skky.util
 		}
 		public static decimal? ToDecimalNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
 			return ToDecimal(str);
@@ -392,14 +394,14 @@ namespace skky.util
 		public static decimal ToDecimal(this string str)
 		{
 			decimal d = 0;
-			if (decimal.TryParse(GetIntegerReady(str), out d))
+			if (!string.IsNullOrWhiteSpace(str) && decimal.TryParse(GetIntegerReady(str), out d))
 				return d;
 
 			return 0;
 		}
 		public static double? ToDoubleNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
 			return ToDouble(str);
@@ -407,14 +409,14 @@ namespace skky.util
 		public static double ToDouble(this string str)
 		{
 			double d = 0;
-			if (double.TryParse(GetIntegerReady(str), out d))
+			if (!string.IsNullOrWhiteSpace(str) && double.TryParse(GetIntegerReady(str), out d))
 				return d;
 
 			return 0;
 		}
 		public static float? ToFloatNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
 			return ToFloat(str);
@@ -422,14 +424,14 @@ namespace skky.util
 		public static float ToFloat(this string str)
 		{
 			float d = 0;
-			if (float.TryParse(GetIntegerReady(str), out d))
+			if (!string.IsNullOrWhiteSpace(str) && float.TryParse(GetIntegerReady(str), out d))
 				return d;
 
 			return 0;
 		}
 		public static Guid? ToGuidNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
 			return str.ToGuid();
@@ -437,14 +439,14 @@ namespace skky.util
 		public static Guid ToGuid(this string str)
 		{
 			Guid g;
-			if (Guid.TryParse(str, out g))
+			if (!string.IsNullOrWhiteSpace(str) && Guid.TryParse(str, out g))
 				return g;
 
 			return Guid.Empty;
 		}
 		public static int? ToIntegerNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
 			return str.ToInteger();
@@ -452,29 +454,29 @@ namespace skky.util
 		public static int ToInteger(this string str)
 		{
 			int i = 0;
-			if (int.TryParse(GetIntegerReady(str), out i))
+			if (!string.IsNullOrWhiteSpace(str) && int.TryParse(GetIntegerReady(str), out i))
 				return i;
 
 			return 0;
 		}
-		public static Guid? ToLongNullable(this string str)
+		public static long? ToLongNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
-			return str.ToGuid();
+			return str.ToLong();
 		}
 		public static long ToLong(this string str)
 		{
 			long l = 0;
-			if (long.TryParse(GetIntegerReady(str), out l))
+			if (!string.IsNullOrWhiteSpace(str) && long.TryParse(GetIntegerReady(str), out l))
 				return l;
 
 			return 0;
 		}
 		public static short? ToShortNullable(this string str)
 		{
-			if (string.IsNullOrEmpty(str))
+			if (string.IsNullOrWhiteSpace(str))
 				return null;
 
 			return ToShort(str);
@@ -482,18 +484,24 @@ namespace skky.util
 		public static short ToShort(this string str)
 		{
 			short d = 0;
-			if (short.TryParse(GetIntegerReady(str), out d))
+			if (!string.IsNullOrWhiteSpace(str) && short.TryParse(GetIntegerReady(str), out d))
 				return d;
 
 			return 0;
 		}
 		public static TimeSpan ToTimeSpan(this string str)
 		{
+			TimeSpan? ts = ToTimeSpanNullable(str);
+
+			return (null == ts ? new TimeSpan() : ts.Value);
+		}
+		public static TimeSpan? ToTimeSpanNullable(this string str)
+		{
 			TimeSpan ts;
-			if (TimeSpan.TryParse(str, out ts))
+			if (!string.IsNullOrWhiteSpace(str) && TimeSpan.TryParse(str, out ts))
 				return ts;
 
-			return new TimeSpan();
+			return null;
 		}
 		#endregion
 
@@ -817,7 +825,7 @@ namespace skky.util
 			Type t = item.GetType();
 			foreach (string formDataKey in coll)
 			{
-				PropertyInfo pi = t.GetProperty(formDataKey, BindingFlags.Public | BindingFlags.Instance);
+				PropertyInfo pi = t.GetProperty(formDataKey.Replace("[]", ""), BindingFlags.Public | BindingFlags.Instance);
 				if (null != pi && pi.CanWrite)
 				{
 					updatedFields.Add(formDataKey);
@@ -825,12 +833,15 @@ namespace skky.util
 					string formDataValue = coll[formDataKey];
 
 					Type propType = pi.PropertyType;
-					if (propType.IsArray)
+					if (propType.IsArray || (propType.IsGenericType && (propType.GetGenericTypeDefinition() == typeof(List<>))))
 					{
-						if (propType == typeof(int) || propType == typeof(System.Nullable<Int32>))
-							pi.SetValue(item, formDataValue.ToIntegerList());
-						else
-							pi.SetValue(item, formDataValue.ToStringList());
+						if (!string.IsNullOrEmpty(formDataValue))
+						{
+							if (propType == typeof(int) || propType == typeof(System.Nullable<Int32>))
+								pi.SetValue(item, formDataValue.ToIntegerList());
+							else
+								pi.SetValue(item, formDataValue.ToStringList());
+						}
 					}
 					else
 					{
@@ -869,10 +880,11 @@ namespace skky.util
 						else if (propType == typeof(DateTime))
 							pi.SetValue(item, formDataValue.ToDateTime());
 						else if (propType == typeof(System.Nullable<DateTime>))
-							pi.SetValue(item, formDataValue.ToDateTime());
-						else if (propType == typeof(TimeSpan)
-							|| propType == typeof(System.Nullable<TimeSpan>))
+							pi.SetValue(item, formDataValue.ToDateTimeNullable());
+						else if (propType == typeof(TimeSpan))
 							pi.SetValue(item, formDataValue.ToTimeSpan());
+						else if (propType == typeof(System.Nullable<TimeSpan>))
+							pi.SetValue(item, formDataValue.ToTimeSpanNullable());
 						else
 							pi.SetValue(item, formDataValue);
 					}
@@ -882,5 +894,18 @@ namespace skky.util
 			return item;
 		}
 		#endregion
+
+		public static dynamic ToDynamic(this object value)
+		{
+			IDictionary<string, object> expando = new ExpandoObject();
+
+			if (null != value)
+			{
+				foreach (PropertyDescriptor property in TypeDescriptor.GetProperties(value.GetType()))
+					expando.Add(property.Name, property.GetValue(value));
+			}
+
+			return expando as ExpandoObject;
+		}
 	}
 }

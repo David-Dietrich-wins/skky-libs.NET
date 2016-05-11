@@ -28,6 +28,16 @@ namespace skky.jqGrid
 			if (null != sortAscending)
 				sord = (sortAscending.Value ? CONST_sordAsc : CONST_sordDesc);
 		}
+		public ActionParams(string sortField, string sortOrder, int maxrows = 0)
+		{
+			if (!string.IsNullOrWhiteSpace(sortField))
+				sidx = sortField;
+
+			if (!string.IsNullOrWhiteSpace(sortOrder))
+				sord = sortOrder;
+
+			rows = maxrows;
+		}
 
 		[DataContract]
 		public class Rule

@@ -158,22 +158,33 @@ namespace skkyMVC.Controllers
 			rs.AddError(errorMessage);
 			return ReturnStatusNotFound(rs);
 		}
+
+		public static string GetExceptionMessage(Exception ex)
+		{
+			if (null != ex)
+			{
+				if (null != ex.InnerException && !string.IsNullOrEmpty(ex.InnerException.Message))
+					return GetExceptionMessage(ex.InnerException);
+
+				return ex.Message;
+			}
+
+			return string.Empty;
+		}
 		protected void AddEditItemException(Exception ex, string objectName)
 		{
 			rs.AddError("Error editing item.");
 
-			if (ex.Message.Contains("duplicate") || (null != ex.InnerException && ex.InnerException.Message.Contains("duplicate")))
+			if (GetExceptionMessage(ex).Contains("duplicate"))
 			{
 				rs.AddMessage("Items are unique.");
 				rs.AddMessage("You attempted to add a " + objectName + " that already exists.");
 			}
 			else
 			{
-				if (null != ex.InnerException && !string.IsNullOrEmpty(ex.InnerException.Message))
-					rs.AddMessage(ex.InnerException.Message);
-				else
-					rs.AddMessage(ex.Message);
+				rs.AddMessage(GetExceptionMessage(ex));
 			}
+
 			rs.AddMessage("Please try again.");
 		}
 		protected void AddEmptyFieldError(string operation, string objectName, string fieldName)

@@ -43,6 +43,7 @@ namespace skky.Types
 		public const string CONST_Id = "Id";
 		public const string CONST_ImportType = "ImportType";
 		public const string CONST_Last = "Last";
+		public const string CONST_lastName = "lastName";
 		public const string CONST_LastName = "LastName";
 		public const string CONST_LastUpdatedDateTime = "LastUpdatedDateTime";
 		public const string CONST_Latitude = "Latitude";
