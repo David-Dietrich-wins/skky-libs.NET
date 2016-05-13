@@ -13,6 +13,7 @@ using System.Text;
 using System.Web.UI;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Web.Helpers;
 
 namespace skkyMVC.Controllers
 {
@@ -404,6 +405,236 @@ namespace skkyMVC.Controllers
 			List<string> chkboxids = ids.ToStringList("\"");
 
 			return chkboxids;
+		}
+
+		protected void WriteRequestAndReferrerInfo()
+		{
+			string msg = string.Empty;
+			int messageNum = 0;
+
+			if (null != Request.UserLanguages && Request.UserLanguages.Count() > 0)
+			{
+				msg = string.Empty;
+				messageNum = 0;
+
+				foreach (var seg in Request.UserLanguages)
+				{
+					if (!string.IsNullOrEmpty(msg))
+						msg += ", ";
+
+					msg += string.Format("{0}: {1}", messageNum, seg[messageNum]);
+					++messageNum;
+				}
+			}
+
+			TraceInformation("Default", "UserHostAddress: " + (Request.UserHostAddress ?? string.Empty)
+				+ ", UserHostName: " + (Request.UserHostName ?? string.Empty)
+				+ ", UserLanguages: " + (msg ?? string.Empty)
+				+ ", UserAgent: " + (Request.UserAgent ?? string.Empty)
+			);
+
+			if (null != Request.UrlReferrer)
+			{
+				if (null != Request.UrlReferrer.Segments && Request.UrlReferrer.Segments.Count() > 0)
+				{
+					msg = string.Empty;
+					messageNum = 0;
+
+					foreach (var seg in Request.UrlReferrer.Segments)
+					{
+						if (!string.IsNullOrEmpty(msg))
+							msg += ", ";
+
+						msg += string.Format("{0}: {1}", messageNum, seg[messageNum]);
+						++messageNum;
+					}
+				}
+
+				TraceInformation("Default", "URL Referrer: "
+					+ ", AbsolutePath: " + (Request.UrlReferrer.AbsolutePath ?? string.Empty)
+					+ ", AbsoluteUri: " + (Request.UrlReferrer.AbsoluteUri ?? string.Empty)
+					+ ", Authority: " + (Request.UrlReferrer.Authority ?? string.Empty)
+					+ ", DnsSafeHost: " + (Request.UrlReferrer.DnsSafeHost ?? string.Empty)
+					+ ", Fragment: " + (Request.UrlReferrer.Fragment ?? string.Empty)
+					+ ", Host: " + (Request.UrlReferrer.Host ?? string.Empty)
+					+ ", HostNameType: " + (Request.UrlReferrer.HostNameType.ToString() ?? string.Empty)
+					+ ", LocalPath: " + (Request.UrlReferrer.LocalPath ?? string.Empty)
+					+ ", OriginalString: " + (Request.UrlReferrer.OriginalString ?? string.Empty)
+					+ ", PathAndQuery: " + (Request.UrlReferrer.PathAndQuery ?? string.Empty)
+					+ ", Port: " + (Request.UrlReferrer.Port.ToString() ?? string.Empty)
+					+ ", Query: " + (Request.UrlReferrer.Query ?? string.Empty)
+					+ ", Scheme: " + (Request.UrlReferrer.Scheme ?? string.Empty)
+					+ ", Segments: " + msg
+					+ ", UserInfo: " + (Request.UrlReferrer.UserInfo ?? string.Empty)
+					);
+			}
+
+			if (null != Request.Url)
+			{
+				if (null != Request.Url.Segments && Request.Url.Segments.Count() > 0)
+				{
+					msg = string.Empty;
+					messageNum = 0;
+
+					foreach (var seg in Request.Url.Segments)
+					{
+						if (!string.IsNullOrEmpty(msg))
+							msg += ", ";
+
+						msg += string.Format("{0}: {1}", messageNum, seg[messageNum]);
+						++messageNum;
+					}
+				}
+
+				TraceInformation("Default", "Raw URL: " + Request.RawUrl
+					+ ", AbsolutePath: " + (Request.Url.AbsolutePath ?? string.Empty)
+					+ ", AbsoluteUri: " + (Request.Url.AbsoluteUri ?? string.Empty)
+					+ ", Authority: " + (Request.Url.Authority ?? string.Empty)
+					+ ", DnsSafeHost: " + (Request.Url.DnsSafeHost ?? string.Empty)
+					+ ", Fragment: " + (Request.Url.Fragment ?? string.Empty)
+					+ ", Host: " + (Request.Url.Host ?? string.Empty)
+					+ ", HostNameType: " + (Request.Url.HostNameType.ToString() ?? string.Empty)
+					+ ", LocalPath: " + (Request.Url.LocalPath ?? string.Empty)
+					+ ", OriginalString: " + (Request.Url.OriginalString ?? string.Empty)
+					+ ", PathAndQuery: " + (Request.Url.PathAndQuery ?? string.Empty)
+					+ ", Port: " + (Request.Url.Port.ToString() ?? string.Empty)
+					+ ", Query: " + (Request.Url.Query ?? string.Empty)
+					+ ", Scheme: " + (Request.Url.Scheme ?? string.Empty)
+					+ ", Segments: " + msg
+					+ ", UserInfo: " + (Request.Url.UserInfo ?? string.Empty)
+					);
+			}
+		}
+
+		protected void EndUserSession(string redirectUrl = null, bool addReturnUrl = true)
+		{
+			// Expire all Session Keys
+			Session.Abandon();
+			HttpContext.User = null;
+
+			// Expire all Cookies
+			int cookieCount = Request.Cookies.Count; //Get the number of cookies and use that as the limit
+			//Loop through the cookies
+			for (int i = 0; i < cookieCount; i++)
+			{
+				string cookieName = Request.Cookies[i].Name;    //get the name of the current cookie
+				if ("ASP.NET_SessionId" == cookieName
+					|| AntiForgeryConfig.CookieName == cookieName
+					|| cookieName.Contains("AspNet")
+					|| cookieName.Contains("Asp.Net"))
+				{
+					HttpCookie aCookie = new HttpCookie(cookieName);    //create a new cookie with the same name as the one you're deleting
+					aCookie.Value = "";    //set a blank value to the cookie
+					aCookie.Expires = DateTime.Now.AddDays(-1);    //Setting the expiration date in the past deletes the cookie
+
+					Response.Cookies.Add(aCookie);    //Set the cookie
+				}
+			}
+
+			if(!string.IsNullOrEmpty(redirectUrl))
+			{
+				if(addReturnUrl)
+					redirectUrl += "?returnUrl=" + System.Web.HttpUtility.HtmlEncode(Request.Url.AbsolutePath);
+
+				Response.Redirect(redirectUrl, true);
+			}
+		}
+
+		protected string GetCookie(string cookieName, string key)
+		{
+			var cookie = Request.Cookies[cookieName];
+			return cookie != null ? HttpUtility.UrlDecode(cookie[key]) : "";
+		}
+		protected void SetCookie(string cookieName, List<StringString> strs)
+		{
+			var cookie = new HttpCookie(cookieName);
+			foreach (var item in strs)
+				cookie[item.stringValue] = HttpUtility.UrlEncode(item.string2Value);
+
+			Response.Cookies.Add(cookie);
+		}
+		protected ActionParams GetActionParamsFromGridCookie()
+		{
+			string apindex = GetCookie("gridCookie", "sidx");
+			string aporder = GetCookie("gridCookie", "sord");
+			int aprows = GetCookie("gridCookie", "rows").ToInteger();
+
+			return new ActionParams(apindex, aporder, aprows);
+		}
+
+		protected string GetRequestString()
+		{
+			Stream req = Request.InputStream;
+			req.Seek(0, System.IO.SeekOrigin.Begin);
+
+			return new StreamReader(req).ReadToEnd();
+		}
+	}
+
+	public class RequiresHTTP : ActionFilterAttribute
+	{
+		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			HttpRequestBase req = filterContext.HttpContext.Request;
+			HttpResponseBase res = filterContext.HttpContext.Response;
+
+			//Check if we're secure or not and if we're on the local box
+			if (req.IsSecureConnection && !req.IsLocal)
+			{
+				var builder = new UriBuilder(req.Url)
+				{
+					Scheme = Uri.UriSchemeHttp,
+					Port = 80
+				};
+
+				res.Redirect(builder.Uri.ToString());
+			}
+
+			base.OnActionExecuting(filterContext);
+		}
+	}
+
+	public class RequiresSSL : ActionFilterAttribute
+	{
+		public override void OnActionExecuting(ActionExecutingContext filterContext)
+		{
+			HttpRequestBase req = filterContext.HttpContext.Request;
+			HttpResponseBase res = filterContext.HttpContext.Response;
+
+			//Check if we're secure or not and if we're on the local box
+			if (!req.IsSecureConnection && !req.IsLocal)
+			{
+				var builder = new UriBuilder(req.Url)
+				{
+					Scheme = Uri.UriSchemeHttps,
+					Port = 443
+				};
+
+				res.RedirectPermanent(builder.Uri.ToString());
+			}
+
+			base.OnActionExecuting(filterContext);
+		}
+	}
+
+	/// <summary>
+	/// Used to send the Anti-forgery token in the HTTP Header.
+	/// This allows us to send application/json requests without interference.
+	/// Be sure to add it to your $.ajax call in -- headers: site.addAntiForgeryToken(this.jfrm)
+	/// </summary>
+	[AttributeUsage(AttributeTargets.Method | AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
+	public sealed class ValidateHeaderAntiForgeryTokenAttribute : FilterAttribute, IAuthorizationFilter
+	{
+		public void OnAuthorization(AuthorizationContext filterContext)
+		{
+			if (filterContext == null)
+			{
+				throw new ArgumentNullException("filterContext");
+			}
+
+			var httpContext = filterContext.HttpContext;
+			var cookie = httpContext.Request.Cookies[AntiForgeryConfig.CookieName];
+			AntiForgery.Validate(cookie != null ? cookie.Value : null, httpContext.Request.Headers["__RequestVerificationToken"]);
 		}
 	}
 }
