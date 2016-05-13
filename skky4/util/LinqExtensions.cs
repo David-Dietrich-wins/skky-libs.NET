@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using skky.Types;
 using skky.jqGrid;
+using skky.Types;
 using System.Text;
 using System.ComponentModel;
 
@@ -354,7 +354,25 @@ namespace skky.util
 					break;
 				//string.Contains()
 				case WhereOperation.cn:
-					condition = Expression.Call(memberAccess, typeof(string).GetMethod("Contains"), Expression.Constant(value));
+					// Check if it's a date, and let's look for the day.
+					if (memberAccess.Type == typeof(System.DateTime))
+					{
+						if (null != value && !string.IsNullOrWhiteSpace(value.ToString()))
+						{
+							DateTime dtStart = value.ToString().ToDateTime();
+							dtStart = new DateTime(dtStart.Year, dtStart.Month, dtStart.Day, 0, 0, 0);
+							DateTime dtEnd = dtStart.AddDays(1);
+
+							var after = Expression.GreaterThanOrEqual(memberAccess, Expression.Constant(dtStart, typeof(System.DateTime)));
+							var before = Expression.LessThan(memberAccess, Expression.Constant(dtEnd, typeof(System.DateTime)));
+
+							condition = Expression.And(after, before);
+						}
+					}
+					else
+					{
+						condition = Expression.Call(memberAccess, typeof(string).GetMethod("Contains"), Expression.Constant(value));
+					}
 					break;
 				case WhereOperation.cni:
 					var methodInfo = typeof(string).GetMethod("IndexOf", new[] { typeof(string), typeof(StringComparison) });
@@ -465,7 +483,7 @@ namespace skky.util
 
 			if (!string.IsNullOrWhiteSpace(ap.sidx) && "\"null\"" != ap.sidx && "null" != ap.sidx && "'null'" != ap.sidx)
 			{
-				sidxDefault = ap.sidx;
+				sidxDefault = ap.GetTranslatedSortIndex();
 
 				// We only want to change the sort order if there is and index column.
 				if (!string.IsNullOrWhiteSpace(ap.sord))
