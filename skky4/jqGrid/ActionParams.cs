@@ -1,4 +1,5 @@
-﻿using System;
+﻿using skky.util;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,8 +20,12 @@ namespace skky.jqGrid
 		public const string CONST_sordDesc = "desc";
 
 		public ActionParams()
-		{ }
+		{
+			translateIdsForSearching = true;
+			searchTranslateTableColumnName = "name";
+		}
 		public ActionParams(string sortField, bool? sortAscending = null)
+			: this()
 		{
 			if (!string.IsNullOrEmpty(sortField))
 				sidx = sortField;
@@ -29,6 +34,7 @@ namespace skky.jqGrid
 				sord = (sortAscending.Value ? CONST_sordAsc : CONST_sordDesc);
 		}
 		public ActionParams(string sortField, string sortOrder, int maxrows = 0)
+			: this()
 		{
 			if (!string.IsNullOrWhiteSpace(sortField))
 				sidx = sortField;
@@ -105,6 +111,27 @@ namespace skky.jqGrid
 
 		[DataMember]
 		public string sord { get; set; }
+
+		/// <summary>
+		/// Used to transform idTable into Table.translateTableColumn (usually the name field).
+		/// </summary>
+		[DataMember]
+		public bool translateIdsForSearching { get; set; }
+
+		[DataMember]
+		public string searchTranslateTableColumnName { get; set; }
+
+		public string GetTranslatedSortIndex()
+		{
+			if (!string.IsNullOrEmpty(sidx)
+				&& translateIdsForSearching
+				&& !string.IsNullOrEmpty(searchTranslateTableColumnName)
+				&& sidx.StartsWith("id")
+				&& sidx.Length > 2)
+				return sidx.Mid(2) + "." + searchTranslateTableColumnName;
+
+			return sidx;
+		}
 
 		private Filter _Filter = null;
 		public Filter theFilter
