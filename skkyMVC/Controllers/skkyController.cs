@@ -361,19 +361,17 @@ namespace skkyMVC.Controllers
 			{
 				StringBuilder sb = new StringBuilder();
 
-				using (StringWriter sw = new StringWriter(sb))
+				StringWriter sw = new StringWriter(sb);
+				using (HtmlTextWriter output = new HtmlTextWriter(sw))
 				{
-					using (HtmlTextWriter output = new HtmlTextWriter(sw))
-					{
-						ViewContext viewContext = new ViewContext(context, result.View, viewData, tempData, output);
-						result.View.Render(viewContext, output);
-					}
+					ViewContext viewContext = new ViewContext(context, result.View, viewData, tempData, output);
+					result.View.Render(viewContext, output);
 				}
 
 				return sb.ToString();
 			}
 
-			return String.Empty;
+			return string.Empty;
 		}
 		#endregion
 
@@ -506,20 +504,27 @@ namespace skkyMVC.Controllers
 			}
 		}
 
-		protected void EndUserSession(string redirectUrl = null, bool addReturnUrl = true)
+		protected void EndUserSession(string redirectUrl = null, bool addReturnUrl = true, bool endResponse = false)
 		{
 			// Expire all Session Keys
-			Session.Abandon();
-			HttpContext.User = null;
+			if(null != Session)
+				Session.Abandon();
+
+			if(null != HttpContext && null != HttpContext.User)
+				HttpContext.User = null;
 
 			// Expire all Cookies
-			int cookieCount = Request.Cookies.Count; //Get the number of cookies and use that as the limit
+
+			int cookieCount = 0;
+			if(null != Request && null != Request.Cookies)
+				cookieCount = Request.Cookies.Count; //Get the number of cookies and use that as the limit
+
 			//Loop through the cookies
 			for (int i = 0; i < cookieCount; i++)
 			{
 				string cookieName = Request.Cookies[i].Name;    //get the name of the current cookie
 				if ("ASP.NET_SessionId" == cookieName
-					|| AntiForgeryConfig.CookieName == cookieName
+					//|| AntiForgeryConfig.CookieName == cookieName
 					|| cookieName.Contains("AspNet")
 					|| cookieName.Contains("Asp.Net"))
 				{
@@ -536,7 +541,7 @@ namespace skkyMVC.Controllers
 				if(addReturnUrl)
 					redirectUrl += "?returnUrl=" + System.Web.HttpUtility.HtmlEncode(Request.Url.AbsolutePath);
 
-				Response.Redirect(redirectUrl, true);
+				Response.Redirect(redirectUrl, endResponse);
 			}
 		}
 
