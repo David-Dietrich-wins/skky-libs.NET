@@ -53,7 +53,7 @@ namespace skky.Types
 		public PropertyManager GetDataRow(int offset)
 		{
 			if (offset < 0 || offset >= RowCount())
-				throw new Exception(string.Format("DataRowManager attempted to access an invalid row #%d.", offset));
+				throw new Exception(string.Format("DataRowManager attempted to access an invalid row #{0}.", offset));
 
 			return DataRows[offset];
 		}

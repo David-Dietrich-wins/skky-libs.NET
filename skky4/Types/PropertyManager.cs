@@ -36,7 +36,7 @@ namespace skky.Types
 		public Property GetProperty(int PropertyNum)
 		{
 			if (PropertyNum < 0 || PropertyNum >= base.Count)
-				throw new Exception(string.Format("PropertyManager attempted to access an invalid Property number of %d.", PropertyNum));
+				throw new Exception(string.Format("PropertyManager attempted to access an invalid Property number of {0}.", PropertyNum));
 
 			return this[PropertyNum];
 		}
