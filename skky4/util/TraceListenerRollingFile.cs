@@ -631,20 +631,14 @@ namespace skky.util
 		{
 			foreach (LogFileData logFile in logFileList.Values)
 			{
-				if (logFile.writer != null)
+				if (null != logFile.writer)
 				{
 					logFile.writer.Flush();
 					logFile.writer.Close();
-				}
-				logFile.writer = null;
-			}
-		}
 
-		public new void Dispose()
-		{
-			Console.WriteLine("RollingFileTraceListener.Dispose()");
-			this.Dispose(true);
-			GC.SuppressFinalize(this);
+					logFile.writer = null;
+				}
+			}
 		}
 
 		protected override void Dispose(bool disposing)
@@ -654,6 +648,8 @@ namespace skky.util
 				Flush();
 				Close();
 			}
+
+			base.Dispose(disposing);
 		}
 
 		public override void Flush()
