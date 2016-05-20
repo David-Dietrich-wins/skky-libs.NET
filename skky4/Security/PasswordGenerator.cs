@@ -15,7 +15,6 @@ namespace skky.Security
 		private const int UBoundLettersOnly = 51;
 		private const int UBoundLowercaseOnly = 25;
 
-		private RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider();
 		private int minSize = DefaultMinimum;
 		private int maxSize = DefaultMaximum;
 		private bool hasRepeatingCharacters = true;
@@ -43,7 +42,10 @@ namespace skky.Security
 
 			do
 			{
-				rng.GetBytes(rndnum);
+				using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
+				{
+					rng.GetBytes(rndnum);
+				}
 				urndnum = System.BitConverter.ToUInt32(rndnum, 0);
 			} while (urndnum >= xcludeRndBase);
 
