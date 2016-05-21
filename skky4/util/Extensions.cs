@@ -907,5 +907,18 @@ namespace skky.util
 
 			return expando as ExpandoObject;
 		}
+
+		public static string GetExceptionMessage(this Exception ex)
+		{
+			if (null != ex)
+			{
+				if (null != ex.InnerException && !string.IsNullOrEmpty(ex.InnerException.Message))
+					return GetExceptionMessage(ex.InnerException);
+
+				return ex.Message;
+			}
+
+			return string.Empty;
+		}
 	}
 }

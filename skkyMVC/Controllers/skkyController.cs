@@ -160,30 +160,18 @@ namespace skkyMVC.Controllers
 			return ReturnStatusNotFound(rs);
 		}
 
-		public static string GetExceptionMessage(Exception ex)
-		{
-			if (null != ex)
-			{
-				if (null != ex.InnerException && !string.IsNullOrEmpty(ex.InnerException.Message))
-					return GetExceptionMessage(ex.InnerException);
-
-				return ex.Message;
-			}
-
-			return string.Empty;
-		}
 		protected void AddEditItemException(Exception ex, string objectName)
 		{
 			rs.AddError("Error editing item.");
 
-			if (GetExceptionMessage(ex).Contains("duplicate"))
+			if (ex.GetExceptionMessage().Contains("duplicate"))
 			{
 				rs.AddMessage("Items are unique.");
 				rs.AddMessage("You attempted to add a " + objectName + " that already exists.");
 			}
 			else
 			{
-				rs.AddMessage(GetExceptionMessage(ex));
+				rs.AddMessage(ex.GetExceptionMessage());
 			}
 
 			rs.AddMessage("Please try again.");
@@ -504,7 +492,7 @@ namespace skkyMVC.Controllers
 			}
 		}
 
-		protected void EndUserSession(string redirectUrl = null, bool addReturnUrl = true, bool endResponse = false)
+		protected void EndUserSession(string redirectUrl = null, bool addReturnUrl = true, bool expireDotNetCookies = false, bool endResponse = false)
 		{
 			// Expire all Session Keys
 			if(null != Session)
@@ -514,31 +502,33 @@ namespace skkyMVC.Controllers
 				HttpContext.User = null;
 
 			// Expire all Cookies
-
-			int cookieCount = 0;
-			if(null != Request && null != Request.Cookies)
-				cookieCount = Request.Cookies.Count; //Get the number of cookies and use that as the limit
-
-			//Loop through the cookies
-			for (int i = 0; i < cookieCount; i++)
+			if (expireDotNetCookies)
 			{
-				string cookieName = Request.Cookies[i].Name;    //get the name of the current cookie
-				if ("ASP.NET_SessionId" == cookieName
-					//|| AntiForgeryConfig.CookieName == cookieName
-					|| cookieName.Contains("AspNet")
-					|| cookieName.Contains("Asp.Net"))
-				{
-					HttpCookie aCookie = new HttpCookie(cookieName);    //create a new cookie with the same name as the one you're deleting
-					aCookie.Value = "";    //set a blank value to the cookie
-					aCookie.Expires = DateTime.Now.AddDays(-1);    //Setting the expiration date in the past deletes the cookie
+				int cookieCount = 0;
+				if (null != Request && null != Request.Cookies)
+					cookieCount = Request.Cookies.Count; //Get the number of cookies and use that as the limit
 
-					Response.Cookies.Add(aCookie);    //Set the cookie
+				//Loop through the cookies
+				for (int i = 0; i < cookieCount; i++)
+				{
+					string cookieName = Request.Cookies[i].Name;    //get the name of the current cookie
+					if ("ASP.NET_SessionId" == cookieName
+						//|| AntiForgeryConfig.CookieName == cookieName
+						|| cookieName.Contains("AspNet")
+						|| cookieName.Contains("Asp.Net"))
+					{
+						HttpCookie aCookie = new HttpCookie(cookieName);    //create a new cookie with the same name as the one you're deleting
+						aCookie.Value = "";    //set a blank value to the cookie
+						aCookie.Expires = DateTime.Now.AddDays(-1);    //Setting the expiration date in the past deletes the cookie
+
+						Response.Cookies.Add(aCookie);    //Set the cookie
+					}
 				}
 			}
 
 			if(!string.IsNullOrEmpty(redirectUrl))
 			{
-				if(addReturnUrl)
+				if(addReturnUrl && !Request.Url.AbsolutePath.Contains("/Login"))
 					redirectUrl += "?returnUrl=" + System.Web.HttpUtility.HtmlEncode(Request.Url.AbsolutePath);
 
 				Response.Redirect(redirectUrl, endResponse);
