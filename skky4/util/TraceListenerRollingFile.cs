@@ -18,10 +18,12 @@ namespace skky.util
 
 		private string path = AppDomain.CurrentDomain.BaseDirectory;
 		private static long fileNameCheckSeconds = 10;
-		private static string recordDelimeter = String.Empty;
+		private static string recordDelimeter = string.Empty;
 		private static string fieldDelimeter = "\t";
 		private static string subFieldDelimeter = ", ";
 		private static string dateTimeFormatStyle = "h:mm:ss tt"; // t = 3:32:14 PM
+
+		private object _lockObject = new object();
 
 		//		private string fileNamePattern = AppDomain.CurrentDomain.BaseDirectory + AppDomain.CurrentDomain.FriendlyName + "_{yyyyMMdd_HH}.log";
 		//		private string rolledFileName = string.Empty;
@@ -49,6 +51,7 @@ namespace skky.util
 					string setting = ConfigurationManager.AppSettings["TraceListenerRollingFile.FilesToKeep"];
 					filesToKeep = !String.IsNullOrEmpty(setting) ? int.Parse(setting) : 48;
 				}
+
 				return filesToKeep;
 			}
 		}
@@ -97,7 +100,7 @@ namespace skky.util
 		public TraceListenerRollingFile(string initializeData, string name)
 			: base(name)
 		{
-			lock (typeof(TraceListenerRollingFile))
+			lock (_lockObject)
 			{
 				if (!string.IsNullOrEmpty(initializeData))
 				{

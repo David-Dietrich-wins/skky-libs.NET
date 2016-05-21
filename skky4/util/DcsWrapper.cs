@@ -54,20 +54,35 @@ namespace skky.util
 		#region GetJson<T>
 		public static string GetJson<T>(T instance)
 		{
-			string json = string.Empty;
-			DataContractJsonSerializer dcs = new DataContractJsonSerializer(typeof(T));
+			MemoryStream stream = null;
+			XmlWriter writer = null;
 
-			using(MemoryStream stream = new MemoryStream())
-			using (XmlWriter writer = JsonReaderWriterFactory.CreateJsonWriter(stream))
+			try
 			{
+				DataContractJsonSerializer dcs = new DataContractJsonSerializer(typeof(T));
+
+				stream = new MemoryStream();
+				writer = JsonReaderWriterFactory.CreateJsonWriter(stream);
+
 				dcs.WriteObject(writer, instance);
 				writer.Flush();
 				stream.Seek(0, SeekOrigin.Begin);
-				using (StreamReader reader = new StreamReader(stream))
-					json = reader.ReadToEnd();
-			}
 
-			return json;
+				using (StreamReader reader = new StreamReader(stream))
+				{
+					stream = null;
+
+					return reader.ReadToEnd();
+				}
+			}
+			finally
+			{
+				if (null != writer)
+					writer.Dispose();
+
+				if (null != stream)
+					stream.Dispose();
+			}
 		} 
 		#endregion
 
@@ -75,86 +90,123 @@ namespace skky.util
 		#region GetObject<T>
 		public static T GetObject<T>(string xml)
 		{
-			T instance;
 			DataContractSerializer dcs = new DataContractSerializer(typeof(T));
+			StringReader sr = null;
 
-			using (StringReader sr = new StringReader(xml))
-			using (XmlReader reader = XmlReader.Create(sr))
+			try
 			{
-				instance = (T)dcs.ReadObject(reader);
-			}
+				sr = new StringReader(xml);
 
-			return instance;
+				using (XmlReader reader = XmlReader.Create(sr))
+				{
+					sr = null;
+					return (T)dcs.ReadObject(reader);
+				}
+			}
+			finally
+			{
+				if (null != sr)
+					sr.Dispose();
+			}
 		}
 		public static T GetObjectFromJson<T>(string json)
 		{
-			T instance;
 			DataContractJsonSerializer dcs = new DataContractJsonSerializer(typeof(T));
+			MemoryStream ms = null;
 
-			using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(json)))
+			try
 			{
+				ms = new MemoryStream(Encoding.Default.GetBytes(json));
 				using (var reader = JsonReaderWriterFactory.CreateJsonReader(ms, new XmlDictionaryReaderQuotas()))
 				{
-					instance = (T)dcs.ReadObject(reader);
+					ms = null;
+
+					return (T)dcs.ReadObject(reader);
 				}
 			}
-
-			return instance;
+			finally
+			{
+				if (null != ms)
+					ms.Dispose();
+			}
 		}
 
 		public static T GetObject<T>(Stream xml)
 		{
-			T instance;
 			DataContractSerializer dcs = new DataContractSerializer(typeof(T));
+			StreamReader sr = null;
 
-			using (StreamReader sr = new StreamReader(xml))
-			using (XmlReader reader = XmlReader.Create(sr))
+			try
 			{
-				instance = (T)dcs.ReadObject(reader);
-			}
+				sr = new StreamReader(xml);
 
-			return instance;
+				using (XmlReader reader = XmlReader.Create(sr))
+				{
+					sr = null;
+
+					return (T)dcs.ReadObject(reader);
+				}
+			}
+			finally
+			{
+				if(null != sr)
+					sr.Dispose();
+			}
 		}
 		public static T GetObjectFromJson<T>(Stream json)
 		{
-			T instance;
 			DataContractJsonSerializer dcs = new DataContractJsonSerializer(typeof(T));
 
 			using (var reader = JsonReaderWriterFactory.CreateJsonReader(json, new XmlDictionaryReaderQuotas()))
 			{
-				instance = (T)dcs.ReadObject(reader);
+				return (T)dcs.ReadObject(reader);
 			}
-
-			return instance;
 		}
 		#endregion
 
 		#region GetObject
 		public static object GetObjectFromJson(string json, Type type)
 		{
-			object instance;
 			DataContractJsonSerializer dcs = new DataContractJsonSerializer(type);
+			StringReader sr = null;
 
-			using (StringReader sr = new StringReader(json))
-			using (XmlReader reader = XmlReader.Create(sr))
+			try
 			{
-				instance = dcs.ReadObject(reader);
-			}
+				sr = new StringReader(json);
+				using (XmlReader reader = XmlReader.Create(sr))
+				{
+					sr = null;
 
-			return instance;
+					return dcs.ReadObject(reader);
+				}
+			}
+			finally
+			{
+				if (null != sr)
+					sr.Dispose();
+			}
 		}
 		public static object GetObject(string xml, Type type)
 		{
-			object instance;
 			DataContractSerializer dcs = new DataContractSerializer(type);
+			StringReader sr = null;
 
-			using (StringReader sr = new StringReader(xml))
-			using (XmlReader reader = XmlReader.Create(sr))
+			try
 			{
-				instance = dcs.ReadObject(reader);
-			}
+				sr = new StringReader(xml);
 
-			return instance;
+				using (XmlReader reader = XmlReader.Create(sr))
+				{
+					sr = null;
+
+					return dcs.ReadObject(reader);
+				}
+			}
+			finally
+			{
+				if (null != sr)
+					sr.Dispose();
+			}
 		}
 		#endregion
 	}

@@ -24,7 +24,7 @@ namespace skky.util
 				catch (Exception ex)
 				{
 					skky.util.Trace.Warning("Error getting Excel column named: " + columnName + ".", ex);
-					throw ex;
+					throw;
 				}
 			}
 

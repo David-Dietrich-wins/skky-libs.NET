@@ -11,7 +11,7 @@ namespace LinqKit
 	/// An IQueryable wrapper that allows us to visit the query's expression tree just before LINQ to SQL gets to it.
 	/// This is based on the excellent work of Tomas Petricek: http://tomasp.net/blog/linq-expand.aspx
 	/// </summary>
-	public class ExpandableQuery<T> : IQueryable<T>, IOrderedQueryable<T>, IOrderedQueryable
+	public sealed class ExpandableQuery<T> : IQueryable<T>, IOrderedQueryable<T>, IOrderedQueryable
 	{
 		ExpandableQueryProvider<T> _provider;
 		IQueryable<T> _inner;

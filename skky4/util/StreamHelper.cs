@@ -29,10 +29,6 @@ namespace skky.util
 		}
 		static public string GetString(Stream stream, int encoding)
 		{
-			return GetString(stream, encoding, true);
-		}
-		static public string GetString(Stream stream, int encoding, bool closeStream)
-		{
 			if (stream != null)
 			{
 				Encoding enc = System.Text.Encoding.GetEncoding(encoding);
@@ -42,10 +38,7 @@ namespace skky.util
 						return sr.ReadToEnd();
 				}
 				finally
-				{
-					if (closeStream)
-						stream.Close();
-				}
+				{ }
 			}
 
 			return string.Empty;
@@ -162,7 +155,7 @@ namespace skky.util
 				}
 				Debug.WriteLine("Error accessing Url " + url);
 				// EventLogUtil.WriteToLog(Assembly.GetExecutingAssembly().ToString(), System.Reflection.MethodBase.GetCurrentMethod().Name.ToString() + " encountered an error. " + e.Message, EventLogEntryType.Error);
-				throw e;
+				throw;
 			}
 
 			Stream respStream = null;
@@ -178,7 +171,7 @@ namespace skky.util
 				Debug.WriteLine("Error writing to:  " + filePath + e.Message);
 				//TODO: Add Trace Logging
 				// EventLogUtil.WriteToLog(Assembly.GetExecutingAssembly().ToString(), System.Reflection.MethodBase.GetCurrentMethod().Name.ToString() + " encountered an error." + e.Message, EventLogEntryType.Error);
-				throw e;
+				throw;
 			}
 			finally
 			{

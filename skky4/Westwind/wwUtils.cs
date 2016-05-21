@@ -450,66 +450,45 @@ namespace Westwind.Tools
 		/// <param name="ObjectType">The Type of the object. Use typeof(yourobject class)</param>
 		/// <param name="BinarySerialization">determines whether we use Xml or Binary serialization</param>
 		/// <returns>Instance of the deserialized object or null. Must be cast to your object type</returns>
-		public static object DeSerializeObject(string Filename,Type ObjectType,bool BinarySerialization) 
+		public static object DeSerializeObject(string Filename, Type ObjectType, bool BinarySerialization) 
 		{
-			object Instance = null;
-			
 			if (!BinarySerialization) 
 			{
 
-				XmlReader reader = null;
-				XmlSerializer serializer = null;
 				FileStream fs = null;
 				try 
 				{
 					// Create an instance of the XmlSerializer specifying type and namespace.
-					serializer = new XmlSerializer(ObjectType);
+					var serializer = new XmlSerializer(ObjectType);
 
 					// A FileStream is needed to read the XML document.
 					fs = new FileStream(Filename, FileMode.Open);
-					reader = new XmlTextReader(fs);
-				
-					Instance = serializer.Deserialize(reader);
 
-				}
-				catch 
-				{
-					return null;
+					using (var reader = new XmlTextReader(fs))
+					{
+						fs = null;
+
+						return serializer.Deserialize(reader);
+					}
 				}
 				finally
 				{
-					if (fs != null)
-						fs.Close();
-
-					if (reader != null)
-						reader.Close();
+					if (null != fs)
+						fs.Dispose();
 				}
 			}
 			else 
 			{
-
-				BinaryFormatter serializer = null;
-				FileStream fs = null;
-
-				try 
+				try
 				{
-					serializer = new BinaryFormatter();
-					fs = new FileStream(Filename, FileMode.Open);
-					Instance = serializer.Deserialize(fs);
+					BinaryFormatter serializer = new BinaryFormatter();
 
-				}
-				catch 
-				{
-					return null;
+					using (var fs = new FileStream(Filename, FileMode.Open))
+						return serializer.Deserialize(fs);
 				}
 				finally
-				{
-					if (fs != null)
-						fs.Close();
-				}
+				{ }
 			}
-
-			return Instance;
 		}
 		#endregion
 

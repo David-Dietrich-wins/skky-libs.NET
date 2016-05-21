@@ -28,28 +28,34 @@ namespace skky.web
 		}
 		public static string Request(string url, string json)
 		{
-			string result = string.Empty;
-			var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-			httpWebRequest.ContentType = "text/json";
-			httpWebRequest.Method = "POST";
+			StreamWriter streamWriter = null;
 
-			using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+			try
 			{
+				var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+				httpWebRequest.ContentType = "text/json";
+				httpWebRequest.Method = "POST";
+
 				//string json = "{\"user\":\"test\"," +
 				//			  "\"password\":\"bla\"}";
 
+				streamWriter = new StreamWriter(httpWebRequest.GetRequestStream());
 				streamWriter.Write(json);
 				streamWriter.Flush();
-				streamWriter.Close();
 
 				var httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
 				using (var streamReader = new StreamReader(httpResponse.GetResponseStream()))
 				{
-					result = streamReader.ReadToEnd();
+					streamWriter = null;
+
+					return streamReader.ReadToEnd();
 				}
 			}
-
-			return result;
+			finally
+			{
+				if (null == streamWriter)
+					streamWriter.Dispose();
+			}
 		}
 	}
 }

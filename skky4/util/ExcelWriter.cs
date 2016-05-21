@@ -6,7 +6,7 @@ using System.IO;
 
 namespace skky.util
 {
-	public class ExcelWriter
+	public class ExcelWriter : IDisposable
 	{
 		private Stream stream;
 		private BinaryWriter writer;
@@ -14,6 +14,27 @@ namespace skky.util
 		private ushort[] clBegin = { 0x0809, 8, 0, 0x10, 0, 0 };
 		private ushort[] clEnd = { 0x0A, 00 };
 
+		~ExcelWriter()
+		{
+			Dispose(false);
+		}
+
+		public void Dispose()
+		{
+			Dispose(true);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if(null != writer)
+				{
+					writer.Dispose();
+					writer = null;
+				}
+			}
+		}
 
 		private void WriteUshortArray(ushort[] value)
 		{

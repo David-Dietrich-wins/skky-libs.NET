@@ -263,7 +263,7 @@ namespace skky.util
 			catch (Exception ex)
 			{
 				skky.util.Trace.Critical(ex);
-				throw ex;
+				throw;
 			}
 		}
 		public static ExcelWorkbook Open(string fileName, bool writable)

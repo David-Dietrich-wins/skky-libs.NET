@@ -18,7 +18,12 @@ namespace skky.util
 			sourceIDString = "";
 		}
 
-		protected TraceBase(String sourceID)
+		~TraceBase()
+		{
+			Dispose(false);
+		}
+
+		protected TraceBase(string sourceID)
 		{
 			this.sourceID = sourceID;
 			sourceIDString = GetSourceString(sourceID);
@@ -357,10 +362,14 @@ namespace skky.util
 		#endregion
 
 		#region IDisposable Members
-
 		public void Dispose()
 		{
-			if (!disposed)
+			Dispose(true);
+		}
+
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing && !disposed)
 			{
 				lock (traceSource)
 				{
@@ -372,7 +381,6 @@ namespace skky.util
 		}
 
 		protected bool disposed;
-
 		#endregion
 	}
 
@@ -381,7 +389,7 @@ namespace skky.util
 		#region Fields
 
 		private static Dictionary<String, SourceIDTrace> sourceTraceList = new Dictionary<String, SourceIDTrace>();
-		private String sourceName;
+		private string sourceName;
 
 		#endregion
 
@@ -456,7 +464,7 @@ namespace skky.util
 	{
 		#region Fields
 
-		public String sourceID;
+		public string sourceID;
 		public Exception e;
 
 		#endregion

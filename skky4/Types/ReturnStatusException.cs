@@ -44,5 +44,13 @@ namespace skky.Types
 		{
 			return Message.Count() > 0 ? true : false;
 		}
+
+		//[SecurityPermission(SecurityAction.Demand, SerializationFormatter = true)]
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+
+			info.AddValue("returnStatus", returnStatus);
+		}
 	}
 }

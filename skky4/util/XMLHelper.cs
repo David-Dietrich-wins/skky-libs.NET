@@ -418,15 +418,26 @@ namespace skky.util
 			if (o == null)
 				return string.Empty;
 
-			using (var ms = new MemoryStream())
+			MemoryStream ms = null;
+			try
 			{
+				ms = new MemoryStream();
+
 				XmlSerializer xml = new XmlSerializer(o.GetType());
 				xml.Serialize(ms, o);
 				ms.Seek(0, SeekOrigin.Begin);
+
 				using (var sr = new StreamReader(ms))
 				{
+					ms = null;
+
 					return sr.ReadToEnd();
 				}
+			}
+			finally
+			{
+				if (null != ms)
+					ms.Dispose();
 			}
 		}
 
@@ -464,10 +475,23 @@ namespace skky.util
 
 		public static XDocument getXDocument(string xml)
 		{
-			using (StringReader sr = new StringReader(xml))
-			using (XmlReader reader = XmlReader.Create(sr))
+			StringReader sr = null;
+			
+			try
 			{
-				return XDocument.Load(reader);
+				sr = new StringReader(xml);
+
+				using (XmlReader reader = XmlReader.Create(sr))
+				{
+					sr = null;
+
+					return XDocument.Load(reader);
+				}
+			}
+			finally
+			{
+				if (null != sr)
+					sr.Dispose();
 			}
 		}
 		public static T DeserializeXDocument<T>(XDocument doc)

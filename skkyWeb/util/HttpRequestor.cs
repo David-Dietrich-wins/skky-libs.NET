@@ -144,7 +144,7 @@ namespace skkyWeb.util
 			if (wr == null)
 				return string.Empty;
 
-			return StreamHelper.GetString(wr.GetResponseStream(), encoding, false);
+			return StreamHelper.GetString(wr.GetResponseStream(), encoding);
 		}
 		public string RetrieveString()
 		{
