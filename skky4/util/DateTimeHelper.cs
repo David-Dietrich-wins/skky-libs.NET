@@ -136,13 +136,20 @@ namespace skky.util
 		{
 			return UnixEpoch.AddSeconds(seconds);
 		}
-		
+
 		public static long ToUnixTimestamp(this DateTime? dateTime)
 		{
 			if (null == dateTime)
 				return 0;
 
 			return (long)(dateTime.Value.ToUniversalTime() - UnixEpoch).TotalSeconds;
+		}
+		public static long ToUnixTimestampMillis(this DateTime? dateTime)
+		{
+			if (null == dateTime)
+				return 0;
+
+			return (long)(dateTime.Value.ToUniversalTime() - UnixEpoch).TotalMilliseconds;
 		}
 
 		//public static DateTime GetDateTimeFromObject(this object o)
