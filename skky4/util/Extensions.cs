@@ -603,20 +603,21 @@ namespace skky.util
 				s = s.Trim('#').ToLower();
 				if (s.Length == 3 || s.Length == 6)
 				{
+					int charCount = 0;
 					char[] ch = new char[s.Length];
-					for (int i = 0; i < s.Length; ++i)
+					for (charCount = 0; charCount < s.Length; ++charCount)
 					{
-						if (!s.Mid(i, 1).Contains("abcdef012346789"))
+						if (!"abcdef012346789".Contains(s.Mid(charCount, 1)))
 							break;
 
-						ch[i] = s[i];
+						ch[charCount] = s[charCount];
 					}
 
 					int hex = 0;
 					int red = 0;
 					int green = 0;
 					int blue = 0;
-					if (s.Length == 3)
+					if (charCount == 3)
 					{
 						hex = ch[0].FromHex();
 						red = ((hex * 16) + hex);
@@ -625,7 +626,7 @@ namespace skky.util
 						hex = ch[2].FromHex();
 						blue = ((hex * 16) + hex);
 					}
-					else
+					else if(charCount == 6)
 					{
 						hex = ch[0].FromHex() * 16;
 						red = hex + ch[1].FromHex();
@@ -633,6 +634,10 @@ namespace skky.util
 						green = hex + ch[3].FromHex();
 						hex = ch[4].FromHex() * 16;
 						blue = hex + ch[5].FromHex();
+					}
+					else
+					{
+						return Color.Empty;
 					}
 
 					return Color.FromArgb(red, green, blue);
