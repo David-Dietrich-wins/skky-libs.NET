@@ -654,7 +654,7 @@ namespace skky.util
 		/// <param name="sCommaList">A comma-delimited string.</param>
 		/// <param name="trimChars">A string of characters to trim from each string array element.</param>
 		/// <returns>A List of strings.</returns>
-		public static List<string> ToStringList(this string sCommaList, string trimChars = null)
+		public static List<string> ToStringList(this string sCommaList, string trimChars = " ")
 		{
 			Regex regex = new Regex("(?<=,(\"|\')).*?(?=(\"|\'),)|(^.*?(?=,))|((?<=,).*?(?=,))|((?<=,).*?$)");
 
