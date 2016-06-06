@@ -27,7 +27,7 @@ namespace skky.Types
 
 		public static ReturnStatus AddExceptionErrorMessage(ReturnStatus rs, Exception ex)
 		{
-			string exceptionMessage = skky.util.Trace.GetExceptionMessageString(ex);
+			string exceptionMessage = ex.GetExceptionMessage();
 			if (null == rs)
 				rs = new ReturnStatus(-1, exceptionMessage);
 			else
