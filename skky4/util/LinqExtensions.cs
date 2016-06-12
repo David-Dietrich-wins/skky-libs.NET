@@ -12,7 +12,7 @@ namespace skky.util
 {
 	public static class LinqExtensions
 	{
-		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, ActionParams ap, string defaultSortColumn = "")
+		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, ActionParams ap, string defaultSortColumn = "", string sortDirection = ActionParams.CONST_sordAsc)
 		{
 			if (null != ap && !string.IsNullOrWhiteSpace(ap.sidx) && !string.IsNullOrWhiteSpace(ap.sord))
 			{
@@ -20,7 +20,7 @@ namespace skky.util
 			}
 			else if(!string.IsNullOrWhiteSpace(defaultSortColumn))
 			{
-				return source.getSorted<T>(defaultSortColumn);
+				return source.getSorted<T>(defaultSortColumn, sortDirection);
 			}
 
 			return source;
