@@ -54,8 +54,15 @@ namespace skky.Types
 		{
 			return HasErrors() || HasMessages();
 		}
+		public virtual bool HasAnyData()
+		{
+			return HasAnyMessages()
+				|| HasErrors()
+				|| code != 0
+				|| !string.IsNullOrEmpty(url);
+		}
 
-		public int AddMessages(ReturnStatusWithoutObject rs)
+		public int AppendMessages(ReturnStatusWithoutObject rs)
 		{
 			int messagesAdded = 0;
 			if (null != rs)
@@ -84,6 +91,10 @@ namespace skky.Types
 			return string.Empty;
 		}
 
+		public void AddException(Exception ex)
+		{
+			err.Add(ex.GetExceptionMessage());
+		}
 		public void AddError(string errorString)
 		{
 			err.Add(errorString);
