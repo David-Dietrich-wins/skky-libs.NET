@@ -656,9 +656,12 @@ namespace skky.util
 		/// <returns>A List of strings.</returns>
 		public static List<string> ToStringList(this string sCommaList, string trimChars = " ")
 		{
+			List<string> lint = new List<string>();
+			if (string.IsNullOrEmpty(sCommaList))
+				return lint;
+
 			Regex regex = new Regex("(?<=,(\"|\')).*?(?=(\"|\'),)|(^.*?(?=,))|((?<=,).*?(?=,))|((?<=,).*?$)");
 
-			List<string> lint = new List<string>();
 			if (!string.IsNullOrEmpty(sCommaList))
 			{
 				char[] trimCharArray = null;

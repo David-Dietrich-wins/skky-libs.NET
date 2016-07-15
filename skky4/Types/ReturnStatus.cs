@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Runtime.Serialization;
 using skky.util;
 
 namespace skky.Types
 {
-	[DataContract]
 	public class ReturnStatus : ReturnStatusWithoutObject
 	{
 		public ReturnStatus()
@@ -22,7 +20,6 @@ namespace skky.Types
 			: base(errorMessage)
 		{ }
 
-		[DataMember]
 		public object obj { get; set; }
 
 		public static ReturnStatus AddExceptionErrorMessage(ReturnStatus rs, Exception ex)

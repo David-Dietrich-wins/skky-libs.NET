@@ -9,7 +9,7 @@ namespace skky.Types
 {
 	public class ReturnStatusWithoutObject : idts
 	{
-		public int code { get; set; }
+		public long code { get; set; }
 
 		public string url { get; set; }
 
@@ -36,6 +36,14 @@ namespace skky.Types
 			: this()
 		{
 			err.Add(errorMessage);
+		}
+
+		public void Clear()
+		{
+			code = 0;
+			url = string.Empty;
+			err.Clear();
+			msg.Clear();
 		}
 
 		public bool HasErrors()
@@ -93,7 +101,11 @@ namespace skky.Types
 
 		public void AddException(Exception ex)
 		{
-			err.Add(ex.GetExceptionMessage());
+			AddError(ex.GetExceptionMessage());
+		}
+		public void AddError(Exception ex)
+		{
+			AddError(ex.GetExceptionMessage());
 		}
 		public void AddError(string errorString)
 		{

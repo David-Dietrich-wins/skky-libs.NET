@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace skky.Types
 {
-	public class idts
+	public class idts : Iidts
 	{
 		private static object m_TransactionObject = new object();
 		private static long m_TransactionId = 0;
@@ -59,5 +59,11 @@ namespace skky.Types
 				return m_TransactionId;
 			}
 		}
+	}
+
+	public interface Iidts
+	{
+		long id { get; set; }
+		long ts { get; set; }
 	}
 }
