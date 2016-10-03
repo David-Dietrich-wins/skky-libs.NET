@@ -85,6 +85,8 @@ namespace skky.Types
 		public const string CONST_Zip = "Zip";
 		public const string CONST_ZipCode = "ZipCode";
 
+		public const int CONST_DefaultPageSize = 20;
+
 		public virtual string DefaultSortField()
 		{
 			return CONST_createdOn;

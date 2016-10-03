@@ -8,17 +8,20 @@ namespace skky.web
 {
 	public class HttpRequestOptions
 	{
-		public const string Const_Get = "GET";
-		public const string Const_Post = "POST";
+		public const string CONST_Get = "GET";
+		public const string CONST_Post = "POST";
+		public const string CONST_Put = "PUT";
+		public const string CONST_Delete = "DELETE";
 
-		public const string Const_ContentTypeXml = "text/xml";
-		public const string Const_ContentTypeJSON = "application/json";
-		public const string Const_ContentTypeFormUrlEncoded = "application/x-www-form-urlencoded";
+		public const string CONST_ContentTypeXml = "text/xml";
+		public const string CONST_ContentTypeJson = "application/json";
+		public const string CONST_ContentTypeJsonUtf8 = CONST_ContentTypeJson + "; charset=utf-8";
+		public const string CONST_ContentTypeFormUrlEncoded = "application/x-www-form-urlencoded";
 
 		public HttpRequestOptions()
 		{
-			Method = Const_Get;
-			ContentType = Const_ContentTypeXml;
+			Method = CONST_Get;
+			ContentType = CONST_ContentTypeXml;
 		}
 
 		public string ContentType { get; set; }

@@ -54,9 +54,7 @@ namespace skky.Types
 		{
 			lock(m_TransactionObject)
 			{
-				++m_TransactionId;
-
-				return m_TransactionId;
+				return ++m_TransactionId;
 			}
 		}
 	}

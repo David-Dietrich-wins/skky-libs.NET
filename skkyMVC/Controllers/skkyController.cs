@@ -6,8 +6,6 @@ using System.Web.Mvc;
 using skky.Types;
 using skky.util;
 using System.Net;
-using System.Configuration;
-using System.Reflection;
 using skky.jqGrid;
 using System.Text;
 using System.Web.UI;
@@ -23,6 +21,8 @@ namespace skkyMVC.Controllers
 
 		public const string CONST_Date4DigitYear = "MMM d, yyyy";
 		public const string CONST_DateTimeLong = "MMMM dd, yyyy hh:mm:ss.ff tt";
+
+		public const int CONST_DefaultPageSize = SkkyRepository.CONST_DefaultPageSize;
 
 		protected ReturnStatus rs = new ReturnStatus();
 		protected DateTime dtNow = DateTime.Now;
@@ -629,7 +629,13 @@ namespace skkyMVC.Controllers
 
 			var httpContext = filterContext.HttpContext;
 			var cookie = httpContext.Request.Cookies[AntiForgeryConfig.CookieName];
-			AntiForgery.Validate(cookie != null ? cookie.Value : null, httpContext.Request.Headers["__RequestVerificationToken"]);
+			string token = string.Empty;
+			if (null != httpContext.Request.Headers.Get("__RequestVerificationToken"))
+			{
+				token = httpContext.Request.Headers["__RequestVerificationToken"];
+
+				AntiForgery.Validate(cookie != null ? cookie.Value : null, token);
+			}
 		}
 	}
 }

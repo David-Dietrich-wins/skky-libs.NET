@@ -122,5 +122,14 @@ namespace skky.util
 
 			return dest;
 		}
+		public static T CopyForSerialization<T>(this T from, T to = null) where T : class, new()
+		{
+			if (null == to)
+				to = new T();
+
+			to.CopyFrom(from);
+
+			return to;
+		}
 	}
 }

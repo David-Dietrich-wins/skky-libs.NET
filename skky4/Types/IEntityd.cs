@@ -9,6 +9,8 @@ namespace skky.Types
 	public interface IEntityid<TEntityId>
 	{
 		TEntityId id { get; }
+
+		object[] GetObjectArray();
 	}
 
 	public interface IEntityIntid : IEntityid<int>

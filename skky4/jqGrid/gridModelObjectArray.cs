@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Runtime.Serialization;
+using skky.Types;
+using skky.util;
 
 namespace skky.jqGrid
 {
@@ -51,5 +53,16 @@ namespace skky.jqGrid
 
 		[DataMember]
 		public List<Row> rows;
+
+		public static gridModelObjectArray GetGridModel<T>(IEnumerable<T> query, ActionParams ap, string sidxDefault = null, string sordDefault = ActionParams.CONST_sordAsc, int maxRows = 20) where T : IEntityIntid
+		{
+			var gm = new gridModelObjectArray();
+			query = query.SortedAndPagedList(gm, ap, sidxDefault, sordDefault, 20);
+
+			foreach (var item in query)
+				gm.AddRow(item.id, item.GetObjectArray());
+
+			return gm;
+		}
 	}
 }

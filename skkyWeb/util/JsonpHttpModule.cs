@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using skky.web;
+using System;
 using System.Web;
 
 namespace skkyWeb.util
 {
 	public class JsonpHttpModule : IHttpModule
 	{
-		private const string JSON_CONTENT_TYPE = "application/json; charset=utf-8";
 		public const string JSONP_CALLBACK = "jsonp_callback";
 
 		#region IHttpModule Members
 		public void Dispose()
-		{
-		}
+		{ }
 
 		public void Init(HttpApplication app)
 		{
@@ -34,11 +30,12 @@ namespace skkyWeb.util
 		{
 			HttpApplication app = (HttpApplication)sender;
 
-			if (!_Apply(app.Context.Request)) return;
+			if (!_Apply(app.Context.Request))
+				return;
 
 			if (string.IsNullOrEmpty(app.Context.Request.ContentType))
 			{
-				app.Context.Request.ContentType = JSON_CONTENT_TYPE;
+				app.Context.Request.ContentType = HttpRequestOptions.CONST_ContentTypeJsonUtf8;
 			}
 		}
 
@@ -46,7 +43,8 @@ namespace skkyWeb.util
 		{
 			HttpApplication app = (HttpApplication)sender;
 
-			if (!_Apply(app.Context.Request)) return;
+			if (!_Apply(app.Context.Request))
+				return;
 
 			app.Context.Response.Filter = new JsonpResponseFilter(app.Context.Response.Filter, app.Context);
 		}

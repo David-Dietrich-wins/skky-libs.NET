@@ -18,7 +18,7 @@ namespace skky.util
 			{
 				return source.getSorted<T>(ap.sidx, ap.sord);
 			}
-			else if(!string.IsNullOrWhiteSpace(defaultSortColumn))
+			else if (!string.IsNullOrWhiteSpace(defaultSortColumn))
 			{
 				return source.getSorted<T>(defaultSortColumn, sortDirection);
 			}
@@ -35,7 +35,7 @@ namespace skky.util
 					(Expression.Convert(Expression.Property(param, sortBy), typeof(object)), param);
 
 				if (ActionParams.CONST_sordDesc == (sortDirection ?? string.Empty).ToLower())
-						return source.AsQueryable<T>().OrderByDescending<T, object>(sortExpression);
+					return source.AsQueryable<T>().OrderByDescending<T, object>(sortExpression);
 
 				return source.AsQueryable<T>().OrderBy<T, object>(sortExpression);
 			}
@@ -153,7 +153,7 @@ namespace skky.util
 					return query.Provider.CreateQuery<T>(result);
 				}
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				// Ignore sort order errors.
 			}
@@ -377,7 +377,7 @@ namespace skky.util
 				case WhereOperation.cni:
 					var methodInfo = typeof(string).GetMethod("IndexOf", new[] { typeof(string), typeof(StringComparison) });
 					var callEx = Expression.Call(memberAccess, methodInfo, Expression.Constant(value), Expression.Constant(StringComparison.OrdinalIgnoreCase));
-					condition = Expression.NotEqual(callEx, Expression.Constant(-1)); 
+					condition = Expression.NotEqual(callEx, Expression.Constant(-1));
 					break;
 				case WhereOperation.en:
 					condition = Expression.Call(memberAccess, typeof(string).GetMethod("EndsWith", new[] { typeof(string) }), Expression.Constant(value));
@@ -451,7 +451,7 @@ namespace skky.util
 					for (int i = 0; i < exprs.Count(); ++i)
 					{
 						Expression cur = exprs.ElementAt(i);
-						if(i == 0)
+						if (i == 0)
 						{
 							master = cur;
 						}
@@ -485,20 +485,20 @@ namespace skky.util
 			{
 				sidxDefault = ap.GetTranslatedSortIndex();
 
-				// We only want to change the sort order if there is and index column.
+				// We only want to change the sort order if there is a sort column.
 				if (!string.IsNullOrWhiteSpace(ap.sord))
 					sordDefault = ap.sord;
 			}
 
-			if(string.IsNullOrWhiteSpace(sordDefault))
+			if (string.IsNullOrWhiteSpace(sordDefault))
 				sordDefault = ap.sord;
-			
 
 			if (!string.IsNullOrEmpty(sidxDefault))
 			{
 				if (string.IsNullOrEmpty(sordDefault))
 					sordDefault = ActionParams.CONST_sordAsc;
-				var orderbyquery = query.OrderBy<T>(sidxDefault, sordDefault);
+
+				var orderbyquery = query.OrderBy(sidxDefault, sordDefault);
 				query = orderbyquery;
 			}
 
@@ -616,6 +616,13 @@ namespace skky.util
 			}
 
 			return query;
+		}
+
+		public static IEnumerable<T> SortedAndPagedList<T>(this IEnumerable<T> query, GridModelBase gm, ActionParams ap = null, string sidxDefault = null, string sordDefault = ActionParams.CONST_sordAsc, int defaultPageSize = 0)
+		{
+			query = query.getSorted(ap, sidxDefault, sordDefault);
+
+			return query.PagedList(gm, ap, defaultPageSize);
 		}
 	}
 }

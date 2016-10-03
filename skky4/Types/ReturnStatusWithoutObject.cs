@@ -13,27 +13,49 @@ namespace skky.Types
 
 		public string url { get; set; }
 
-		public List<string> msg { get; set; }
+		private List<string> _msg = null;
+		public List<string> msg
+		{
+			get
+			{
+				if (null == _msg)
+					_msg = new List<string>();
 
-		public List<string> err { get; set; }
+				return _msg;
+			}
+			set
+			{
+				_msg = value;
+			}
+		}
+
+		private List<string> _err = null;
+		public List<string> err
+		{
+			get
+			{
+				if (null == _err)
+					_err = new List<string>();
+
+				return _err;
+			}
+			set
+			{
+				_err = value;
+			}
+		}
 
 		public ReturnStatusWithoutObject()
-		{
-			msg = new List<string>();
-			err = new List<string>();
-		}
+		{ }
 		public ReturnStatusWithoutObject(int rc)
-			: this()
 		{
 			code = rc;
 		}
 		public ReturnStatusWithoutObject(int rc, string errorMessage)
-			: this(rc)
 		{
 			err.Add(errorMessage);
 		}
 		public ReturnStatusWithoutObject(string errorMessage)
-			: this()
 		{
 			err.Add(errorMessage);
 		}
@@ -42,21 +64,21 @@ namespace skky.Types
 		{
 			code = 0;
 			url = string.Empty;
-			err.Clear();
-			msg.Clear();
+			_err = null;
+			_msg = null;
 		}
 
-		public bool HasErrors()
+		public bool HasErrors(int minimumNumberOfItems = 0)
 		{
-			return (code < 0 || err.Any());
+			return (code < 0 || (null != _err && _err.Count() > minimumNumberOfItems));
 		}
 		public bool ErrorFree()
 		{
 			return !HasErrors();
 		}
-		public bool HasMessages()
+		public bool HasMessages(int minimumNumberOfItems = 0)
 		{
-			return msg.Any();
+			return (null != _msg && _msg.Count() > minimumNumberOfItems);
 		}
 		public bool HasAnyMessages()
 		{
@@ -73,18 +95,25 @@ namespace skky.Types
 		public int AppendMessages(ReturnStatusWithoutObject rs)
 		{
 			int messagesAdded = 0;
+
 			if (null != rs)
 			{
-				foreach (var rsErr in rs.err)
+				if (null != rs._err)
 				{
-					err.Add(rsErr);
-					++messagesAdded;
+					foreach (var rsErr in rs._err)
+					{
+						err.Add(rsErr);
+						++messagesAdded;
+					}
 				}
 
-				foreach (var rsMsg in rs.msg)
+				if (null != rs._msg)
 				{
-					msg.Add(rsMsg);
-					++messagesAdded;
+					foreach (var rsMsg in rs._msg)
+					{
+						msg.Add(rsMsg);
+						++messagesAdded;
+					}
 				}
 			}
 

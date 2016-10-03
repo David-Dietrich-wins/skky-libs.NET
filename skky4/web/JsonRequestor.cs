@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Net;
-using System.Text;
 
 namespace skky.web
 {
@@ -33,8 +29,8 @@ namespace skky.web
 			try
 			{
 				var httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
-				httpWebRequest.ContentType = "text/json";
-				httpWebRequest.Method = "POST";
+				httpWebRequest.ContentType = HttpRequestOptions.CONST_ContentTypeJson;
+				httpWebRequest.Method = HttpRequestOptions.CONST_Post;
 
 				//string json = "{\"user\":\"test\"," +
 				//			  "\"password\":\"bla\"}";

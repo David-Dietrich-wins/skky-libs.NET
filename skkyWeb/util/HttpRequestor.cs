@@ -50,16 +50,16 @@ namespace skkyWeb.util
 			: this(new HttpRequestOptions()
 			{
 				Url = url,
-				ContentType = HttpRequestOptions.Const_ContentTypeFormUrlEncoded,
-				Method = HttpRequestOptions.Const_Get,
+				ContentType = HttpRequestOptions.CONST_ContentTypeFormUrlEncoded,
+				Method = HttpRequestOptions.CONST_Get,
 			})
 		{ }
 		public HttpRequestor(string url, string postData)
 			: this(new HttpRequestOptions()
 			{
 				Url = url,
-				ContentType = HttpRequestOptions.Const_ContentTypeFormUrlEncoded,
-				Method = HttpRequestOptions.Const_Post,
+				ContentType = HttpRequestOptions.CONST_ContentTypeFormUrlEncoded,
+				Method = HttpRequestOptions.CONST_Post,
 				PostData = postData,
 			})
 		{ }
@@ -117,7 +117,7 @@ namespace skkyWeb.util
 			webRequest.ProtocolVersion = HttpVersion.Version11;
 			webRequest.ContentType = HttpOptions.ContentType;
 
-			if (HttpOptions.Method == HttpRequestOptions.Const_Post)
+			if (HttpOptions.Method == HttpRequestOptions.CONST_Post)
 				StreamHelper.WriteStringEncoded(webRequest.GetRequestStream(), HttpOptions.PostData, Encoding.ASCII.CodePage, true);
 
 			return webRequest;
@@ -189,7 +189,7 @@ namespace skkyWeb.util
 
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 			//request.Credentials = CredentialCache.DefaultCredentials;
-			request.Method = HttpRequestOptions.Const_Get;
+			request.Method = HttpRequestOptions.CONST_Get;
 			request.KeepAlive = false;
 
 			// Add the client certificate
@@ -276,7 +276,7 @@ namespace skkyWeb.util
 
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 			//request.Credentials = CredentialCache.DefaultCredentials;
-			request.Method = HttpRequestOptions.Const_Get;
+			request.Method = HttpRequestOptions.CONST_Get;
 			request.KeepAlive = false;
 			request.ProtocolVersion = new System.Version("1.0");
 			request.AllowAutoRedirect = true;
@@ -346,7 +346,7 @@ namespace skkyWeb.util
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 
 			//request.Credentials = CredentialCache.DefaultCredentials;
-			request.Method = HttpRequestOptions.Const_Get;
+			request.Method = HttpRequestOptions.CONST_Get;
 			request.KeepAlive = false;
 			request.ProtocolVersion = new System.Version("1.0");
 			request.AllowAutoRedirect = true;
@@ -456,7 +456,7 @@ namespace skkyWeb.util
 			MemoryStream result = new MemoryStream();
 			HttpWebRequest request = (HttpWebRequest)HttpWebRequest.Create(url);
 
-			request.Method = "POST";
+			request.Method = HttpRequestOptions.CONST_Post;
 			//request.KeepAlive = true;
 			request.ProtocolVersion = new System.Version("1.0");
 			request.AllowAutoRedirect = true;
@@ -680,8 +680,8 @@ namespace skkyWeb.util
 			Console.WriteLine("POST request to http://localhost" + locationHeader);
 			request = (HttpWebRequest)WebRequest.Create("http://localhost" + locationHeader);
 			request.AllowAutoRedirect = false;
-			request.Method = HttpRequestOptions.Const_Post;
-			request.ContentType = HttpRequestOptions.Const_ContentTypeFormUrlEncoded;
+			request.Method = HttpRequestOptions.CONST_Post;
+			request.ContentType = HttpRequestOptions.CONST_ContentTypeFormUrlEncoded;
 
 			CookieContainer cookies = new CookieContainer();
 			request.CookieContainer = cookies;
@@ -823,8 +823,8 @@ namespace skkyWeb.util
 			Console.WriteLine("POST request to " + AuthHelper.URI);
 			request = (HttpWebRequest)WebRequest.Create(AuthHelper.URI);
 			request.AllowAutoRedirect = false;
-			request.Method = HttpRequestOptions.Const_Post;
-			request.ContentType = HttpRequestOptions.Const_ContentTypeFormUrlEncoded;
+			request.Method = HttpRequestOptions.CONST_Post;
+			request.ContentType = HttpRequestOptions.CONST_ContentTypeFormUrlEncoded;
 
 			if (HttpOptions.RetrieveCookies)
 			{
@@ -888,8 +888,8 @@ namespace skkyWeb.util
 	{
 		public static readonly HttpRequestOptions JSONHttpRequestOptions = new HttpRequestOptions
 		{
-			ContentType = HttpRequestOptions.Const_ContentTypeJSON,
-			Method = HttpRequestOptions.Const_Post,
+			ContentType = HttpRequestOptions.CONST_ContentTypeJson,
+			Method = HttpRequestOptions.CONST_Post,
 		};
 
 		public JSONHttpRequestor(string url)

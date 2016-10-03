@@ -92,6 +92,7 @@
     <Compile Include="Security\PasswordGenerator.cs" />
     <Compile Include="Types\CallParams.cs" />
     <Compile Include="Types\idts.cs" />
+    <Compile Include="Types\IEntityCreatedOn.cs" />
     <Compile Include="Types\IEntityd.cs" />
     <Compile Include="Types\ISkkyEntities.cs" />
     <Compile Include="Types\IEntityObjectWithId.cs" />
