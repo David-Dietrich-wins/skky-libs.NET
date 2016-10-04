@@ -23,9 +23,12 @@ namespace skkyMVC.Controllers
 		public const string CONST_DateTimeLong = "MMMM dd, yyyy hh:mm:ss.ff tt";
 
 		public const int CONST_DefaultPageSize = SkkyRepository.CONST_DefaultPageSize;
+		public const string CONST_GridCookieName = "gridCookie";
 
 		protected ReturnStatus rs = new ReturnStatus();
 		protected DateTime dtNow = DateTime.Now;
+
+		public string JsonDeserialize { get; private set; }
 
 		public FileResult ExcelFile(byte[] bytes, string fileName = null)
 		{
@@ -538,7 +541,28 @@ namespace skkyMVC.Controllers
 		protected string GetCookie(string cookieName, string key)
 		{
 			var cookie = Request.Cookies[cookieName];
-			return cookie != null ? HttpUtility.UrlDecode(cookie[key]) : "";
+
+			string s = string.Empty;
+			if (null != cookie)
+				s = HttpUtility.UrlDecode(cookie[key]);
+
+			return s;
+		}
+		protected T GetCookie<T>(string cookieName) where T : class, new()
+		{
+			var cookie = Request.Cookies[cookieName];
+
+			if (null == cookie)
+				return null;
+
+			return HttpUtility.UrlDecode(cookie.Value).JsonDeserialize<T>(true);
+		}
+		protected void SetCookie(string cookieName, object o)
+		{
+			var cookie = new HttpCookie(cookieName);
+			cookie.Value = HttpUtility.UrlEncode(o.SerializeObject());
+
+			Response.Cookies.Add(cookie);
 		}
 		protected void SetCookie(string cookieName, List<StringString> strs)
 		{
@@ -550,11 +574,13 @@ namespace skkyMVC.Controllers
 		}
 		protected ActionParams GetActionParamsFromGridCookie()
 		{
-			string apindex = GetCookie("gridCookie", "sidx");
-			string aporder = GetCookie("gridCookie", "sord");
-			int aprows = GetCookie("gridCookie", "rows").ToInteger();
+			ActionParams ap = GetCookie<ActionParams>(CONST_GridCookieName);
+			//string apindex = GetCookie(CONST_GridCookieName, "sidx");
+			//string aporder = GetCookie(CONST_GridCookieName, "sord");
+			//int aprows = GetCookie(CONST_GridCookieName, "rows").ToInteger();
 
-			return new ActionParams(apindex, aporder, aprows);
+			//return new ActionParams(apindex, aporder, aprows);
+			return ap;
 		}
 
 		protected string GetRequestString()

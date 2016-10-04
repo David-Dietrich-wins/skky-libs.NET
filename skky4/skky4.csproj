@@ -34,6 +34,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\Geroix.NET\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.configuration" />
@@ -153,6 +158,7 @@
     <Compile Include="util\ExcelWorkbook.cs" />
     <Compile Include="util\ExcelWriter.cs" />
     <Compile Include="util\Extensions.cs" />
+    <Compile Include="util\ExtensionsJson.cs" />
     <Compile Include="util\FileHelper.cs" />
     <Compile Include="util\FileNameRotator.cs" />
     <Compile Include="util\ImageHelper.cs" />
@@ -184,6 +190,7 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="ThirdParty\NPOI.dll" />
