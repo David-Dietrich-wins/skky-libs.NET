@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace skky.Types
 {
-	public interface IEntityid<TEntityId>
+	public interface IGetObjectArray
+	{
+		object[] GetObjectArray();
+	}
+	public interface IEntityid<TEntityId> : IGetObjectArray
 	{
 		TEntityId id { get; }
-
-		object[] GetObjectArray();
 	}
 
 	public interface IEntityIntid : IEntityid<int>

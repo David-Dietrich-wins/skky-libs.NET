@@ -12,6 +12,8 @@ using System.Web.UI;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Web.Helpers;
+using System.Web.UI.WebControls;
+using System.ComponentModel;
 
 namespace skkyMVC.Controllers
 {
@@ -574,21 +576,77 @@ namespace skkyMVC.Controllers
 		}
 		protected ActionParams GetActionParamsFromGridCookie()
 		{
-			ActionParams ap = GetCookie<ActionParams>(CONST_GridCookieName);
-			//string apindex = GetCookie(CONST_GridCookieName, "sidx");
-			//string aporder = GetCookie(CONST_GridCookieName, "sord");
-			//int aprows = GetCookie(CONST_GridCookieName, "rows").ToInteger();
-
-			//return new ActionParams(apindex, aporder, aprows);
-			return ap;
+			return (GetCookie<ActionParams>(CONST_GridCookieName) ?? new ActionParams());
 		}
 
 		protected string GetRequestString()
 		{
 			Stream req = Request.InputStream;
-			req.Seek(0, System.IO.SeekOrigin.Begin);
+			req.Seek(0, SeekOrigin.Begin);
 
 			return new StreamReader(req).ReadToEnd();
+		}
+		public FileResult ExcelFileForExcel2003(IEnumerable<object> lstObjects, string fileName, string sheetName = "Sheet1")
+		{
+			MemoryStream ms = ExcelHelper.ToMemoryStreamForExcel2003(lstObjects, sheetName);
+
+			return File(ms.ToArray(), "application/vnd.ms-excel", string.Format("{0}.xls", (fileName.EndsWith(".xls") ? fileName.Right(fileName.Length - 4) : fileName).Replace(" ", "")));
+		}
+
+		/// <summary>
+		/// Used to export out a Microsoft Excel formattable HTML table.
+		/// But can take any IEnumerable and write HTML without exporting to Excel.
+		/// </summary>
+		/// <typeparam name="T">Object type to export.</typeparam>
+		/// <param name="data"></param>
+		/// <param name="output">Stream to write the output. Usually Response.Out</param>
+		public void WriteHtmlTable<T>(IEnumerable<T> data, TextWriter output)
+		{
+			//Writes markup characters and text to an ASP.NET server control output stream. This class provides formatting capabilities that ASP.NET server controls use when rendering markup to clients.
+			using (StringWriter sw = new StringWriter())
+			{
+				using (HtmlTextWriter htw = new HtmlTextWriter(sw))
+				{
+					//  Create a form to contain the List
+					Table table = new Table();
+					TableRow row = new TableRow();
+					PropertyDescriptorCollection props = TypeDescriptor.GetProperties(typeof(T));
+					foreach (PropertyDescriptor prop in props)
+					{
+						TableHeaderCell hcell = new TableHeaderCell();
+						hcell.Text = prop.Name;
+						//hcell.BackColor = System.Drawing.Color.Yellow;
+						row.Cells.Add(hcell);
+					}
+
+					table.Rows.Add(row);
+
+					//  add each of the data item to the table
+					foreach (T item in data)
+					{
+						row = new TableRow();
+						foreach (PropertyDescriptor prop in props)
+						{
+							TableCell cell = new TableCell();
+							cell.Text = prop.Converter.ConvertToString(prop.GetValue(item));
+							row.Cells.Add(cell);
+						}
+						table.Rows.Add(row);
+					}
+
+					//  render the table into the htmlwriter
+					table.RenderControl(htw);
+
+					//  render the htmlwriter into the response
+					output.Write(sw.ToString());
+				}
+
+				//Response.ClearContent();
+				//Response.AddHeader("content-disposition", "attachment;filename=Contact.xls");
+				//Response.AddHeader("Content-Type", "application/vnd.ms-excel");
+				//WriteHtmlTable(uow.IotEventAll(MyCustomerId).Take(10000), Response.Output);
+				//Response.End();
+			}
 		}
 	}
 
