@@ -17,28 +17,35 @@ namespace skky.util
 		{
 			if (null != ap && !string.IsNullOrWhiteSpace(ap.sidx) && !string.IsNullOrWhiteSpace(ap.sord))
 			{
-				return source.getSorted<T>(ap.sidx, ap.sord);
+				return source.getSorted(ap.sidx, ap.sord);
 			}
 			else if (!string.IsNullOrWhiteSpace(defaultSortColumn))
 			{
-				return source.getSorted<T>(defaultSortColumn, sortDirection);
+				return source.getSorted(defaultSortColumn, sortDirection);
 			}
 
 			return source;
 		}
 		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, string sortBy, string sortDirection = ActionParams.CONST_sordAsc)
 		{
-			if (!string.IsNullOrEmpty(sortBy))
+			try
 			{
-				var param = Expression.Parameter(typeof(T), "item");
+				if (!string.IsNullOrEmpty(sortBy))
+				{
+					var param = Expression.Parameter(typeof(T), "item");
 
-				var sortExpression = Expression.Lambda<Func<T, object>>
-					(Expression.Convert(Expression.Property(param, sortBy), typeof(object)), param);
+					var sortExpression = Expression.Lambda<Func<T, object>>
+						(Expression.Convert(Expression.Property(param, sortBy), typeof(object)), param);
 
-				if (ActionParams.CONST_sordDesc == (sortDirection ?? string.Empty).ToLower())
-					return source.AsQueryable<T>().OrderByDescending<T, object>(sortExpression);
+					if (ActionParams.CONST_sordDesc == (sortDirection ?? string.Empty).ToLower())
+						return source.AsQueryable().OrderByDescending(sortExpression);
 
-				return source.AsQueryable<T>().OrderBy<T, object>(sortExpression);
+					return source.AsQueryable().OrderBy(sortExpression);
+				}
+			}
+			catch(Exception ex)
+			{
+				Trace.MethodException("getSorted", ex);
 			}
 
 			return source;
@@ -154,9 +161,10 @@ namespace skky.util
 					return query.Provider.CreateQuery<T>(result);
 				}
 			}
-			catch (Exception)
+			catch (Exception ex)
 			{
 				// Ignore sort order errors.
+				Trace.MethodException("OrderBy", ex);
 			}
 
 			return query;
