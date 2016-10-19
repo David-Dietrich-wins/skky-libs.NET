@@ -2,16 +2,14 @@
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace skky.util
 {
 	public static class ExtensionsJson
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger("ExtensionsJson");
+
 		public class ShouldSerializeListContractResolver : DefaultContractResolver
 		{
 			public static readonly ShouldSerializeListContractResolver Instance = new ShouldSerializeListContractResolver();
@@ -57,6 +55,28 @@ namespace skky.util
 			return JsonSerialize(o, false, null);
 		}
 
+
+		/// <summary>
+		/// Returns a serialized iot object.
+		/// Returns null if iotObject is null or this is an error.
+		/// Typically used for saving to an IotCommand.json[xxx] field in the database. Hence the null return.
+		/// </summary>
+		/// <param name="iotObject"></param>
+		/// <returns></returns>
+		public static string SerializeNoException(this object iotObject)
+		{
+			try
+			{
+				return iotObject.JsonSerialize(true);
+			}
+			catch (Exception ex)
+			{
+				log.Error("SerializeNoException", ex);
+			}
+
+			return null;
+		}
+
 		public static string JsonSerialize(this object o, bool returnNullIfEmpty = false, JsonSerializerSettings serializerSettings = null)
 		{
 			if (null == o)
@@ -77,9 +97,9 @@ namespace skky.util
 					// return (new JavaScriptSerializer()).Deserialize<T>(s);
 					item = JsonConvert.DeserializeObject<T>(s);
 				}
-				catch (Exception)
+				catch (Exception ex)
 				{
-					//log.LogException("JsonDeserialize", ex);
+					log.Error("JsonDeserialize", ex);
 				}
 			}
 
