@@ -12,7 +12,7 @@ namespace skky.Types
 		private static object m_TransactionObject = new object();
 		private static long m_TransactionId = 0;
 
-		private long m_id = 0;
+		private long _Identifier = 0;
 		/// <summary>
 		/// Transaction ID for this object.
 		/// </summary>
@@ -20,18 +20,18 @@ namespace skky.Types
 		{
 			get
 			{
-				if (m_id == 0)
-					m_id = GetNextId();
+				if (_Identifier == 0)
+					_Identifier = GetNextId();
 
-				return m_id;
+				return _Identifier;
 			}
 			set
 			{
-				m_id = value;
+				_Identifier = value;
 			}
 		}
 
-		private long m_ts = 0;
+		private long _TimeStamp = 0;
 		/// <summary>
 		/// Unix Timestamp in milliseconds since Unix Epoch 1/1/1970.
 		/// </summary>
@@ -39,14 +39,14 @@ namespace skky.Types
 		{
 			get
 			{
-				if (m_ts == 0)
-					m_ts = DateTimeHelper.GetUnixTimestampMillis();
+				if (_TimeStamp == 0)
+					_TimeStamp = DateTimeHelper.GetUnixTimestampMillis();
 
-				return m_ts;
+				return _TimeStamp;
 			}
 			set
 			{
-				m_ts = value;
+				_TimeStamp = value;
 			}
 		}
 
