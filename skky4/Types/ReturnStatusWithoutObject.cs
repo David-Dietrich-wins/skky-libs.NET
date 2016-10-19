@@ -9,39 +9,38 @@ namespace skky.Types
 {
 	public class ReturnStatusWithoutObject : idts
 	{
-		public long code { get; set; }
+		public virtual long code { get; set; }
+		public virtual long subcode { get; set; }
 
-		public string url { get; set; }
-
-		private List<string> _msg = null;
-		public List<string> msg
+		private List<string> _messageList = null;
+		public virtual List<string> msg
 		{
 			get
 			{
-				if (null == _msg)
-					_msg = new List<string>();
+				if (null == _messageList)
+					_messageList = new List<string>();
 
-				return _msg;
+				return _messageList;
 			}
 			set
 			{
-				_msg = value;
+				_messageList = value;
 			}
 		}
 
-		private List<string> _err = null;
-		public List<string> err
+		private List<string> _errorList = null;
+		public virtual List<string> err
 		{
 			get
 			{
-				if (null == _err)
-					_err = new List<string>();
+				if (null == _errorList)
+					_errorList = new List<string>();
 
-				return _err;
+				return _errorList;
 			}
 			set
 			{
-				_err = value;
+				_errorList = value;
 			}
 		}
 
@@ -60,25 +59,24 @@ namespace skky.Types
 			err.Add(errorMessage);
 		}
 
-		public void Clear()
+		public virtual void Clear()
 		{
 			code = 0;
-			url = string.Empty;
-			_err = null;
-			_msg = null;
+			_errorList = null;
+			_messageList = null;
 		}
 
-		public bool HasErrors(int minimumNumberOfItems = 0)
+		public virtual bool HasErrors(int minimumNumberOfItems = 0)
 		{
-			return (code < 0 || (null != _err && _err.Count() > minimumNumberOfItems));
+			return (code < 0 || (null != _errorList && _errorList.Count() > minimumNumberOfItems));
 		}
-		public bool ErrorFree()
+		public virtual bool ErrorFree()
 		{
 			return !HasErrors();
 		}
-		public bool HasMessages(int minimumNumberOfItems = 0)
+		public virtual bool HasMessages(int minimumNumberOfItems = 0)
 		{
-			return (null != _msg && _msg.Count() > minimumNumberOfItems);
+			return (null != _messageList && _messageList.Count() > minimumNumberOfItems);
 		}
 		public bool HasAnyMessages()
 		{
@@ -88,28 +86,27 @@ namespace skky.Types
 		{
 			return HasAnyMessages()
 				|| HasErrors()
-				|| code != 0
-				|| !string.IsNullOrEmpty(url);
+				|| code != 0;
 		}
 
-		public int AppendMessages(ReturnStatusWithoutObject rs)
+		public virtual int AppendMessages(ReturnStatusWithoutObject rs)
 		{
 			int messagesAdded = 0;
 
 			if (null != rs)
 			{
-				if (null != rs._err)
+				if (null != rs._errorList)
 				{
-					foreach (var rsErr in rs._err)
+					foreach (var rsErr in rs._errorList)
 					{
 						err.Add(rsErr);
 						++messagesAdded;
 					}
 				}
 
-				if (null != rs._msg)
+				if (null != rs._messageList)
 				{
-					foreach (var rsMsg in rs._msg)
+					foreach (var rsMsg in rs._messageList)
 					{
 						msg.Add(rsMsg);
 						++messagesAdded;
@@ -128,20 +125,20 @@ namespace skky.Types
 			return string.Empty;
 		}
 
-		public void AddException(Exception ex)
+		public virtual void AddException(Exception ex)
 		{
 			AddError(ex.GetExceptionMessage());
 		}
-		public void AddError(Exception ex)
+		public virtual void AddError(Exception ex)
 		{
 			AddError(ex.GetExceptionMessage());
 		}
-		public void AddError(string errorString)
+		public virtual void AddError(string errorString)
 		{
 			err.Add(errorString);
 		}
 
-		public void AddMessage(string message)
+		public virtual void AddMessage(string message)
 		{
 			msg.Add(message);
 		}
