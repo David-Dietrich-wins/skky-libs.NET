@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace skky.Types
 {
@@ -10,8 +6,17 @@ namespace skky.Types
 	{
 		DateTime createdOn { get; set; }
 	}
+	public interface IEntityCreatedBy : IEntityCreatedOn
+	{
+		string createdBy { get; set; }
+	}
+
 	public interface IEntityUpdatedOn : IEntityCreatedOn
 	{
 		DateTime updatedOn { get; set; }
+	}
+	public interface IEntityUpdatedBy : IEntityUpdatedOn, IEntityCreatedBy
+	{
+		string updatedBy { get; set; }
 	}
 }
