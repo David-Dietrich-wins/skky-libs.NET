@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using skky.jqGrid;
 using skky.Types;
-using System.Text;
 using System.ComponentModel;
 using System.Data;
 
@@ -13,6 +11,8 @@ namespace skky.util
 {
 	public static class LinqExtensions
 	{
+		private static readonly log4net.ILog log = log4net.LogManager.GetLogger("LinqExtensions");
+
 		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, ActionParams ap, string defaultSortColumn = "", string sortDirection = ActionParams.CONST_sordAsc)
 		{
 			if (null != ap && !string.IsNullOrWhiteSpace(ap.sidx) && !string.IsNullOrWhiteSpace(ap.sord))
@@ -45,7 +45,7 @@ namespace skky.util
 			}
 			catch(Exception ex)
 			{
-				Trace.MethodException("getSorted", ex);
+				log.Error("getSorted", ex);
 			}
 
 			return source;
@@ -164,7 +164,7 @@ namespace skky.util
 			catch (Exception ex)
 			{
 				// Ignore sort order errors.
-				Trace.MethodException("OrderBy", ex);
+				log.Error("OrderBy", ex);
 			}
 
 			return query;
