@@ -131,5 +131,19 @@ namespace skky.util
 
 			return to;
 		}
+
+		public static List<T> CopyForSerialization<T>(this IEnumerable<T> from, List<T> to = null) where T : class, new()
+		{
+			if(null == to)
+				to = new List<T>();
+
+			if(null != from)
+			{
+				foreach (var fromitem in from)
+					to.Add(fromitem.CopyForSerialization());
+			}
+
+			return to;
+		}
 	}
 }
