@@ -595,53 +595,19 @@ namespace skky.util
 
 			return "#" + c.R.ToHexString() + c.G.ToHexString() + c.B.ToHexString();
 		}
-		public static Color FromHtmlString(this string str)
+		public static Color FromHtmlString(this string sHtmlString)
 		{
-			if (!string.IsNullOrEmpty(str))
+			string shex = (sHtmlString ?? string.Empty).Trim().Trim('#').ToLower();
+
+			if (shex.Length == 3)
+				shex = new string(shex[0], 2) + new string(shex[1], 2) + new string(shex[2], 2);
+
+			if (shex.Length == 6)
 			{
-				string s = str.Trim();
-				s = s.Trim('#').ToLower();
-				if (s.Length == 3 || s.Length == 6)
-				{
-					int charCount = 0;
-					char[] ch = new char[s.Length];
-					for (charCount = 0; charCount < s.Length; ++charCount)
-					{
-						if (!"abcdef012346789".Contains(s.Mid(charCount, 1)))
-							break;
-
-						ch[charCount] = s[charCount];
-					}
-
-					int hex = 0;
-					int red = 0;
-					int green = 0;
-					int blue = 0;
-					if (charCount == 3)
-					{
-						hex = ch[0].FromHex();
-						red = ((hex * 16) + hex);
-						hex = ch[1].FromHex();
-						green = ((hex * 16) + hex);
-						hex = ch[2].FromHex();
-						blue = ((hex * 16) + hex);
-					}
-					else if(charCount == 6)
-					{
-						hex = ch[0].FromHex() * 16;
-						red = hex + ch[1].FromHex();
-						hex = ch[2].FromHex() * 16;
-						green = hex + ch[3].FromHex();
-						hex = ch[4].FromHex() * 16;
-						blue = hex + ch[5].FromHex();
-					}
-					else
-					{
-						return Color.Empty;
-					}
-
-					return Color.FromArgb(red, green, blue);
-				}
+				return Color.FromArgb(
+					Convert.ToInt32(shex.Substring(0, 2), 16)
+					, Convert.ToInt32(shex.Substring(2, 2), 16)
+					, Convert.ToInt32(shex.Substring(4, 2), 16));
 			}
 
 			return Color.Empty;

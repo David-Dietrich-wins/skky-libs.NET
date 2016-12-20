@@ -101,7 +101,7 @@ namespace skky.util
 				catch (Exception ex)
 				{
 					log.Error("JsonDeserialize", ex);
-					log.Error("Type: " + typeof(T).Name + ". String: " + s + ".");
+					log.Error("Type: " + typeof(T).Name + ". String: " + s);
 				}
 			}
 
