@@ -62,7 +62,7 @@ namespace skky.util
 		{
 			if (null != src)
 			{
-				List<string> lstIgnore = skky.util.Parser.SplitAndTrimString(ignoreList).ToList();
+				List<string> lstIgnore = Parser.SplitAndTrimString(ignoreList).ToList();
 
 				PropertyInfo[] srcFields = src.GetType().GetProperties(
 					BindingFlags.Instance | BindingFlags.Public | BindingFlags.GetProperty);
@@ -81,7 +81,7 @@ namespace skky.util
 						{
 						Type type = property.PropertyType;
 						if(type != typeof(string)
-							&& type != typeof(Decimal)
+							&& type != typeof(decimal)
 							&& type != typeof(DateTime)
 							&& type != typeof(DateTimeOffset)
 							&& type != typeof(TimeSpan)

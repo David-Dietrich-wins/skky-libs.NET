@@ -20,7 +20,7 @@ namespace skky.Types
 			: base(errorMessage)
 		{ }
 
-		public object obj { get; set; }
+		public object o { get; set; }
 
 		public static ReturnStatus AddExceptionErrorMessage(ReturnStatus rs, Exception ex)
 		{

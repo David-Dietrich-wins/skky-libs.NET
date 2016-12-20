@@ -48,6 +48,7 @@ namespace skky.util
 			NullValueHandling = NullValueHandling.Ignore,
 			DefaultValueHandling = DefaultValueHandling.Ignore,
 			ContractResolver = ShouldSerializeListContractResolver.Instance,
+			Formatting = Formatting.None,
 		};
 
 		public static string SerializeObject(this object o)
@@ -82,7 +83,7 @@ namespace skky.util
 			if (null == o)
 				return (returnNullIfEmpty ? null : string.Empty);
 
-			// return (new JavaScriptSerializer()).Serialize(o);
+			//return (new JavaScriptSerializer()).Serialize(o);
 			return JsonConvert.SerializeObject(o, Formatting.None, null == serializerSettings ? DefaultJsonSerializerSettings : serializerSettings);
 		}
 
