@@ -13,6 +13,9 @@ namespace skky.Types
 		public const string CONST_day = "day";
 		public const string CONST_week = "week";
 		public const string CONST_month = "month";
+		public const string CONST_hour = "hour";
+		public const string CONST_minute = "minute";
+		public const string CONST_second = "second";
 		public const string CONST_quarter = "quarter";
 		public const string CONST_year = "year";
 		public const string CONST_past = "past";
