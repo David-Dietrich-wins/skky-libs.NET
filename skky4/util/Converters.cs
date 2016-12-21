@@ -176,5 +176,35 @@ namespace skky.util
 			return string.Join(delimiter,
 				collection.Select(convert).ToArray());
 		}
+
+		/// <summary>
+		/// Converts a value from a value in the Original Range to the New Range.
+		/// First used to convert different ranges to RGB values 0-255.
+		/// </summary>
+		/// <param name="originalRangeMin"></param>
+		/// <param name="originalRangeMax"></param>
+		/// <param name="newRangeMin"></param>
+		/// <param name="newRangeMax"></param>
+		/// <param name="val"></param>
+		/// <returns></returns>
+		public static long Remap(long originalRangeMin, long originalRangeMax
+			, long newRangeMin, long newRangeMax, long val)
+		{
+			long NewValue = 0;
+
+			long OldRange = originalRangeMax - originalRangeMin;
+			if (OldRange == 0)
+			{
+				NewValue = newRangeMin;
+			}
+			else
+			{
+				long NewRange = newRangeMax - newRangeMin;
+
+				NewValue = (((val - originalRangeMin) * NewRange) / OldRange) + newRangeMin;
+			}
+
+			return NewValue;
+		}
 	}
 }
