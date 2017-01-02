@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Drawing;
-using System.Xml.Serialization;
-using System.IO;
 using skky.Conversions;
 using skky.Types;
 
@@ -156,7 +152,7 @@ namespace skky.util
 		public static string SingleQuoteStringList(IEnumerable<string> strs, bool addSingleQuotesAroundSources = false, string defaultIfNone = null)
 		{
 			string str = string.Empty;
-			if(null != strs && strs.Count() > 0)
+			if (null != strs && strs.Count() > 0)
 				str = Join(",", strs, i => "'" + i.ToString() + "'");
 
 			if (!string.IsNullOrWhiteSpace(str) && addSingleQuotesAroundSources)
@@ -205,6 +201,15 @@ namespace skky.util
 			}
 
 			return NewValue;
+		}
+
+		public static double CelsiusToFahrenheit(double celsius)
+		{
+			return ((celsius * 9) / 5) + 32;
+		}
+		public static double FahrenheitToCelsius(double fahrenheit)
+		{
+			return ((fahrenheit - 32) * 5) / 9;
 		}
 	}
 }
