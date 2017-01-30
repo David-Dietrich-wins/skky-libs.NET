@@ -60,7 +60,7 @@ namespace skky.jqGrid
 			query = query.SortedAndPagedList(gm, ap, sidxDefault, sordDefault, 20);
 
 			foreach (var item in query)
-				gm.AddRow(item.id, item.GetObjectArray());
+				gm.AddRow(item.id, item.GetObjectArray(ap.tzom));
 
 			return gm;
 		}

@@ -8,7 +8,7 @@ namespace skky.Types
 {
 	public interface IGetObjectArray
 	{
-		object[] GetObjectArray();
+		object[] GetObjectArray(int tzoMinutes);
 	}
 	public interface IEntityid<TEntityId> : IGetObjectArray
 	{

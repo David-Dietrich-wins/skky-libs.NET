@@ -113,6 +113,14 @@ namespace skky.jqGrid
 		public string sord { get; set; }
 
 		/// <summary>
+		/// Timezone offset in minutes.
+		/// JavaScript it will be positive west of GMT and negative east of GMT.
+		/// This is because in the west, I must add the minutes to be UTC.
+		/// </summary>
+		[DataMember]
+		public int tzom { get; set; }
+
+		/// <summary>
 		/// Used to transform idTable into Table.translateTableColumn (usually the name field).
 		/// </summary>
 		[DataMember]
