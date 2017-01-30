@@ -54,27 +54,26 @@ namespace skky.util
 		/// Returns a string in the format M/d/yy h:mm:ss tt.
 		/// </summary>
 		/// <param name="dtDateTime">DateTime object to make a string from.</param>
+		/// <param name="tzoMinutes">Timezone offset in minutes (positive number west of UTC).</param>
 		/// <returns>A string in the format M/d/yy h:mm:ss tt.</returns>
-		public static string GetDefaultDateTimeString(DateTime? dtDateTime)
+		public static string GetDefaultDateTimeString(DateTime? dtDateTime, int tzoMinutes = 0)
 		{
-			return GetString(dtDateTime, CONST_DefaultDateTimeFormat);
+			return GetString(dtDateTime, tzoMinutes, CONST_DefaultDateTimeFormat);
 		}
 
-		public static string GetString(DateTime? dtDateTime, string format = "M/d/yyyy")
+		public static string GetString(DateTime? dtDateTime, int tzoMinutes = 0, string format = "M/d/yyyy")
 		{
 			if (dtDateTime.HasValue)
-				return dtDateTime.Value.ToString(format);
+				return dtDateTime.Value.AddMinutes(0 - tzoMinutes).ToString(format);
 
 			return string.Empty;
 		}
 
-		public static string ToPublicDateTimeFormat(this DateTime dt)
+		public static string ToPublicDateTimeFormat(this DateTime dt, int tzoMinutes = 0)
 		{
 			string result = null;
 			if (null != dt && dt != DateTime.MinValue)
-			{
-				result = dt.ToString(PublicDateTimeFormat, CultureInfo.InvariantCulture);
-			}
+				result = dt.AddMinutes(0 - tzoMinutes).ToString(PublicDateTimeFormat, CultureInfo.InvariantCulture);
 
 			return result;
 		}
