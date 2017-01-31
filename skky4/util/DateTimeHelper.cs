@@ -64,7 +64,12 @@ namespace skky.util
 		public static string GetString(DateTime? dtDateTime, int tzoMinutes = 0, string format = "M/d/yyyy")
 		{
 			if (dtDateTime.HasValue)
-				return dtDateTime.Value.AddMinutes(0 - tzoMinutes).ToString(format);
+			{
+				if (dtDateTime == DateTime.MinValue || dtDateTime == DateTime.MaxValue)
+					return dtDateTime.Value.ToString(format);
+				else
+					return dtDateTime.Value.AddMinutes(0 - tzoMinutes).ToString(format);
+			}
 
 			return string.Empty;
 		}

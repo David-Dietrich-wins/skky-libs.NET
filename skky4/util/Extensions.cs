@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Drawing;
-using System.Security.Cryptography;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Net.Mail;
-using System.Xml;
 using System.Collections.Specialized;
 using System.Reflection;
 using System.Dynamic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace skky.util
 {
@@ -273,6 +272,7 @@ namespace skky.util
 			return msg;
 		}
 
+		#region Numbers
 		public static bool IsNumber(this string str)
 		{
 			if (string.IsNullOrWhiteSpace(str))
@@ -335,6 +335,7 @@ namespace skky.util
 
 			return sint.Trim().Replace(",", "");
 		}
+		#endregion
 
 		#region Basic type converters
 		public static bool? ToBooleanNullable(this string str)
@@ -505,6 +506,7 @@ namespace skky.util
 		}
 		#endregion
 
+		#region Colors
 		public static string ToHexString(this byte byteToHex)
 		{
 			return string.Format("{0:x2}", byteToHex);
@@ -612,6 +614,7 @@ namespace skky.util
 
 			return Color.Empty;
 		}
+		#endregion
 
 		/// <summary>
 		/// Converts a comma-delimited string to an array of strings.
@@ -696,6 +699,7 @@ namespace skky.util
 			return lint;
 		}
 
+		#region Encode and Decode strings
 		public static byte[] Encode(this string str, int encoding)
 		{
 			return (str ?? string.Empty).Encode(Encoding.GetEncoding(encoding));
@@ -712,7 +716,8 @@ namespace skky.util
 		{
 			return (str ?? string.Empty).Encode(new UnicodeEncoding());
 		}
-
+		#endregion
+		
 		/// <summary>
 		/// Combines a base URL with a relative path.
 		/// Accounts for leading and trailing / characters so that only 1 / ever separates paths.
@@ -866,6 +871,35 @@ namespace skky.util
 			}
 
 			return item;
+		}
+		#endregion
+
+		#region Enums
+		public static string DisplayName(this Enum value)
+		{
+			try
+			{
+				var enumType = value.GetType();
+				var enumValue = Enum.GetName(enumType, value);
+				MemberInfo member = enumType.GetMember(enumValue)[0];
+
+				var attrs = member.GetCustomAttributes(typeof(DisplayAttribute), false);
+				if (attrs.Any())
+				{
+					var outString = ((DisplayAttribute)attrs[0]).Name;
+
+					if (((DisplayAttribute)attrs[0]).ResourceType != null)
+					{
+						outString = ((DisplayAttribute)attrs[0]).GetName();
+					}
+
+					return outString;
+				}
+			}
+			catch(Exception)
+			{ }
+
+			return value.ToString();
 		}
 		#endregion
 
