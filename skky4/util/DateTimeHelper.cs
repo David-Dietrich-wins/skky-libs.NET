@@ -68,7 +68,7 @@ namespace skky.util
 				if (dtDateTime == DateTime.MinValue || dtDateTime == DateTime.MaxValue)
 					return dtDateTime.Value.ToString(format);
 				else
-					return dtDateTime.Value.AddMinutes(0 - tzoMinutes).ToString(format);
+					return dtDateTime.Value.AddMinutes(tzoMinutes).ToString(format);
 			}
 
 			return string.Empty;
@@ -77,7 +77,7 @@ namespace skky.util
 		public static string ToPublicDateTimeFormat(this DateTime dt, int tzoMinutes = 0)
 		{
 			string result = null;
-			if (null != dt && dt != DateTime.MinValue)
+			if (null != dt && dt != DateTime.MinValue && dt != DateTime.MaxValue)
 				result = dt.AddMinutes(0 - tzoMinutes).ToString(PublicDateTimeFormat, CultureInfo.InvariantCulture);
 
 			return result;
@@ -141,19 +141,25 @@ namespace skky.util
 			return UnixEpoch.AddSeconds(seconds);
 		}
 
-		public static long ToUnixTimestamp(this DateTime? dateTime)
+		public static long ToUnixTimestamp(this DateTime? dateTime, int tzoMinutes = 0)
 		{
 			if (null == dateTime)
 				return 0;
 
-			return (long)(dateTime.Value.ToUniversalTime() - UnixEpoch).TotalSeconds;
+			if (tzoMinutes != 0 && dateTime.Value != DateTime.MinValue && dateTime.Value != DateTime.MaxValue)
+				dateTime = dateTime.Value.AddMinutes(tzoMinutes);
+
+			return (long)(dateTime.Value - UnixEpoch).TotalSeconds;
 		}
-		public static long ToUnixTimestampMillis(this DateTime? dateTime)
+		public static long ToUnixTimestampMillis(this DateTime? dateTime, int tzoMinutes = 0)
 		{
 			if (null == dateTime)
 				return 0;
 
-			return (long)(dateTime.Value.ToUniversalTime() - UnixEpoch).TotalMilliseconds;
+			if (tzoMinutes != 0 && dateTime.Value != DateTime.MinValue && dateTime.Value != DateTime.MaxValue)
+				dateTime = dateTime.Value.AddMinutes(tzoMinutes);
+
+			return (long)(dateTime.Value - UnixEpoch).TotalMilliseconds;
 		}
 
 		//public static DateTime GetDateTimeFromObject(this object o)
