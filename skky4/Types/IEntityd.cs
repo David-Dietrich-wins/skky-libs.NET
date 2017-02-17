@@ -26,4 +26,9 @@ namespace skky.Types
 
 	public interface IEntityStringid : IEntityid<string>
 	{ }
+
+	public interface IEntityName
+	{
+		string name { get; set; }
+	}
 }
