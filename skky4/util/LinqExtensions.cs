@@ -144,7 +144,7 @@ namespace skky.util
 			try
 			{
 				foreach (var property in sortColumn.Split('.'))
-					memberAccess = MemberExpression.Property
+					memberAccess = Expression.Property
 						(memberAccess ?? (parameter as Expression), property);
 
 				if (null != memberAccess)
@@ -338,7 +338,7 @@ namespace skky.util
 
 			MemberExpression memberAccess = null;
 			foreach (var property in column.Split('.'))
-				memberAccess = MemberExpression.Property
+				memberAccess = Expression.Property
 					(memberAccess ?? (parameter as Expression), property);
 
 			//change param value type
@@ -364,23 +364,27 @@ namespace skky.util
 				//string.Contains()
 				case WhereOperation.cn:
 					// Check if it's a date, and let's look for the day.
-					if (memberAccess.Type == typeof(System.DateTime))
+					if (memberAccess.Type == typeof(DateTime) || memberAccess.Type == typeof(DateTime?))
 					{
 						if (null != value && !string.IsNullOrWhiteSpace(value.ToString()))
 						{
 							DateTime dtStart = value.ToString().ToDateTime();
-							dtStart = new DateTime(dtStart.Year, dtStart.Month, dtStart.Day, 0, 0, 0);
+							dtStart = DateTimeHelper.DateAtMidnight(dtStart);
 							DateTime dtEnd = dtStart.AddDays(1);
 
-							var after = Expression.GreaterThanOrEqual(memberAccess, Expression.Constant(dtStart, typeof(System.DateTime)));
-							var before = Expression.LessThan(memberAccess, Expression.Constant(dtEnd, typeof(System.DateTime)));
+							var after = Expression.GreaterThanOrEqual(memberAccess, Expression.Constant(dtStart, memberAccess.Type == typeof(DateTime) ? typeof(DateTime) : typeof(DateTime?)));
+							var before = Expression.LessThan(memberAccess, Expression.Constant(dtEnd, memberAccess.Type == typeof(DateTime) ? typeof(DateTime) : typeof(DateTime?)));
 
 							condition = Expression.And(after, before);
 						}
 					}
-					else
+					else if(memberAccess.Type == typeof(string))
 					{
 						condition = Expression.Call(memberAccess, typeof(string).GetMethod("Contains"), Expression.Constant(value));
+					}
+					else
+					{
+						condition = Expression.Equal(memberAccess, filter);
 					}
 					break;
 				case WhereOperation.cni:
@@ -450,7 +454,7 @@ namespace skky.util
 
 				foreach (var rule in ap.theFilter.rules)
 				{
-					var expr = query.Lambda<T>(parameter, rule.field, rule.data, rule.op);
+					var expr = query.Lambda(parameter, rule.field, rule.data, rule.op);
 					if (null != expr)
 						exprs.Add(expr);
 				}
