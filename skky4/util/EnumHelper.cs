@@ -1,24 +1,40 @@
-﻿using System;
+﻿using skky.Types;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace skky.util
 {
 	public static class EnumHelper<T>
 	{
-		public static IList<T> GetValues(Enum value)
+		public static IList<T> GetValues()
 		{
 			var enumValues = new List<T>();
 
-			foreach (FieldInfo fi in value.GetType().GetFields(BindingFlags.Static | BindingFlags.Public))
+			foreach (FieldInfo fi in typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public))
 			{
-				enumValues.Add((T)Enum.Parse(value.GetType(), fi.Name, false));
+				enumValues.Add((T)Enum.Parse(typeof(T), fi.Name, false));
 			}
+
 			return enumValues;
+		}
+
+		public static IList<idName> GetIdNames()
+		{
+			var idnames = new List<idName>();
+
+			foreach (FieldInfo fi in typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public))
+			{
+				T ten = (T)Enum.Parse(typeof(T), fi.Name, false);
+				if(null != ten)
+				{
+					idnames.Add(new idName(Convert.ToInt32(ten), GetDisplayValue(ten)));
+				}
+			}
+
+			return idnames;
 		}
 
 		public static T Parse(string value)
@@ -26,14 +42,14 @@ namespace skky.util
 			return (T)Enum.Parse(typeof(T), value, true);
 		}
 
-		public static IList<string> GetNames(Enum value)
+		public static IList<string> GetNames()
 		{
-			return value.GetType().GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name).ToList();
+			return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name).ToList();
 		}
 
-		public static IList<string> GetDisplayValues(Enum value)
+		public static IList<string> GetDisplayValues()
 		{
-			return GetNames(value).Select(obj => GetDisplayValue(Parse(obj))).ToList();
+			return GetNames().Select(obj => GetDisplayValue(Parse(obj))).ToList();
 		}
 
 		public static string GetDisplayValue(T value)
