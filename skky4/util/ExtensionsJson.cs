@@ -49,6 +49,7 @@ namespace skky.util
 			DefaultValueHandling = DefaultValueHandling.Ignore,
 			ContractResolver = ShouldSerializeListContractResolver.Instance,
 			Formatting = Formatting.None,
+			DateTimeZoneHandling = DateTimeZoneHandling.Utc,
 		};
 
 		public static string SerializeObject(this object o)

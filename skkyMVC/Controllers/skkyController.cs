@@ -574,9 +574,14 @@ namespace skkyMVC.Controllers
 
 			Response.Cookies.Add(cookie);
 		}
-		protected ActionParams GetActionParamsFromGridCookie()
+		protected ActionParams GetActionParamsFromGridCookie(bool setSearchIfFilters = true)
 		{
-			return (GetCookie<ActionParams>(CONST_GridCookieName) ?? new ActionParams());
+			var ap = GetCookie<ActionParams>(CONST_GridCookieName) ?? new ActionParams();
+
+			if (setSearchIfFilters && !string.IsNullOrWhiteSpace(ap.filters))
+				ap._search = true;
+
+			return ap;
 		}
 
 		protected string GetRequestString()
