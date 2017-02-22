@@ -170,6 +170,13 @@ namespace skky.util
 		{
 			return XMLHelper.AddTag(tagName, str);
 		}
+		public static string ToCamelCase(this string s)
+		{
+			if (string.IsNullOrEmpty(s))
+				return string.Empty;
+
+			return s.Substring(0, 1).ToLower() + s.Substring(1);
+		}
 		#endregion
 
 		//public static bool IsNumeric(this string str)

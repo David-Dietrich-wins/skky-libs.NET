@@ -1,12 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Runtime.Serialization;
 using skky.util;
+using skky4.Models;
 
 namespace skky.Types
 {
+	[JavascriptEnum]
+	public enum DateElements
+	{
+		Unknown,
+		Millisecond,
+		Second,
+		Minute,
+		Hour,
+		Day,
+		Week,
+		Month,
+		Quarter,
+		Year,
+	}
+
 	[DataContract]
 	public class DateSettings
 	{
