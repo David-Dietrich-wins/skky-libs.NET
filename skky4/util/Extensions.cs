@@ -882,29 +882,28 @@ namespace skky.util
 		#endregion
 
 		#region Enums
-		public static string DisplayName(this Enum value)
+		public static string DisplayName(this Enum value, bool ignoreDisplay = false)
 		{
-			try
+			if (!ignoreDisplay)
 			{
-				var enumType = value.GetType();
-				var enumValue = Enum.GetName(enumType, value);
-				MemberInfo member = enumType.GetMember(enumValue)[0];
-
-				var attrs = member.GetCustomAttributes(typeof(DisplayAttribute), false);
-				if (attrs.Any())
+				try
 				{
-					var outString = ((DisplayAttribute)attrs[0]).Name;
+					var enumType = value.GetType();
+					var enumValue = Enum.GetName(enumType, value);
+					MemberInfo member = enumType.GetMember(enumValue)[0];
 
-					if (((DisplayAttribute)attrs[0]).ResourceType != null)
+					var attrs = member.GetCustomAttributes(typeof(DisplayAttribute), false);
+					if (attrs.Any())
 					{
-						outString = ((DisplayAttribute)attrs[0]).GetName();
-					}
+						if (null != ((DisplayAttribute)attrs[0]).ResourceType)
+							return ((DisplayAttribute)attrs[0]).GetName();
 
-					return outString;
+						return ((DisplayAttribute)attrs[0]).Name;
+					}
 				}
+				catch (Exception)
+				{ }
 			}
-			catch(Exception)
-			{ }
 
 			return value.ToString();
 		}
