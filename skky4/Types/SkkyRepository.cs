@@ -28,6 +28,7 @@ namespace skky.Types
 		public const string CONST_createdOn = "createdOn";
 		public const string CONST_CreationDateTime = "CreationDateTime";
 		public const string CONST_Customer = "Customer";
+		public const string CONST_date = "date";
 		public const string CONST_DateKey = "DateKey";
 		public const string CONST_Description = "Description";
 		public const string CONST_Email = "Email";
@@ -80,6 +81,7 @@ namespace skky.Types
 		public const string CONST_updatedOn = "updatedOn";
 		public const string CONST_Url = "Url";
 		public const string CONST_UserName = "UserName";
+		public const string CONST_val = "val";
 		public const string CONST_Value = "Value";
 		public const string CONST_Website = "Website";
 		public const string CONST_Zip = "Zip";

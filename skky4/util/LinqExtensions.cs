@@ -26,7 +26,7 @@ namespace skky.util
 
 			return source;
 		}
-		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, string sortBy, string sortDirection = ActionParams.CONST_sordAsc)
+		public static IEnumerable<T> getSorted<T>(this IEnumerable<T> source, string sortBy, string sortDirection = ActionParams.CONST_sordAsc, int maxRows = 0)
 		{
 			try
 			{
@@ -37,10 +37,24 @@ namespace skky.util
 					var sortExpression = Expression.Lambda<Func<T, object>>
 						(Expression.Convert(Expression.Property(param, sortBy), typeof(object)), param);
 
-					if (ActionParams.CONST_sordDesc == (sortDirection ?? string.Empty).ToLower())
-						return source.AsQueryable().OrderByDescending(sortExpression);
+					if(string.IsNullOrWhiteSpace(sortBy))
+					{
+						if (maxRows < 1)
+							return source;
 
-					return source.AsQueryable().OrderBy(sortExpression);
+						return source.Take(maxRows);
+					}
+
+					IOrderedQueryable<T> lst = null;
+					if (ActionParams.CONST_sordDesc == (sortDirection ?? string.Empty).ToLower())
+						lst = source.AsQueryable().OrderByDescending(sortExpression);
+					else
+						lst = source.AsQueryable().OrderBy(sortExpression);
+
+					if (maxRows < 1)
+						return lst;
+
+					return lst.Take(maxRows);
 				}
 			}
 			catch(Exception ex)
