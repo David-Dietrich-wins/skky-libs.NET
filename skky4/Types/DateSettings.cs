@@ -6,7 +6,7 @@ using skky4.Models;
 namespace skky.Types
 {
 	[JavascriptEnum]
-	public enum DateElements
+	public enum DatePeriods
 	{
 		Unknown,
 		Millisecond,
@@ -520,6 +520,43 @@ namespace skky.Types
 			}
 
 			return s;
+		}
+
+		/// <summary>
+		/// Returns a DateTime in the past by the period and numPeriods.
+		/// </summary>
+		/// <param name="dt">DateTime to go back from.</param>
+		/// <param name="period">Time Frame of the Period.</param>
+		/// <param name="numPeriods">Number of Periods. Pass in a positive number as it will be turned negative.</param>
+		/// <returns>A new DateTime with the numPeriods and period in the past.</returns>
+		public static DateTime MinusPeriods(DateTime dt, DatePeriods period, int numPeriods = 1)
+		{
+			// Set numPeriods to negative.
+			numPeriods = 0 - numPeriods;
+
+			switch (period)
+			{
+				case DatePeriods.Second:
+					return dt.AddSeconds(numPeriods);
+				case DatePeriods.Minute:
+					return dt.AddMinutes(numPeriods);
+				case DatePeriods.Hour:
+					return dt.AddHours(numPeriods);
+				case DatePeriods.Day:
+					return dt.AddDays(numPeriods);
+				case DatePeriods.Week:
+					return dt.AddDays(7 * numPeriods);
+				case DatePeriods.Month:
+					return dt.AddMonths(numPeriods);
+				case DatePeriods.Quarter:
+					return dt.AddMonths(3 * numPeriods);
+				case DatePeriods.Year:
+					return dt.AddYears(numPeriods);
+				default:    // day
+					break;
+			}
+
+			return dt;
 		}
 	}
 }
