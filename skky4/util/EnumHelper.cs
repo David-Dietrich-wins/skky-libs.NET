@@ -9,7 +9,7 @@ namespace skky.util
 {
 	public static class EnumHelper<T>
 	{
-		public static IList<T> GetValues()
+		public static List<T> GetValues()
 		{
 			var enumValues = new List<T>();
 
@@ -21,7 +21,7 @@ namespace skky.util
 			return enumValues;
 		}
 
-		public static IList<idName> GetIdNames()
+		public static List<idName> GetIdNames()
 		{
 			var idnames = new List<idName>();
 
@@ -29,9 +29,7 @@ namespace skky.util
 			{
 				T ten = (T)Enum.Parse(typeof(T), fi.Name, false);
 				if(null != ten)
-				{
-					idnames.Add(new idName(Convert.ToInt32(ten), GetDisplayValue(ten)));
-				}
+					idnames.Add(new idName(Convert.ToInt32(ten), GetDisplayName(ten)));
 			}
 
 			return idnames;
@@ -41,18 +39,29 @@ namespace skky.util
 		{
 			return (T)Enum.Parse(typeof(T), value, true);
 		}
+		public static T ParseDisplayName(string displayName)
+		{
+			foreach (FieldInfo fi in typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public))
+			{
+				T ten = (T)Enum.Parse(typeof(T), fi.Name, false);
+				if (null != ten && GetDisplayName(ten) == displayName)
+					return ten;
+			}
 
-		public static IList<string> GetNames()
+			return (T)Enum.Parse(typeof(T), displayName, true);
+		}
+
+		public static List<string> GetNames()
 		{
 			return typeof(T).GetFields(BindingFlags.Static | BindingFlags.Public).Select(fi => fi.Name).ToList();
 		}
 
-		public static IList<string> GetDisplayValues()
+		public static List<string> GetDisplayNames()
 		{
-			return GetNames().Select(obj => GetDisplayValue(Parse(obj))).ToList();
+			return GetNames().Select(obj => GetDisplayName(Parse(obj))).ToList();
 		}
 
-		public static string GetDisplayValue(T value)
+		public static string GetDisplayName(T value)
 		{
 			var fieldInfo = value.GetType().GetField(value.ToString());
 
