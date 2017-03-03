@@ -652,6 +652,36 @@ namespace skky.util
 			return query.PagedList(gm, ap, defaultPageSize);
 		}
 
+		/// <summary>
+		/// Used for grouping elements.
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <param name="source"></param>
+		/// <param name="predicate"></param>
+		/// <returns></returns>
+		public static IEnumerable<IEnumerable<T>> GroupWhile<T>(this IEnumerable<T> source
+			, Func<List<T>, T, T, bool> predicate)
+		{
+			using (var iterator = source.GetEnumerator())
+			{
+				if (!iterator.MoveNext())
+					yield break;
+
+				List<T> currentGroup = new List<T>() { iterator.Current };
+				while (iterator.MoveNext())
+				{
+					if (predicate(currentGroup, currentGroup.Last(), iterator.Current))
+						currentGroup.Add(iterator.Current);
+					else
+					{
+						yield return currentGroup;
+						currentGroup = new List<T>() { iterator.Current };
+					}
+				}
+
+				yield return currentGroup;
+			}
+		}
 		public static DataTable ToDataTable<T>(this IEnumerable<T> data)
 		{
 			PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(typeof(T));
