@@ -1,18 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Runtime.Serialization;
-
-namespace skky.Types
+﻿namespace skky.Types
 {
-	[DataContract]
 	public class idName
 	{
-		[DataMember]
 		public int id { get; set; }
 
-		[DataMember]
 		public string name { get; set; }
 
 		public idName()
