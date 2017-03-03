@@ -2,6 +2,8 @@
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace skky.util
@@ -14,6 +16,14 @@ namespace skky.util
 		{
 			public static readonly ShouldSerializeListContractResolver Instance = new ShouldSerializeListContractResolver();
 
+			private List<string> _namesToIgnore = new List<string>();
+			public ShouldSerializeListContractResolver()
+			{ }
+			public ShouldSerializeListContractResolver(string namesToIgnoreCommaSeparated)
+			{
+				_namesToIgnore = namesToIgnoreCommaSeparated.ToStringList();
+			}
+
 			protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
 			{
 				JsonProperty property = base.CreateProperty(member, memberSerialization);
@@ -22,9 +32,16 @@ namespace skky.util
 					((property.DefaultValueHandling ?? DefaultValueHandling.Ignore)
 						& DefaultValueHandling.Ignore) != 0;
 
-				if (isDefaultValueIgnored
-						&& !typeof(string).IsAssignableFrom(property.PropertyType)
-						&& typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
+				if(_namesToIgnore.Any() && _namesToIgnore.Contains(property.PropertyName))
+				{
+					property.ShouldSerialize = obj =>
+					{
+						return false;
+					};
+				}
+				else if (isDefaultValueIgnored
+					&& !typeof(string).IsAssignableFrom(property.PropertyType)
+					&& typeof(IEnumerable).IsAssignableFrom(property.PropertyType))
 				{
 					Predicate<object> newShouldSerialize = obj => {
 						var collection = property.ValueProvider.GetValue(obj) as ICollection;
@@ -41,6 +58,18 @@ namespace skky.util
 
 				return property;
 			}
+
+			public static JsonSerializerSettings GetSettings(string namesToIgnoreCommaSeparated)
+			{
+				return new JsonSerializerSettings()
+				{
+					NullValueHandling = NullValueHandling.Ignore,
+					DefaultValueHandling = DefaultValueHandling.Ignore,
+					ContractResolver = new ShouldSerializeListContractResolver(namesToIgnoreCommaSeparated),
+					Formatting = Formatting.None,
+					DateTimeZoneHandling = DateTimeZoneHandling.Utc,
+				};
+			}
 		}
 
 		public static readonly JsonSerializerSettings DefaultJsonSerializerSettings = new JsonSerializerSettings
@@ -51,12 +80,10 @@ namespace skky.util
 			Formatting = Formatting.None,
 			DateTimeZoneHandling = DateTimeZoneHandling.Utc,
 		};
-
 		public static string SerializeObject(this object o)
 		{
 			return JsonSerialize(o, false, null);
 		}
-
 
 		/// <summary>
 		/// Returns a serialized iot object.
@@ -86,6 +113,14 @@ namespace skky.util
 
 			//return (new JavaScriptSerializer()).Serialize(o);
 			return JsonConvert.SerializeObject(o, Formatting.None, null == serializerSettings ? DefaultJsonSerializerSettings : serializerSettings);
+		}
+		public static string JsonSerialize(this object o, string namesToIgnore, bool returnNullIfEmpty = false)
+		{
+			if (null == o)
+				return (returnNullIfEmpty ? null : string.Empty);
+
+			//return (new JavaScriptSerializer()).Serialize(o);
+			return JsonConvert.SerializeObject(o, Formatting.None, ExtensionsJson.ShouldSerializeListContractResolver.GetSettings(namesToIgnore));
 		}
 
 		public static T JsonDeserialize<T>(this string s, bool returnNullIfEmpty = true) where T : class, new()
