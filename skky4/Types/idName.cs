@@ -15,4 +15,20 @@
 			name = theName;
 		}
 	}
+
+	public class idNameTypeDesc : idName
+	{
+		public int type { get; set; }
+		public string desc { get; set; }
+
+		public idNameTypeDesc()
+		{ }
+
+		public idNameTypeDesc(int theid, string theName, int theType, string theDescription)
+			: base(theid, theName)
+		{
+			type = theType;
+			desc = theDescription;
+		}
+	}
 }
