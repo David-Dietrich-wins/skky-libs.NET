@@ -106,7 +106,14 @@ namespace skky.util
 			return null;
 		}
 
-		public static string JsonSerialize(this object o, bool returnNullIfEmpty = false, JsonSerializerSettings serializerSettings = null)
+		public static string JsonSerialize(this object o, bool returnNullIfEmpty = false)
+		{
+			if (null == o)
+				return (returnNullIfEmpty ? null : string.Empty);
+
+			return JsonSerialize(o, returnNullIfEmpty, null);
+		}
+		public static string JsonSerialize(this object o, bool returnNullIfEmpty, JsonSerializerSettings serializerSettings)
 		{
 			if (null == o)
 				return (returnNullIfEmpty ? null : string.Empty);

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Net.Mail;
 using System.Reflection;
 
@@ -85,7 +84,7 @@ namespace skky.util
 				mm.IsBodyHtml = true;
 				mm.Body = body;
 
-				if (null != attachmentFileNames && attachmentFileNames.Count() > 0)
+				if (null != attachmentFileNames && attachmentFileNames.Any())
 				{
 					foreach (var attachmentFileName in attachmentFileNames)
 					{
