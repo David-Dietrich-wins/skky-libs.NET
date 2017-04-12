@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections;
@@ -130,6 +131,38 @@ namespace skky.util
 			return JsonConvert.SerializeObject(o, Formatting.None, ExtensionsJson.ShouldSerializeListContractResolver.GetSettings(namesToIgnore));
 		}
 
+		public static T Deserialize<T>(this object o, bool returnNullIfEmpty = true) where T : class, new()
+		{
+			if (null == o)
+				return returnNullIfEmpty ? null : new T();
+
+			if (o is T)
+				return o as T;
+
+			if (o is JObject)
+				return DeserializeJObject<T>(o as JObject, returnNullIfEmpty);
+
+			return JsonDeserialize<T>(Convert.ToString(o), returnNullIfEmpty);
+		}
+		public static T DeserializeJObject<T>(this JObject o, bool returnNullIfEmpty = true) where T : class, new()
+		{
+			T item = null;
+
+			if (null != o)
+			{
+				try
+				{
+					item = o.ToObject<T>();
+				}
+				catch (Exception ex)
+				{
+					log.Error("JsonDeserialize", ex);
+					log.Error("Type: " + typeof(T).Name + ". String: " + o.ToString());
+				}
+			}
+
+			return (null == item && !returnNullIfEmpty ? new T() : item);
+		}
 		public static T JsonDeserialize<T>(this string s, bool returnNullIfEmpty = true) where T : class, new()
 		{
 			T item = null;
