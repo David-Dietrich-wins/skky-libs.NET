@@ -74,6 +74,33 @@ namespace skky.util
 			return string.Empty;
 		}
 
+		/// <summary>
+		/// Applies the Windows or IANA timezone to the DateTime
+		/// </summary>
+		/// <param name="utc">UTC DateTime to apply timezone to.</param>
+		/// <param name="timezone">Timezone in Windows or IANA format.</param>
+		/// <returns>The updated DateTime.</returns>
+		public static DateTime ApplyTimeZone(this DateTime utc, string timezone)
+		{
+			TimeZoneInfo tzinfo = null;
+			string tzWindows = string.Empty;
+			if (!string.IsNullOrEmpty(timezone) && DateTime.MinValue != utc && DateTime.MaxValue != utc)
+			{
+				tzWindows = TimeZoneConverter.TZConvert.IanaToWindows(timezone);
+				if (!string.IsNullOrEmpty(tzWindows))
+					tzinfo = TimeZoneInfo.FindSystemTimeZoneById(tzWindows);
+
+				// IANA timezone not found. Try Windows TZ.
+				if (null == tzinfo)
+					tzinfo = TimeZoneInfo.FindSystemTimeZoneById(timezone);
+
+				if (null != tzinfo)
+					return TimeZoneInfo.ConvertTimeFromUtc(utc, tzinfo);
+			}
+
+			return utc;
+		}
+
 		public static string ToPublicDateTimeFormat(this DateTime dt, int tzoMinutes = 0)
 		{
 			string result = null;
@@ -146,7 +173,7 @@ namespace skky.util
 			if (null == dateTime)
 				return 0;
 
-			if (tzoMinutes != 0 && dateTime.Value != DateTime.MinValue && dateTime.Value != DateTime.MaxValue)
+			if (tzoMinutes != 0 && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
 				dateTime = dateTime.Value.AddMinutes(tzoMinutes);
 
 			return (long)(dateTime.Value - UnixEpoch).TotalSeconds;
@@ -156,10 +183,29 @@ namespace skky.util
 			if (null == dateTime)
 				return 0;
 
-			if (tzoMinutes != 0 && dateTime.Value != DateTime.MinValue && dateTime.Value != DateTime.MaxValue)
+			if (tzoMinutes != 0 && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
 				dateTime = dateTime.Value.AddMinutes(tzoMinutes);
 
 			return (long)(dateTime.Value - UnixEpoch).TotalMilliseconds;
+		}
+		public static long ToUnixTimestampMillis(this DateTime? dateTime, string timezone)
+		{
+			if (null == dateTime)
+				return 0;
+
+			if (!string.IsNullOrEmpty(timezone) && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
+				dateTime = dateTime.Value.ApplyTimeZone(timezone);
+
+			return (long)(dateTime.Value - UnixEpoch).TotalMilliseconds;
+		}
+		public static long ToUnixTimestampMillis(this long lmillis, string timezone)
+		{
+			if (lmillis < 1)
+				return 0;
+
+			DateTime dateTime = DateTimeFromUnixTimestampMillis(lmillis);
+
+			return ToUnixTimestampMillis(dateTime, timezone);
 		}
 
 		//public static DateTime GetDateTimeFromObject(this object o)
@@ -217,7 +263,7 @@ namespace skky.util
 
 		public static long ToJavaScriptMilliseconds(this DateTime dt)
 		{
-			return (long)((dt.ToUniversalTime().Ticks - DatetimeMinTimeTicks) / 10000);
+			return (dt.ToUniversalTime().Ticks - DatetimeMinTimeTicks) / 10000;
 		}
 
 		/// <summary>
