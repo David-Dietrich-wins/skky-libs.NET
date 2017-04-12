@@ -118,7 +118,7 @@ namespace skky.jqGrid
 		/// This is because in the west, I must add the minutes to be UTC.
 		/// </summary>
 		[DataMember]
-		public int tzom { get; set; }
+		public string tz { get; set; }
 
 		/// <summary>
 		/// Used to transform idTable into Table.translateTableColumn (usually the name field).

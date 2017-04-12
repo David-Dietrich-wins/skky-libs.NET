@@ -54,21 +54,21 @@ namespace skky.util
 		/// Returns a string in the format M/d/yy h:mm:ss tt.
 		/// </summary>
 		/// <param name="dtDateTime">DateTime object to make a string from.</param>
-		/// <param name="tzoMinutes">Timezone offset in minutes (positive number west of UTC).</param>
+		/// <param name="timezone">Timezone in Windows or IANA format (positive number west of UTC).</param>
 		/// <returns>A string in the format M/d/yy h:mm:ss tt.</returns>
-		public static string GetDefaultDateTimeString(DateTime? dtDateTime, int tzoMinutes = 0)
+		public static string GetDefaultDateTimeString(DateTime? dtDateTime, string timezone = "")
 		{
-			return GetString(dtDateTime, tzoMinutes, CONST_DefaultDateTimeFormat);
+			return GetString(dtDateTime, timezone, CONST_DefaultDateTimeFormat);
 		}
 
-		public static string GetString(DateTime? dtDateTime, int tzoMinutes = 0, string format = "M/d/yyyy")
+		public static string GetString(DateTime? dtDateTime, string timezone, string format = "M/d/yyyy")
 		{
 			if (dtDateTime.HasValue)
 			{
 				if (dtDateTime == DateTime.MinValue || dtDateTime == DateTime.MaxValue)
 					return dtDateTime.Value.ToString(format);
 				else
-					return dtDateTime.Value.AddMinutes(tzoMinutes).ToString(format);
+					return dtDateTime.Value.ApplyTimeZone(timezone).ToString(format);
 			}
 
 			return string.Empty;
@@ -101,11 +101,11 @@ namespace skky.util
 			return utc;
 		}
 
-		public static string ToPublicDateTimeFormat(this DateTime dt, int tzoMinutes = 0)
+		public static string ToPublicDateTimeFormat(this DateTime dt, string timezone = "")
 		{
 			string result = null;
-			if (null != dt && dt != DateTime.MinValue && dt != DateTime.MaxValue)
-				result = dt.AddMinutes(0 - tzoMinutes).ToString(PublicDateTimeFormat, CultureInfo.InvariantCulture);
+			if (null != dt && DateTime.MinValue != dt && DateTime.MaxValue != dt)
+				result = dt.ApplyTimeZone(timezone).ToString(PublicDateTimeFormat, CultureInfo.InvariantCulture);
 
 			return result;
 		}
@@ -155,12 +155,12 @@ namespace skky.util
 			return UnixEpoch.AddMilliseconds(millis);
 		}
 
-		public static long GetUnixTimestampSeconds(DateTime? dt = null)
+		public static long GetUnixTimestampSeconds(DateTime? dt = null, string timezone = "")
 		{
 			if (!dt.HasValue)
 				dt = DateTime.UtcNow;
 
-			return ToUnixTimestamp(dt);
+			return dt.ToUnixTimestamp(timezone);
 		}
 
 		public static DateTime DateTimeFromUnixTimestampSeconds(long seconds)
@@ -168,32 +168,22 @@ namespace skky.util
 			return UnixEpoch.AddSeconds(seconds);
 		}
 
-		public static long ToUnixTimestamp(this DateTime? dateTime, int tzoMinutes = 0)
+		public static long ToUnixTimestamp(this DateTime? dateTime, string timezone = "")
 		{
 			if (null == dateTime)
 				return 0;
 
-			if (tzoMinutes != 0 && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
-				dateTime = dateTime.Value.AddMinutes(tzoMinutes);
+			if (!string.IsNullOrWhiteSpace(timezone) && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
+				dateTime = dateTime.Value.ApplyTimeZone(timezone);
 
 			return (long)(dateTime.Value - UnixEpoch).TotalSeconds;
 		}
-		public static long ToUnixTimestampMillis(this DateTime? dateTime, int tzoMinutes = 0)
+		public static long ToUnixTimestampMillis(this DateTime? dateTime, string timezone = "")
 		{
 			if (null == dateTime)
 				return 0;
 
-			if (tzoMinutes != 0 && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
-				dateTime = dateTime.Value.AddMinutes(tzoMinutes);
-
-			return (long)(dateTime.Value - UnixEpoch).TotalMilliseconds;
-		}
-		public static long ToUnixTimestampMillis(this DateTime? dateTime, string timezone)
-		{
-			if (null == dateTime)
-				return 0;
-
-			if (!string.IsNullOrEmpty(timezone) && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
+			if (!string.IsNullOrWhiteSpace(timezone) && DateTime.MinValue != dateTime && DateTime.MaxValue != dateTime)
 				dateTime = dateTime.Value.ApplyTimeZone(timezone);
 
 			return (long)(dateTime.Value - UnixEpoch).TotalMilliseconds;

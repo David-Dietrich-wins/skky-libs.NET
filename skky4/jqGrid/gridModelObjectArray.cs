@@ -73,7 +73,7 @@ namespace skky.jqGrid
 			query = query.PagedList(gm, ap, maxRows);
 
 			foreach (var item in query)
-				gm.AddRow(item.id, null == conversionFunc ? item.GetObjectArray(null == ap ? 0 : ap.tzom) : conversionFunc(item));
+				gm.AddRow(item.id, null == conversionFunc ? item.GetObjectArray(null == ap ? string.Empty : ap.tz) : conversionFunc(item));
 
 			return gm;
 		}
