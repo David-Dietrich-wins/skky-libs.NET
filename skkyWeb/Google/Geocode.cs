@@ -13,6 +13,11 @@ namespace skkyWeb.Google
 		public const string CONST_GoogleGeocodeUrl = "http://maps.google.com/maps/api/geocode/json?address={0}&sensor=false";
 		public const string CONST_GoogleOk = "OK";
 
+		public static GeocodeResponse Decode(string address, string city, string state, string zip)
+		{
+			return Decode(address + ", " + city + " " + state + ", " + zip);
+		}
+
 		public static GeocodeResponse Decode(string address)
 		{
 			if(string.IsNullOrWhiteSpace(address))

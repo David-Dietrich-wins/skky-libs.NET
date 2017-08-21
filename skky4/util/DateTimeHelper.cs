@@ -60,6 +60,13 @@ namespace skky.util
 		{
 			return GetString(dtDateTime, timezone, CONST_DefaultDateTimeFormat);
 		}
+		public static string GetString(DateTime? dtDateTime, string format = "M/d/yyyy")
+		{
+			if (dtDateTime.HasValue)
+				return dtDateTime.Value.ToString(format);
+
+			return string.Empty;
+		}
 
 		public static string GetString(DateTime? dtDateTime, string timezone, string format = "M/d/yyyy")
 		{
@@ -264,7 +271,7 @@ namespace skky.util
 		/// </summary>
 		/// <param name="month">The long text of the month to return with the year.</param>
 		/// <returns>A DateTime representing a Month and a Year.</returns>
-		public static DateTime getMonthBasedDateTime(string month, int year = 0)
+		public static DateTime GetMonthBasedDateTime(string month, int year = 0)
 		{
 			DateTime dtNow = DateTime.Now;
 			if (!string.IsNullOrEmpty(month))
@@ -297,20 +304,20 @@ namespace skky.util
 
 		public static string DefaultMonthText()
 		{
-			DateTime dtMonth = getMonthBasedDateTime(string.Empty);
+			DateTime dtMonth = GetMonthBasedDateTime(string.Empty);
 
 			return dtMonth.ToString("MMMM");
 		}
 
 		public static string DefaultMonthYearText()
 		{
-			DateTime dtMonth = getMonthBasedDateTime(string.Empty);
+			DateTime dtMonth = GetMonthBasedDateTime(string.Empty);
 
 			return dtMonth.ToString("MMMM yyyy");
 		}
 		public static int DefaultMonthInt()
 		{
-			DateTime dtMonth = getMonthBasedDateTime(string.Empty);
+			DateTime dtMonth = GetMonthBasedDateTime(string.Empty);
 
 			return dtMonth.Month;
 		}
@@ -343,19 +350,26 @@ namespace skky.util
 		/// </summary>
 		/// <param name="dt">A month and year DateTime to get the next month for.</param>
 		/// <returns>A month and year one month ahead with the day being the first.</returns>
-		public static DateTime GetFirstDayOfNextMonth(DateTime? dt)
+		public static DateTime GetFirstDayOfMonth(DateTime? dt = null)
 		{
 			if (null == dt)
 			{
 				DateTime dtNow = DateTime.Now;
-				dt = new DateTime(dtNow.Year, dtNow.Month, 1);
-			}
-			else
-			{
-				dt = new DateTime(dt.Value.Year, dt.Value.Month, 1);
+				return new DateTime(dtNow.Year, dtNow.Month, 1);
 			}
 
-			return dt.Value.AddMonths(1);
+			return new DateTime(dt.Value.Year, dt.Value.Month, 1);
+		}
+
+		/// <summary>
+		/// We want to set everything to the first of the next month passed in.
+		/// If an empty DateTime is passed in, use the current month.
+		/// </summary>
+		/// <param name="dt">A month and year DateTime to get the next month for.</param>
+		/// <returns>A month and year one month ahead with the day being the first.</returns>
+		public static DateTime GetFirstDayOfNextMonth(DateTime? dt)
+		{
+			return GetFirstDayOfMonth(dt).AddMonths(1);
 		}
 
 		public static string TimeDifferenceMessage(DateTime dtStart, DateTime dtEnd)
