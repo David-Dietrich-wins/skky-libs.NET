@@ -84,9 +84,9 @@ namespace skky.util
 				mm.IsBodyHtml = true;
 				mm.Body = body;
 
-				if (null != attachmentFileNames && attachmentFileNames.Any())
+				if (null != attachmentFileNames && attachmentFileNames.Any(x => null != x && x != string.Empty))
 				{
-					foreach (var attachmentFileName in attachmentFileNames)
+					foreach (var attachmentFileName in attachmentFileNames.Where(x => null != x && x != string.Empty))
 					{
 						Attachment attachment = new Attachment(attachmentFileName);
 						mm.Attachments.Add(attachment);
