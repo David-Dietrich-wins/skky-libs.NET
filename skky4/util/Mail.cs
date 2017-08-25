@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Mail;
 using System.Reflection;
@@ -8,6 +9,7 @@ namespace skky.util
 {
 	public static class Mail
 	{
+		private static readonly log4net.ILog logger = log4net.LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType.Name);
 		public static void Send(string toEmails, string ccEmails, string subject, string body, IEnumerable<string> attachmentFileNames = null, string from = "")
 		{
 			var toArray = Parser.SplitAndTrimString(toEmails);
@@ -28,8 +30,10 @@ namespace skky.util
 			List<string> attachmentFileNames = null;
 			if (!string.IsNullOrWhiteSpace(attachmentFileName))
 			{
-				attachmentFileNames = new List<string>();
-				attachmentFileNames.Add(attachmentFileName);
+				attachmentFileNames = new List<string>
+				{
+					attachmentFileName
+				};
 			}
 
 			Send(to, null, null, subject, body, attachmentFileNames, from);
@@ -39,14 +43,16 @@ namespace skky.util
 			List<string> attachmentFileNames = null;
 			if (!string.IsNullOrWhiteSpace(attachmentFileName))
 			{
-				attachmentFileNames = new List<string>();
-				attachmentFileNames.Add(attachmentFileName);
+				attachmentFileNames = new List<string>
+				{
+					attachmentFileName
+				};
 			}
 
 			Send(to, cc, null, subject, body, attachmentFileNames, from);
 		}
 
-		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, IEnumerable<string> bcc, string subject, string body, IEnumerable<string> attachmentFileNames = null, string from = "")
+		public static void Send(IEnumerable<string> to, IEnumerable<string> cc, IEnumerable<string> bcc, string subject, string body, IEnumerable<string> attachmentFilenames = null, string from = "")
 		{
 			try
 			{
@@ -84,12 +90,19 @@ namespace skky.util
 				mm.IsBodyHtml = true;
 				mm.Body = body;
 
-				if (null != attachmentFileNames && attachmentFileNames.Any(x => null != x && x != string.Empty))
+				if (null != attachmentFilenames && attachmentFilenames.Any(x => null != x && x != string.Empty))
 				{
-					foreach (var attachmentFileName in attachmentFileNames.Where(x => null != x && x != string.Empty))
+					foreach (var attachmentFilename in attachmentFilenames.Where(x => null != x && x != string.Empty))
 					{
-						Attachment attachment = new Attachment(attachmentFileName);
-						mm.Attachments.Add(attachment);
+						if (File.Exists(attachmentFilename))
+						{
+							Attachment attachment = new Attachment(attachmentFilename);
+							mm.Attachments.Add(attachment);
+						}
+						else
+						{
+							logger.Error("Attachment missing: " + attachmentFilename + ".");
+						}
 					}
 				}
 
