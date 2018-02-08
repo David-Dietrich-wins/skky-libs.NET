@@ -10,6 +10,7 @@ namespace skky.util
 	{
 		public const string PublicDateFormat = "yyyy-MM-dd";
 		public const string PublicDateTimeFormat = "yyyy-MM-ddTHH:mm:ss.fffzzz";
+		public const string CONST_DateAtTimeFormat = "MMMM dd, yyyy 'at' H:mm tt";
 
 		public const string CONST_DefaultDateFormat = ﻿"M/d/yy";
 		public const string CONST_DefaultDateTimeFormat = ﻿"M/d/yy h:mm:ss tt";
@@ -34,7 +35,7 @@ namespace skky.util
 
 		public static readonly DateTime UnixEpoch =
 			new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-	
+
 		/// <summary>
 		/// Returns a string in the format M/d/yy.
 		/// </summary>
@@ -51,6 +52,16 @@ namespace skky.util
 		}
 
 		/// <summary>
+		/// Returns a string in the format M/d/yy.
+		/// </summary>
+		/// <param name="dtDateTime">DateTime object to make a string from.</param>
+		/// <returns>A string in the format M/d/yy.</returns>
+		public static string GetDateAtTimeString(DateTime? dtDateTime)
+		{
+			return GetString(dtDateTime, CONST_DateAtTimeFormat);
+		}
+
+		/// <summary>
 		/// Returns a string in the format M/d/yy h:mm:ss tt.
 		/// </summary>
 		/// <param name="dtDateTime">DateTime object to make a string from.</param>
@@ -62,7 +73,7 @@ namespace skky.util
 		}
 		public static string GetString(DateTime? dtDateTime, string format = "M/d/yyyy")
 		{
-			if (dtDateTime.HasValue)
+			if (dtDateTime.HasValue && dtDateTime.Value != DateTime.MinValue && dtDateTime != DateTime.MaxValue)
 				return dtDateTime.Value.ToString(format);
 
 			return string.Empty;
