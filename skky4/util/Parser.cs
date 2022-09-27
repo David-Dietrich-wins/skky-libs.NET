@@ -8,10 +8,20 @@ using skky.Types;
 
 namespace skky.util
 {
+    /// <summary>
+    /// Class to wrap common parsing needs.
+    /// </summary>
 	public static class Parser
 	{
 		public const string sClassName = "Parser";
 
+        /// <summary>
+        /// Splits a string into an array of strings.
+        /// </summary>
+        /// <param name="str">The string to split and trim.</param>
+        /// <param name="splitChar">The char to use for splitting. Defaults to a comma.</param>
+        /// <param name="lowerTheString">True if you want the resulting strings to all be lowercase.</param>
+        /// <returns>A string array of split, and optionally trimmed, strings. The return will never be null.</returns>
 		public static string[] SplitAndTrimString(string str, char splitChar = ',', bool lowerTheString = false)
 		{
 			string s;
